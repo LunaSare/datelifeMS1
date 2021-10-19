@@ -1,9 +1,15 @@
 # Welcome to DateLife's first reproducible manuscript GitHub repository!
 
-To reproduce any version of this manuscript, you will need the R packages `datelife`, `drake`, `knitr` and `rmarkdown` installed.
+To reproduce any version of this manuscript, you will need the R packages `datelife`, `drake`, `knitr` and `rmarkdown`.
+
+To install them or update them, use the `install_deps()` function from the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package as:
+
+```{r}
+devtools::install_deps()
+```
 
 From the root directory, choose the version of the paper that you want to reproduce, for example `biorxiv_2019.09.28.Rmd`.
-You can open this in RStudio and hit the `knit` button. Or you can go to the R terminal and use rmarkdown::render("biorxiv_2019.09.28.Rmd", "all")
+You can open this in RStudio and hit the `knit` button. Or you can go to the R terminal and use `rmarkdown::render("biorxiv_2019.09.28.Rmd", "all")`
 
 ### Project file structure:
 
@@ -23,7 +29,7 @@ You can open this in RStudio and hit the `knit` button. Or you can go to the R t
 
 The file svm-latex-ms.tex was downloaded with the following code on Sept 27 2019:
 
-```
-download.file(url = "https://raw.githubusercontent.com/svmiller/svm-r-markdown-templates/master/svm-latex-ms.tex",
+```{r}
+utils::download.file(url = "https://raw.githubusercontent.com/svmiller/svm-r-markdown-templates/master/svm-latex-ms.tex",
               destfile = "svm-latex-ms.tex", mode="wb")
 ```
