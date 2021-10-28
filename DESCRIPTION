@@ -4,8 +4,9 @@ Version: 0.0.1
 Authors@R:
     person("Luna Luisa", "Sanchez Reyes", , "lunalsr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7668-2528")),
+    c(person("Emily Jane", "McTavish", role=c("aut"), email="ejmctavish@gmail.com")
     c(person("Brian", "O'Meara", role=c("aut"), email="bomeara@gmail.com")
-Description: dateloifeMS1 contains all the R code, data and markdown files to reproduce locally the first manuscript for the DateLife project. It relies on the package drake.
+Description: datelifeMS1 contains all the R code, data and markdown files to reproduce locally the first manuscript for the DateLife project. It uses the package drake.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
