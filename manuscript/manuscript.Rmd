@@ -1,54 +1,79 @@
 ---
-title             : "The title"
+title             : "DateLife: Leveraging databases and analytical tools to reveal the dated Tree of Life"
 shorttitle        : "Title"
 
-author: 
-  - name          : "First Author"
-    affiliation   : "1"
+author:
+  - name          : "Luna L. Sánchez Reyes"
+    affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
-    address       : "Postal address"
-    email         : "my@email.com"
+    address       : ""
+    email         : "sanchez.reyes.luna@gmail.com"
     role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
-      - Conceptualization
+      - Data curation
+      - Investigation
+      - Software
+      - Visualization
+      - Validation
       - Writing - Original Draft Preparation
       - Writing - Review & Editing
-  - name          : "Ernst-August Doelle"
-    affiliation   : "1,2"
+  - name          : "Emily Jane McTavish"
+    affiliation   : "1"
     role:
+      - Resources
+      - Software
+      - Writing - Review & Editing
+  - name          : "Brian O'Meara"
+    affiliation   : "2"
+    role:
+      - Conceptualization
+      - Funding acquisition
+      - Methodology
+      - Resources
+      - Software
+      - Supervision
       - Writing - Review & Editing
 
 affiliation:
   - id            : "1"
-    institution   : "Wilhelm-Wundt-University"
+    institution   : "University of California, Merced"
   - id            : "2"
-    institution   : "Konstanz Business School"
+    institution   : "University of Tennessee, Knoxville"
 
 authornote: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+  School of Natural Sciences, University of California, Merced, Science and Engineering Building 1.
 
-  Enter author note here.
+  Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 425 Hesler Biology Building, Knoxville, TN 37996, USA.
 
 abstract: |
-  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
-  
-  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
-  
-  One sentence clearly stating the **general problem** being addressed by  this particular study.
-  
-  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
-  
-  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
-  
-  One or two sentences to put the results into a more **general context**.
-  
-  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
-  
+  Time of evolutionary origin is fundamental for understanding biological processes.
+
+  The combination of new analytical techniques, availability of more fossil and molecular
+  data, and efforts to improve data sharing practices in biology has resulted in a steady accumulation
+  of time of lineage divergence in public and open databases such as TreeBASE, Dryad, and Open Tree
+  of Life for a large quantity and diversity of organisms in the last few decades.
+
+  However, getting a tree with branch lengths proportional to time remains difficult for many biologists and the non-academic community, despite its importance for biological research, medicine, education, and science communication.
+
+  Here we present `datelife`, a service implemented via an R package and a web site
+  (<http://www.datelife.org/>) for efficient reuse, summary and reanalysis of expert, peer-reviewed, public data on time of lineage divergence.
+
+  Main results:
+    1. blah
+    2. blah
+    3. blah
+
+  Results in a general context:
+  All source and summary chronograms can be saved in formats that permit easy reuse and reanalysis. Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology.
+  How well this trees work for this purpose still needs to be tested.
+
+  `datelife` will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
+
   <!-- https://tinyurl.com/ybremelq -->
-  
+
 keywords          : "keywords"
 wordcount         : "X"
 
-bibliography      : ["r-references.bib"]
+bibliography      : ["paper_references.bib"]
 
 floatsintext      : no
 figurelist        : no
@@ -65,12 +90,12 @@ output            : papaja::apa6_pdf
 
 ```{r setup, include = FALSE}
 library("papaja")
-r_refs("r-references.bib")
+r_refs("paper_references.bib")
 ```
 
 ```{r analysis-preferences}
 # Seed for random number generation
-set.seed(42)
+set.seed(50)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 

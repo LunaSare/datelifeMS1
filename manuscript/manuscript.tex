@@ -37,8 +37,8 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={The title},
-  pdfauthor={First Author1 \& Ernst-August Doelle1,2},
+  pdftitle={DateLife: Leveraging databases and analytical tools to reveal the dated Tree of Life},
+  pdfauthor={Luna L. Sánchez Reyes1,2, Emily Jane McTavish1, \& Brian O'Meara2},
   pdflang={en-EN},
   pdfkeywords={keywords},
   hidelinks,
@@ -131,24 +131,24 @@
   \usepackage[shorthands=off,main=english]{babel}
 \fi
 
-\title{The title}
-\author{First Author\textsuperscript{1} \& Ernst-August Doelle\textsuperscript{1,2}}
+\title{DateLife: Leveraging databases and analytical tools to reveal the dated Tree of Life}
+\author{Luna L. Sánchez Reyes\textsuperscript{1,2}, Emily Jane McTavish\textsuperscript{1}, \& Brian O'Meara\textsuperscript{2}}
 \date{}
 
 
 \authornote{
 
-Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+School of Natural Sciences, University of California, Merced, Science and Engineering Building 1.
 
-Enter author note here.
+Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 425 Hesler Biology Building, Knoxville, TN 37996, USA.
 
-The authors made the following contributions. First Author: Conceptualization, Writing - Original Draft Preparation, Writing - Review \& Editing; Ernst-August Doelle: Writing - Review \& Editing.
+The authors made the following contributions. Luna L. Sánchez Reyes: Data curation, Investigation, Software, Visualization, Validation, Writing - Original Draft Preparation, Writing - Review \& Editing; Emily Jane McTavish: Resources, Software, Writing - Review \& Editing; Brian O'Meara: Conceptualization, Funding acquisition, Methodology, Resources, Software, Supervision, Writing - Review \& Editing.
 
-Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: \href{mailto:my@email.com}{\nolinkurl{my@email.com}}
+Correspondence concerning this article should be addressed to Luna L. Sánchez Reyes, . E-mail: \href{mailto:sanchez.reyes.luna@gmail.com}{\nolinkurl{sanchez.reyes.luna@gmail.com}}
 
 }
 
-\affiliation{\vspace{0.5cm}\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
+\affiliation{\vspace{0.5cm}\textsuperscript{1} University of California, Merced\\\textsuperscript{2} University of Tennessee, Knoxville}
 
 \abstract{
 One or two sentences providing a \textbf{basic introduction} to the field, comprehensible to a scientist in any discipline.
@@ -164,6 +164,12 @@ Two or three sentences explaining what the \textbf{main result} reveals in direc
 One or two sentences to put the results into a more \textbf{general context}.
 
 Two or three sentences to provide a \textbf{broader perspective}, readily comprehensible to a scientist in any discipline.
+
+The combination of new analytical techniques, availability of more fossil and molecular
+data, and better practices in data sharing in biology has resulted in a steady accumulation
+of chronograms in public and open databases such as TreeBASE, Dryad, and Open Tree
+of Life for a large quantity and diversity of organisms in the last few decades. However, getting a tree with branch lengths proportional to time remains difficult for many biologists and the non-academic community, despite its importance in many areas of research, education, and science communication. \texttt{datelife} is a service implemented via an R package and a web site
+(\url{http://www.datelife.org/}) for efficient reuse, summary and reanalysis of published data on lineage divergence times. The main workflow starts with at least two taxon names as input, either as tip labels on a tree, or as a simple comma separated character string. A name search is then performed across the chronogram database and positively identified source trees are pruned to maintain queried taxa only and stored as a named list of patristic distance matrices. Source chronogram data can be summarised using branch length summary statistics or variance minimizing approaches to generate a single summary chronogram. Source chronogram data can also be used as calibration points to date a tree containing some or all names from the initial query. If there is no information available for any queried taxa, data can be simulated. All source and summary chronograms can be saved in formats that permit easy reuse and reanalysis. Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology. How well this trees work for this purpose still needs to be tested. \texttt{datelife} will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
 }
 
 
