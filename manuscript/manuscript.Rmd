@@ -45,17 +45,16 @@ authornote: |
   Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 425 Hesler Biology Building, Knoxville, TN 37996, USA.
 
 abstract: |
-  Time of evolutionary origin is fundamental for understanding biological processes.
+  Time of evolutionary origin is fundamental for research in the natural sciences, as well as for education, science communication and policy.
+  Despite an increased availability of fossil and molecular data, and time-efficient analytical techniques, achieving a high-quality reconstruction of time of evolutionary origin as a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is still a difficult and time-consuming task for a majority of interested parties.
+  Yet, the amount of published chronograms has increased significantly in the past two decades, and a non-negligeable proportion of these data have been steadily accumulating in public, open databases such as TreeBASE and Open Tree
+  of Life, exposing a wealth of expertly-curated and peer-reviewed data on time of evolutionary origin in a programatic and reusable way, for a large quantity and diversity of organisms.
+  This trend results from intensive and localized efforts for improving data sharing practices, as well as incentivizing open science in biology. Despite these trends, accessibility for time data is not that good.
+  R has become a widely used element of the biological data analyst toolkit. Hence,to improve accessibility of time data we developed an R package that access these data and eases interaction, reanalysis and reuse of it, incorporation of these data into the evolutionary workflow. 
 
-  The combination of new analytical techniques, availability of more fossil and molecular
-  data, and efforts to improve data sharing practices in biology has resulted in a steady accumulation
-  of time of lineage divergence in public and open databases such as TreeBASE, Dryad, and Open Tree
-  of Life for a large quantity and diversity of organisms in the last few decades.
 
-  However, getting a tree with branch lengths proportional to time remains difficult for many biologists and the non-academic community, despite its importance for biological research, medicine, education, and science communication.
-
-  Here we present `datelife`, a service implemented via an R package and a web site
-  (<http://www.datelife.org/>) for efficient reuse, summary and reanalysis of expert, peer-reviewed, public data on time of lineage divergence.
+  Here we present `datelife`, a service implemented as an R package and a web site
+  (www.datelife.org) for increased accessibility, efficient reuse, summary and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
 
   Main results:
     1. blah
