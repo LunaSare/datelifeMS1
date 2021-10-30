@@ -232,21 +232,12 @@ Both summary and newly generated trees are useful to evaluate evolutionary hypot
 \textsc{Availability}
 \end{center}
 
-`datelife` is free and open source and it can be used through its current website
-<http://www.datelife.org/query/>, through its R package, and through Phylotastic's project web portal <http://phylo.cs.nmsu.edu:3000/>.
-`datelife`'s website is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker.
-`datelife`'s R package stable version `r availability`
-for installation from the CRAN repository (<https://cran.r-project.org/package=datelife>)
-using the command `install.packages(pkgs = "datelife")` from within R. Development versions
-are available from the GitHub repository (<https://github.com/phylotastic/datelife>)
-and can be installed using the command `devtools::install_github("phylotastic/datelife")`.
 
 
 \begin{center}
 \textsc{Supplementary Material}
 \end{center}
 
-Code used to generate all versions of this manuscript, the biological examples, as well as the benchmark of functionalities are respectively in the [datelife_paper1](https://github.com/LunaSare/datelife_paper1), [datelife_examples](https://github.com/LunaSare/datelife_examples), and [datelife_benchmark](https://github.com/LunaSare/datelife_benchmark) repositories in LLSR GitHub account.
 <!-- Vignettes?
 Dryad also?? since it is all in github already, maybe not necessary-->
 
@@ -254,7 +245,7 @@ Dryad also?? since it is all in github already, maybe not necessary-->
 \textsc{Funding}
 \end{center}
 
-Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572.
+
 
 <!-- Any separate funding from the University of Tennessee, Knoxville?? -->
 
@@ -262,13 +253,3 @@ Funding was provided by the US National Science Foundation (NSF) grants ABI-1458
 \begin{center}
 \textsc{Acknowledgements}
 \end{center}
-
-We thank colleagues from the O'Meara Lab at the University
-of Tennesse Knoxville for suggestions, discussions and software testing.
-The late National Evolutionary Synthesis Center (NESCent), which sponsored hackathons
-that led to initial work on this project. The team that assembled `datelife`'s first proof of concept: Tracy Heath, Jonathan Eastman, Peter Midford, Joseph Brown, Matt Pennell, Mike Alfaro, and Luke Harmon.
-The Open Tree of Life project that provides the open, metadata rich repository of
-trees used for `datelife`.
-The many scientists who publish their chronograms in an open, reusable form, and
-the scientists who curate them for deposition in the Open Tree of Life repository.
-The NSF for funding nearly all the above, in addition to the ABI grant that funded this project itself.

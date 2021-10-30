@@ -37,10 +37,10 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={DateLife: Leveraging databases and analytical tools to reveal the dated Tree of Life},
+  pdftitle={DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life},
   pdfauthor={Luna L. Sánchez Reyes1,2, Emily Jane McTavish1, \& Brian O'Meara2},
   pdflang={en-EN},
-  pdfkeywords={keywords},
+  pdfkeywords={Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
@@ -111,8 +111,8 @@
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
 \makeatother
-\shorttitle{Title}
-\keywords{keywords\newline\indent Word count: X}
+\shorttitle{DateLife: revealing the dated Tree of Life}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations\newline\indent Word count: 55}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -131,7 +131,7 @@
   \usepackage[shorthands=off,main=english]{babel}
 \fi
 
-\title{DateLife: Leveraging databases and analytical tools to reveal the dated Tree of Life}
+\title{DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life}
 \author{Luna L. Sánchez Reyes\textsuperscript{1,2}, Emily Jane McTavish\textsuperscript{1}, \& Brian O'Meara\textsuperscript{2}}
 \date{}
 
@@ -151,25 +151,28 @@ Correspondence concerning this article should be addressed to Luna L. Sánchez R
 \affiliation{\vspace{0.5cm}\textsuperscript{1} University of California, Merced\\\textsuperscript{2} University of Tennessee, Knoxville}
 
 \abstract{
-One or two sentences providing a \textbf{basic introduction} to the field, comprehensible to a scientist in any discipline.
-
-Two to three sentences of \textbf{more detailed background}, comprehensible to scientists in related disciplines.
-
-One sentence clearly stating the \textbf{general problem} being addressed by this particular study.
-
-One sentence summarizing the main result (with the words ``\textbf{here we show}'' or their equivalent).
-
-Two or three sentences explaining what the \textbf{main result} reveals in direct comparison to what was thought to be the case previously, or how the main result adds to previous knowledge.
-
-One or two sentences to put the results into a more \textbf{general context}.
-
-Two or three sentences to provide a \textbf{broader perspective}, readily comprehensible to a scientist in any discipline.
+Time of evolutionary origin is fundamental for understanding biological processes.
 
 The combination of new analytical techniques, availability of more fossil and molecular
-data, and better practices in data sharing in biology has resulted in a steady accumulation
-of chronograms in public and open databases such as TreeBASE, Dryad, and Open Tree
-of Life for a large quantity and diversity of organisms in the last few decades. However, getting a tree with branch lengths proportional to time remains difficult for many biologists and the non-academic community, despite its importance in many areas of research, education, and science communication. \texttt{datelife} is a service implemented via an R package and a web site
-(\url{http://www.datelife.org/}) for efficient reuse, summary and reanalysis of published data on lineage divergence times. The main workflow starts with at least two taxon names as input, either as tip labels on a tree, or as a simple comma separated character string. A name search is then performed across the chronogram database and positively identified source trees are pruned to maintain queried taxa only and stored as a named list of patristic distance matrices. Source chronogram data can be summarised using branch length summary statistics or variance minimizing approaches to generate a single summary chronogram. Source chronogram data can also be used as calibration points to date a tree containing some or all names from the initial query. If there is no information available for any queried taxa, data can be simulated. All source and summary chronograms can be saved in formats that permit easy reuse and reanalysis. Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology. How well this trees work for this purpose still needs to be tested. \texttt{datelife} will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
+data, and efforts to improve data sharing practices in biology has resulted in a steady accumulation
+of time of lineage divergence in public and open databases such as TreeBASE, Dryad, and Open Tree
+of Life for a large quantity and diversity of organisms in the last few decades.
+
+However, getting a tree with branch lengths proportional to time remains difficult for many biologists and the non-academic community, despite its importance for biological research, medicine, education, and science communication.
+
+Here we present \texttt{datelife}, a service implemented via an R package and a web site
+(\url{http://www.datelife.org/}) for efficient reuse, summary and reanalysis of expert, peer-reviewed, public data on time of lineage divergence.
+
+Main results:
+1. blah
+2. blah
+3. blah
+
+Results in a general context:
+All source and summary chronograms can be saved in formats that permit easy reuse and reanalysis. Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology.
+How well this trees work for this purpose still needs to be tested.
+
+\texttt{datelife} will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
 }
 
 
@@ -177,30 +180,66 @@ of Life for a large quantity and diversity of organisms in the last few decades.
 \begin{document}
 \maketitle
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\begin{verbatim}
+## Warning in data(opentree_chronograms): data set 'opentree_chronograms' not found
+\end{verbatim}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{description}{%
+\section{Description}\label{description}}
 
 We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study.
 
-\hypertarget{participants}{%
-\subsection{Participants}\label{participants}}
+\hypertarget{benchmark}{%
+\section{Benchmark}\label{benchmark}}
 
-\hypertarget{material}{%
-\subsection{Material}\label{material}}
-
-\hypertarget{procedure}{%
-\subsection{Procedure}\label{procedure}}
-
-\hypertarget{data-analysis}{%
-\subsection{Data analysis}\label{data-analysis}}
+\hypertarget{example}{%
+\section{Example}\label{example}}
 
 We used R (Version 4.1.0; R Core Team, 2021) and the R-package \emph{papaja} (Version 0.1.0.9997; Aust \& Barth, 2020) for all our analyses.
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
-
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
+
+\hypertarget{conclusions}{%
+\section{Conclusions}\label{conclusions}}
+
+\hypertarget{availability}{%
+\section{Availability}\label{availability}}
+
+\texttt{datelife} is free and open source and it can be used through its current website
+\url{http://www.datelife.org/query/}, through its R package, and through Phylotastic's project web portal \url{http://phylo.cs.nmsu.edu:3000/}.
+\texttt{datelife}'s website is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker.
+\texttt{datelife}'s R package stable version will be available
+for installation from the CRAN repository (\url{https://cran.r-project.org/package=datelife})
+using the command \texttt{install.packages(pkgs\ =\ "datelife")} from within R. Development versions
+are available from the GitHub repository (\url{https://github.com/phylotastic/datelife})
+and can be installed using the command \texttt{devtools::install\_github("phylotastic/datelife")}.
+
+\hypertarget{supplementary-material}{%
+\section{Supplementary Material}\label{supplementary-material}}
+
+Code used to generate all versions of this manuscript, the biological examples, as well as the benchmark of functionalities are available at \href{https://github.com/LunaSare/datelifeMS1}{datelifeMS1}, \href{https://github.com/LunaSare/datelife_examples}{datelife\_examples}, and \href{https://github.com/LunaSare/datelife_benchmark}{datelife\_benchmark} repositories in LLSR's GitHub account.
+
+\hypertarget{funding}{%
+\section{Funding}\label{funding}}
+
+Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603 to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572.
+
+\hypertarget{acknowledgements}{%
+\section{Acknowledgements}\label{acknowledgements}}
+
+We thank colleagues from the O'Meara Lab at the University
+of Tennesse Knoxville for suggestions, discussions and software testing.
+The late National Evolutionary Synthesis Center (NESCent), which sponsored hackathons
+that led to initial work on this project. The team that assembled \texttt{datelife}'s first proof of concept: Tracy Heath, Jonathan Eastman, Peter Midford, Joseph Brown, Matt Pennell, Mike Alfaro, and Luke Harmon.
+The Open Tree of Life project that provides the open, metadata rich repository of
+trees used for \texttt{datelife}.
+The many scientists who publish their chronograms in an open, reusable form, and
+the scientists who curate them for deposition in the Open Tree of Life repository.
+The NSF for funding nearly all the above, in addition to the ABI grant that funded this project itself.
 
 \newpage
 
@@ -214,6 +253,33 @@ We used R (Version 4.1.0; R Core Team, 2021) and the R-package \emph{papaja} (Ve
 \hypertarget{refs}{}
 \leavevmode\hypertarget{ref-R-papaja}{}%
 Aust, F., \& Barth, M. (2020). \emph{papaja: Create APA manuscripts with R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\leavevmode\hypertarget{ref-barker2012going}{}%
+Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2012). Going to extremes: Contrasting rates of diversification in a recent radiation of new world passerine birds. \emph{Systematic Biology}, \emph{62}(2), 298--320.
+
+\leavevmode\hypertarget{ref-barker2015new}{}%
+Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2015). New insights into new world biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. \emph{The Auk: Ornithological Advances}, \emph{132}(2), 333--348.
+
+\leavevmode\hypertarget{ref-burns2014phylogenetics}{}%
+Burns, K. J., Shultz, A. J., Title, P. O., Mason, N. A., Barker, F. K., Klicka, J., \ldots{} Lovette, I. J. (2014). Phylogenetics and diversification of tanagers (passeriformes: Thraupidae), the largest radiation of neotropical songbirds. \emph{Molecular Phylogenetics and Evolution}, \emph{75}, 41--77.
+
+\leavevmode\hypertarget{ref-claramunt2015new}{}%
+Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's imprint on the evolution of modern birds. \emph{Science Advances}, \emph{1}(11), e1501005.
+
+\leavevmode\hypertarget{ref-gibb2015new}{}%
+Gibb, G. C., England, R., Hartig, G., McLenachan, P. A., Taylor Smith, B. L., McComish, B. J., \ldots{} Penny, D. (2015). New zealand passerines help clarify the diversification of major songbird lineages during the oligocene. \emph{Genome Biology and Evolution}, \emph{7}(11), 2983--2995.
+
+\leavevmode\hypertarget{ref-Hedges2015}{}%
+Hedges, S. B., Marin, J., Suleski, M., Paymer, M., \& Kumar, S. (2015). Tree of life reveals clock-like speciation and diversification. \emph{Molecular Biology and Evolution}, \emph{32}(4), 835--845. \url{https://doi.org/10.1093/molbev/msv037}
+
+\leavevmode\hypertarget{ref-hooper2017chromosomal}{}%
+Hooper, D. M., \& Price, T. D. (2017). Chromosomal inversion differences correlate with range overlap in passerine birds. \emph{Nature Ecology \& Evolution}, \emph{1}(10), 1526.
+
+\leavevmode\hypertarget{ref-Jetz2012}{}%
+Jetz, W., Thomas, G., Joy, J. J. B., Hartmann, K., \& Mooers, A. (2012). The global diversity of birds in space and time. \emph{Nature}, \emph{491}(7424), 444--448. \url{https://doi.org/10.1038/nature11631}
+
+\leavevmode\hypertarget{ref-price2014niche}{}%
+Price, T. D., Hooper, D. M., Buchanan, C. D., Johansson, U. S., Tietze, D. T., Alström, P., \ldots{} others. (2014). Niche filling slows the diversification of himalayan songbirds. \emph{Nature}, \emph{509}(7499), 222.
 
 \leavevmode\hypertarget{ref-R-base}{}%
 R Core Team. (2021). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
