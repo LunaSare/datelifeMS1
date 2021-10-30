@@ -6,15 +6,21 @@ Authors@R:
            comment = c(ORCID = "0000-0001-7668-2528")),
     c(person("Emily Jane", "McTavish", role=c("aut"), email="ejmctavish@gmail.com")
     c(person("Brian", "O'Meara", role=c("aut"), email="bomeara@gmail.com")
-Description: datelifeMS1 contains all the R code, data and markdown files to reproduce locally the first manuscript for the DateLife project. It uses the package drake.
+Description: datelifeMS1 contains all the R code, data and markdown files to reproduce locally the first manuscript for the DateLife project.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
     datelife,
-    drake,
+    datelifeplot,
     knitr,
     rmarkdown
 Remotes:
     phylotastic/datelife
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
