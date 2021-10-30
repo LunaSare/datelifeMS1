@@ -188,10 +188,37 @@ How well this trees work for this purpose still needs to be tested.
 \hypertarget{description}{%
 \section{Description}\label{description}}
 
-We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study.
+The \texttt{datelife} workflow builds off from functions in several R packages (rotl (Michonneau, Brown, \& Winter, 2016), ape (Paradis, Claude, \& Strimmer, 2004),
+geiger (Harmon, Weir, Brock, Glor, \& Challenger, 2008), paleotree (Bapst, 2012), bold (Chamberlain, 2018), phytools (Revell, 2012), taxize (Chamberlain, 2018; Chamberlain \& Szöcs, 2013), phyloch (Heibl, 2008), and phylocomr (Ooms \& Chamberlain, 2018)).
+
+The basic \texttt{datelife} workflow is shown in figure \ref{fig:workflow} and consists of:
+
+\begin{enumerate}
+\item A user providing at least two taxon names as input. Taxon names can be given at the species level or above. The user can provide them as a simple comma separated character string, or as tip labels on a tree. The tree can be provided in newick format (as a character string) or as a "phylo" R object, and can be with or without branch lengths.
+\item A name search is then performed across the chronogram database. Source trees with at least two matching input names are selected, and taxa that do not match the original query are dropped from these source trees.
+<!-- The resulting pruned source chronograms are hereafter referred as source chronograms.  --> <!--# This was generating some confussion, so I'm calling them pruned source chronograms now-->
+Finally, each pruned source chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all further analyses and summarizing algorithms. For the sake of keeping track of authorship later, the matrices are associated to the citation of the original study.
+\item  At this point, the user can already obtain different summary information from their query, allowing the user to take informed decisions for the next steps of the workflow. Types of summary information provided are: a) all pruned source chronograms, b) age of the mrca (most recent common ancestor) of the pruned source chronograms, c) citations of studies where pruned source chronograms were originally published, d) a summary table with all of the above, e) a single summary chronogram of all or a subset of pruned source chronograms, f) a report of succesful matches of input taxon names across pruned source chronograms, and g) the single pruned source chronogram with the most taxa matched.
+\item  Then, source chronogram data can be used as secondary calibration points to date a tree with or without branch lengths containing some or all taxon names from the initial query. %<!--, a taxonomic tree-->
+\item  If there is no information available for any queried taxa, users can also create both age and phylogenetic data for this missing taxa with a variety of algorithms described below.
+\item  Finally, users can easily save all source and summary chronograms in formats that permit easy reuse and reanalyses (newick and R "phylo" format), as well as view and compare results graphically, or construct their own graphs using \texttt{datelife}'s graphic generation functions.
+\end{enumerate}
 
 \hypertarget{benchmark}{%
 \section{Benchmark}\label{benchmark}}
+
+\texttt{datelife}'s code speed was tested on an Apple iMac
+with one 3.4 GHz Intel Core i5 processor.
+We registered variation in computing time of query processing and search through the database relative to number of queried taxon names.
+Query processing time increases roughly linearly with number of input taxon names, and
+increases considerably if the taxonomic name resolution service (TNRS; Boyle et al., 2013) is activated.
+Up to ten thousand names can be processed and searched in less than 30 minutes with the most time consuming settings.
+Once names have been processed as described in methods, a name search through the chronogram database can be performed in less than a minute, even with a very large number of taxon names (Fig. \ref{fig:runtime1}).
+\texttt{datelife}'s code performance was evaluated with a set of unit tests designed and
+implemented with the R package testthat (R Core Team, 2018) that were run both locally
+with the devtools package (R Core Team, 2018), and on a public server --via
+GitHub, using the continuous integration tool Travis CI (\url{https://travis-ci.org}). At
+present, unit tests cover more than 30\% of \texttt{datelife}'s code (\url{https://codecov.io/gh/phylotastic/datelife}).
 
 \hypertarget{example}{%
 \section{Example}\label{example}}
@@ -252,14 +279,26 @@ The NSF for funding nearly all the above, in addition to the ABI grant that fund
 \leavevmode\hypertarget{ref-R-papaja}{}%
 Aust, F., \& Barth, M. (2020). \emph{papaja: Create APA manuscripts with R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
 
+\leavevmode\hypertarget{ref-Bapst2012a}{}%
+Bapst, D. W. (2012). Paleotree: An R package for paleontological and phylogenetic analyses of evolution. \emph{Methods in Ecology and Evolution}, \emph{3}(5), 803--807. \url{https://doi.org/10.1111/j.2041-210X.2012.00223.x}
+
 \leavevmode\hypertarget{ref-barker2012going}{}%
 Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2012). Going to extremes: Contrasting rates of diversification in a recent radiation of new world passerine birds. \emph{Systematic Biology}, \emph{62}(2), 298--320.
 
 \leavevmode\hypertarget{ref-barker2015new}{}%
 Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2015). New insights into new world biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. \emph{The Auk: Ornithological Advances}, \emph{132}(2), 333--348.
 
+\leavevmode\hypertarget{ref-Boyle2013}{}%
+Boyle, B., Hopkins, N., Lu, Z., Raygoza Garay, J. A., Mozzherin, D., Rees, T., \ldots{} Enquist, B. J. (2013). The taxonomic name resolution service: An online tool for automated standardization of plant names. \emph{BMC Bioinformatics}, \emph{14}(1). \url{https://doi.org/10.1186/1471-2105-14-16}
+
 \leavevmode\hypertarget{ref-burns2014phylogenetics}{}%
 Burns, K. J., Shultz, A. J., Title, P. O., Mason, N. A., Barker, F. K., Klicka, J., \ldots{} Lovette, I. J. (2014). Phylogenetics and diversification of tanagers (passeriformes: Thraupidae), the largest radiation of neotropical songbirds. \emph{Molecular Phylogenetics and Evolution}, \emph{75}, 41--77.
+
+\leavevmode\hypertarget{ref-Chamberlain2018}{}%
+Chamberlain, S. (2018). \emph{bold: Interface to Bold Systems API}. Retrieved from \url{https://CRAN.R-project.org/package=bold}
+
+\leavevmode\hypertarget{ref-Chamberlain2013}{}%
+Chamberlain, S. A., \& Szöcs, E. (2013). taxize : taxonomic search and retrieval in R {[}version 2; referees: 3 approved{]}. \emph{F1000Research}, \emph{2}(191), 1--29. \url{https://doi.org/10.12688/f1000research.2-191.v2}
 
 \leavevmode\hypertarget{ref-claramunt2015new}{}%
 Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's imprint on the evolution of modern birds. \emph{Science Advances}, \emph{1}(11), e1501005.
@@ -267,8 +306,14 @@ Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's i
 \leavevmode\hypertarget{ref-gibb2015new}{}%
 Gibb, G. C., England, R., Hartig, G., McLenachan, P. A., Taylor Smith, B. L., McComish, B. J., \ldots{} Penny, D. (2015). New zealand passerines help clarify the diversification of major songbird lineages during the oligocene. \emph{Genome Biology and Evolution}, \emph{7}(11), 2983--2995.
 
+\leavevmode\hypertarget{ref-Harmon2008}{}%
+Harmon, L., Weir, J., Brock, C., Glor, R., \& Challenger, W. (2008). GEIGER: investigating evolutionary radiations. \emph{Bioinformatics}, \emph{24}, 129--131.
+
 \leavevmode\hypertarget{ref-Hedges2015}{}%
 Hedges, S. B., Marin, J., Suleski, M., Paymer, M., \& Kumar, S. (2015). Tree of life reveals clock-like speciation and diversification. \emph{Molecular Biology and Evolution}, \emph{32}(4), 835--845. \url{https://doi.org/10.1093/molbev/msv037}
+
+\leavevmode\hypertarget{ref-Heibl2008}{}%
+Heibl, C. (2008). \emph{PHYLOCH: R language tree plotting tools and interfaces to diverse phylogenetic software packages.} Retrieved from \url{http://www.christophheibl.de/Rpackages.html}
 
 \leavevmode\hypertarget{ref-hooper2017chromosomal}{}%
 Hooper, D. M., \& Price, T. D. (2017). Chromosomal inversion differences correlate with range overlap in passerine birds. \emph{Nature Ecology \& Evolution}, \emph{1}(10), 1526.
@@ -276,11 +321,26 @@ Hooper, D. M., \& Price, T. D. (2017). Chromosomal inversion differences correla
 \leavevmode\hypertarget{ref-Jetz2012}{}%
 Jetz, W., Thomas, G., Joy, J. J. B., Hartmann, K., \& Mooers, A. (2012). The global diversity of birds in space and time. \emph{Nature}, \emph{491}(7424), 444--448. \url{https://doi.org/10.1038/nature11631}
 
+\leavevmode\hypertarget{ref-Michonneau2016}{}%
+Michonneau, F., Brown, J. W., \& Winter, D. J. (2016). rotl: an R package to interact with the Open Tree of Life data. \emph{Methods in Ecology and Evolution}, \emph{7}(12), 1476--1481. \url{https://doi.org/10.1111/2041-210X.12593}
+
+\leavevmode\hypertarget{ref-Ooms2018}{}%
+Ooms, J., \& Chamberlain, S. (2018). \emph{Phylocomr: Interface to 'phylocom'}. Retrieved from \url{https://CRAN.R-project.org/package=phylocomr}
+
+\leavevmode\hypertarget{ref-Paradis2004}{}%
+Paradis, E., Claude, J., \& Strimmer, K. (2004). APE: analyses of phylogenetics and evolution in R language. \emph{Bioinformatics}, \emph{20}, 289--290.
+
 \leavevmode\hypertarget{ref-price2014niche}{}%
 Price, T. D., Hooper, D. M., Buchanan, C. D., Johansson, U. S., Tietze, D. T., Alström, P., \ldots{} others. (2014). Niche filling slows the diversification of himalayan songbirds. \emph{Nature}, \emph{509}(7499), 222.
 
+\leavevmode\hypertarget{ref-RCoreTeam2018}{}%
+R Core Team. (2018). \emph{R: a language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing.
+
 \leavevmode\hypertarget{ref-R-base}{}%
 R Core Team. (2021). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
+
+\leavevmode\hypertarget{ref-Revell2012}{}%
+Revell, L. J. (2012). Phytools: An r package for phylogenetic comparative biology (and other things). \emph{Methods in Ecology and Evolution}, \emph{3}, 217--223.
 
 \endgroup
 

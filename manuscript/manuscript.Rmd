@@ -70,7 +70,7 @@ abstract: |
   <!-- https://tinyurl.com/ybremelq -->
 
 keywords          : "Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations"
-wordcount         : "55"
+wordcount         : "571"
 
 bibliography      : ["paper_references.bib"]
 
@@ -108,9 +108,46 @@ availability <- ifelse(rpackage_available, "is available", "will be available")
 
 
 # Description
-We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+The `datelife` workflow builds off from functions in several R packages (rotl [@Michonneau2016], ape [@Paradis2004],
+geiger [@Harmon2008], paleotree [@Bapst2012a], bold [@Chamberlain2018], phytools [@Revell2012], taxize [@Chamberlain2013; @Chamberlain2018], phyloch [@Heibl2008], and phylocomr [@Ooms2018]).
+
+The basic `datelife` workflow is shown in figure \ref{fig:workflow} and consists of:
+
+\begin{enumerate}
+\item A user providing at least two taxon names as input. Taxon names can be given at the species level or above. The user can provide them as a simple comma separated character string, or as tip labels on a tree. The tree can be provided in newick format (as a character string) or as a "phylo" R object, and can be with or without branch lengths.
+\item A name search is then performed across the chronogram database. Source trees with at least two matching input names are selected, and taxa that do not match the original query are dropped from these source trees.
+<!-- The resulting pruned source chronograms are hereafter referred as source chronograms.  --> <!--# This was generating some confussion, so I'm calling them pruned source chronograms now-->
+Finally, each pruned source chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all further analyses and summarizing algorithms. For the sake of keeping track of authorship later, the matrices are associated to the citation of the original study.
+\item  At this point, the user can already obtain different summary information from their query, allowing the user to take informed decisions for the next steps of the workflow. Types of summary information provided are: a) all pruned source chronograms, b) age of the mrca (most recent common ancestor) of the pruned source chronograms, c) citations of studies where pruned source chronograms were originally published, d) a summary table with all of the above, e) a single summary chronogram of all or a subset of pruned source chronograms, f) a report of succesful matches of input taxon names across pruned source chronograms, and g) the single pruned source chronogram with the most taxa matched.
+\item  Then, source chronogram data can be used as secondary calibration points to date a tree with or without branch lengths containing some or all taxon names from the initial query. %<!--, a taxonomic tree-->
+\item  If there is no information available for any queried taxa, users can also create both age and phylogenetic data for this missing taxa with a variety of algorithms described below.
+\item  Finally, users can easily save all source and summary chronograms in formats that permit easy reuse and reanalyses (newick and R "phylo" format), as well as view and compare results graphically, or construct their own graphs using \texttt{datelife}'s graphic generation functions.
+\end{enumerate}
 
 # Benchmark
+
+`datelife`'s code speed was tested on an Apple iMac
+with one 3.4 GHz Intel Core i5 processor. <!--No multiprocessor tests were performed-->
+We registered variation in computing time of query processing and search through the database relative to number of queried taxon names.
+Query processing time increases roughly linearly with number of input taxon names, and
+increases considerably if the taxonomic name resolution service [TNRS; @Boyle2013] is activated.
+<!-- Defining tnrs here again, bc we only talk about it two times, so it easy to forget it -->
+Up to ten thousand names can be processed and searched in less than 30 minutes with the most time consuming settings.
+Once names have been processed as described in methods, a name search through the chronogram database can be performed in less than a minute, even with a very large number of taxon names (Fig. \ref{fig:runtime1}).
+<!--Speed of other datelife workflows? NO, bc it reflects speed from other software mainly. But I will put a sentence about it...
+Summarizing `datelife` results processing times: shows sdm speed, clustering methods speed;
+generating new trees: shows bladj speed;
+Adding dates processing time: reflects more mrbayes speed than anything;
+get_bold_otol_tree running time: reflects bold downloading data speed.-->
+<!--Speed with different number of chronograms in database? NO-->
+<!--Speed of web interface and of r package in computers with different capacities? NOOOO-->
+`datelife`'s code performance was evaluated with a set of unit tests designed and
+implemented with the R package testthat [@RCoreTeam2018] that were run both locally
+with the devtools package [@RCoreTeam2018], and on a public server --via
+GitHub, using the continuous integration tool Travis CI (<https://travis-ci.org>). At
+present, unit tests cover more than 30% of `datelife`'s code (<https://codecov.io/gh/phylotastic/datelife>). <!-- unit test make code robust, verifiable, debuggable, -->
+
 
 # Example
 We used `r cite_r("r-references.bib")` for all our analyses.
