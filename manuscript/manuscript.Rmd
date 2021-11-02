@@ -70,7 +70,7 @@ abstract: |
   <!-- https://tinyurl.com/ybremelq -->
 
 keywords          : "Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations"
-wordcount         : "2628"
+wordcount         : "2650"
 
 bibliography      : ["paper_references.bib"]
 
@@ -84,7 +84,11 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_pdf
+output            : 
+  papaja::apa6_pdf:
+    includes      :
+      # in_header: preamble.tex
+      after_body  : [figures.tex]
 
 nocite: |
   @barker2012going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche
@@ -120,8 +124,7 @@ The basic `datelife` workflow is shown in figure \ref{fig:workflow}, largely:
 
 \begin{enumerate}
 \item It starts with an input consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. The tree can be provided in newick format, also as a character string, or as a "phylo" R object, and can have any type of branch lengths or none. 
-\item The input taxon names are cleaned with TNRS and saved as a `datelifeQuery` object. If taxon names are taxonomic groups above the species level, `datelife` has two alternative behaviors. If the "get species from taxon" flag is active, `datelife` will retrieve all species within a higher taxon name and add the species names to the input. If the flag is inactive, `datelife` will drop the higher taxon names from the input. The cleaned input taxon names are searched across the source chronogram database. Source chronograms with at least two matching input taxon names are singled out and pruned down to preserve only input taxon names in the tips of the chronograms. 
-<!-- The resulting pruned source chronograms are hereafter referred as source chronograms.  --> <!-- This was generating some confusion, so I'm calling them pruned source chronograms now-->
+\item The input taxon names are cleaned with TNRS and saved as a `datelifeQuery` object. If taxon names are taxonomic groups above the species level, `datelife` has two alternative behaviors. If the "get species from taxon" flag is active, `datelife` will retrieve all species within a higher taxon name and add the species names to the input. If the flag is inactive, `datelife` will drop the higher taxon names from the input. The cleaned input taxon names are searched across the source chronogram database. Source chronograms with at least two matching input taxon names are singled out and pruned down to preserve only input taxon names in the tips of the chronograms.
 Then, each pruned source chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all downstream analyses and summaries. The matrices are associated to the citation of the original study and stored as a `datelifeResult` object.
 \item  At this point, various summary data can be obtained to inform decisions for the next steps of the analysis workflow. Types of summary information provided are: a) all pruned source chronograms, b) age of the MRCA (most recent common ancestor) of the pruned source chronograms, c) citations of studies where pruned source chronograms were originally published, d) a summary table with all of the above, e) a single summary chronogram of all or a subset of pruned source chronograms, f) a report of successful matches of input taxon names across pruned source chronograms, and g) the single pruned source chronogram with the most matching input taxon names.
 \item  Finally, time of lineage divcergence obtained from the pruned source chronograms can be used as secondary calibration points to date a tree with or without branch lengths containing some or all input taxon names. %<!--, a taxonomic tree-->
