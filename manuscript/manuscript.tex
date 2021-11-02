@@ -40,7 +40,7 @@
   pdftitle={DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life},
   pdfauthor={Luna L. Sánchez Reyes1,2, Emily Jane McTavish1, \& Brian O'Meara2},
   pdflang={en-EN},
-  pdfkeywords={Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations},
+  pdfkeywords={Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
@@ -112,7 +112,7 @@
   {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{DateLife: revealing the dated Tree of Life}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations\newline\indent Word count: 2650}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 2949}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -155,22 +155,17 @@ Time of evolutionary origin is fundamental for research in the natural sciences,
 Despite an increased availability of fossil and molecular data, and time-efficient analytical techniques, achieving a high-quality reconstruction of time of evolutionary origin as a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is still a difficult and time-consuming task for a majority of interested parties.
 Yet, the amount of published chronograms has increased significantly in the past two decades, and a non-negligeable proportion of these data have been steadily accumulating in public, open databases such as TreeBASE and Open Tree
 of Life, exposing a wealth of expertly-curated and peer-reviewed data on time of evolutionary origin in a programatic and reusable way, for a large quantity and diversity of organisms.
-This trend results from intensive and localized efforts for improving data sharing practices, as well as incentivizing open science in biology. Despite these trends, accessibility for time data is not that good.
-R has become a widely used element of the biological data analyst toolkit. Hence,to improve accessibility of time data we developed an R package that access these data and eases interaction, reanalysis and reuse of it, incorporation of these data into the evolutionary workflow.
+This trend results from intensive and localized efforts for improving data sharing practices, as well as incentivizing open science in biology. Despite these trends, accessibility to state-of-the-art knowledge on time of evolutionary origin is still reduced.
 
-Here we present \texttt{datelife}, a service implemented as an R package and a web site
-(www.datelife.org) for increased accessibility, efficient reuse, summary and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
+Here we present \texttt{datelife}, a service implemented as an R package and an Rshiny website application
+available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
 
-Main results:
-1. blah
-2. blah
-3. blah
+The main workflow of \texttt{datelife} is to construct a chronogram for any given combination of taxon names, by searching a local chronogram database constructed and curated from the Open Tree of Life (OpenTree), which incorporates phylogenetic data from the TreeBASE database as well.
+We implement and test methods for summarizing time data from multiple source chronograms using supertree and congruification algorithms. Additionally, time data extracted from source chronograms can be usedas secondary calibration points to add branch lengths proportional to absolute time to a tree topology using alternative dating methods.
 
-Results in a general context:
-All source and summary chronograms can be saved in formats that permit easy reuse and reanalysis. Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology.
-How well this trees work for this purpose still needs to be tested.
+Summary and newly generated trees are potentially useful to evaluate evolutionary hypothesis in different areas of research in biology. How well this chronograms work for this purpose still needs to be tested.
 
-\texttt{datelife} will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
+\texttt{datelife} will be useful to increase awereness on the existing variation in expert time of divergence data, and might foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, providing a framework for a more informed interpretation of evolutionary results.
 }
 
 
@@ -181,10 +176,18 @@ How well this trees work for this purpose still needs to be tested.
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
+Time of evolutionary origin represents a fundamental piece of information for
+understanding biological processes in many areas of research, from developmental to conservation biology (Felsenstein, 1985; Webb, 2000), from historical biogeography to species diversification studies (Morlon, 2014; Posadas, Crisci, \& Katinas, 2006).
+The number of studies publishing phylogenies with branch lengths proportional to absolute time (hereafter chronograms) have constantly increased in number for the last two decades (Kumar, Stecher, Suleski, \& Hedges, 2017).
+Still, generating a chronogram is not an easy task unless you have specialized training, and a wealth of time and resources: it requires inferring a phylogenetic tree using genetic markers, obtaining independent time data from the fossil record, and understanding the placement of fossils on the tree as well as their limits for analysis. That is why there has been an urge for promoting and facilitating the reuse of the vast amount of phylogenetic and evolutionary time data that has been made available in publications, for the advantage of research relying on this information (Stoltzfus et al., 2013; Webb \& Donoghue, 2005).
+
+A tool for efficient reuse of expert, published data on time of evolutionary origin should have an open and fully public chronogram database storing data in a format suitable for scientific reuse, an automatised way of accessing the information, and straightforward means of comparing and summarizing chronogram information as needed by the user.
+A prototype service aiming to meet this criteria was developed over a series of hackathons at the National Evolutionary Synthesis Center (Stoltzfus et al., 2013).
+Here we present the full implementation of the \texttt{datelife} service, constituted by an R package and a web site available at www.datelife.org/query/.
+The current implementation of \texttt{datelife} performs the tasks described above. It features an algorithm for automatic curation and maintenance of an open database of chronograms pulled from the OpenTree public repository, methods to summarize and compare source chronograms, and new functions to visualize and graphically compare source and summary chronograms.
+
 \hypertarget{implementationdescriptionworkflow}{%
 \section{Implementation/Description/Workflow}\label{implementationdescriptionworkflow}}
-
-The main goal of \texttt{datelife} is to generate a chronogram for any given combination of taxon names, based on expert scientific information.
 
 The \texttt{datelife} workflow builds off of functions from several R packages (rotl (Michonneau, Brown, \& Winter, 2016), ape (Paradis, Claude, \& Strimmer, 2004),
 geiger (Harmon, Weir, Brock, Glor, \& Challenger, 2008), paleotree (Bapst, 2012), bold (Chamberlain, 2018), phytools (Revell, 2012), taxize (Chamberlain, 2018; Chamberlain \& Szöcs, 2013), phyloch (Heibl, 2008), and phylocomr (Ooms \& Chamberlain, 2018)).
@@ -192,7 +195,7 @@ geiger (Harmon, Weir, Brock, Glor, \& Challenger, 2008), paleotree (Bapst, 2012)
 The basic \texttt{datelife} workflow is shown in figure \ref{fig:workflow}, largely:
 
 \begin{enumerate}
-\item It starts with an input consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. The tree can be provided in newick format, also as a character string, or as a "phylo" R object, and can have any type of branch lengths or none. 
+\item It starts with an input consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. The tree can be provided in newick format, also as a character string, or as a "phylo" R object, and can have any type of branch lengths or none.
 \item The input taxon names are cleaned with TNRS and saved as a `datelifeQuery` object. If taxon names are taxonomic groups above the species level, `datelife` has two alternative behaviors. If the "get species from taxon" flag is active, `datelife` will retrieve all species within a higher taxon name and add the species names to the input. If the flag is inactive, `datelife` will drop the higher taxon names from the input. The cleaned input taxon names are searched across the source chronogram database. Source chronograms with at least two matching input taxon names are singled out and pruned down to preserve only input taxon names in the tips of the chronograms.
 Then, each pruned source chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all downstream analyses and summaries. The matrices are associated to the citation of the original study and stored as a `datelifeResult` object.
 \item  At this point, various summary data can be obtained to inform decisions for the next steps of the analysis workflow. Types of summary information provided are: a) all pruned source chronograms, b) age of the MRCA (most recent common ancestor) of the pruned source chronograms, c) citations of studies where pruned source chronograms were originally published, d) a summary table with all of the above, e) a single summary chronogram of all or a subset of pruned source chronograms, f) a report of successful matches of input taxon names across pruned source chronograms, and g) the single pruned source chronogram with the most matching input taxon names.
@@ -244,7 +247,7 @@ More examples and code used to generate these trees were developed on an open re
 
 The main goal of \texttt{datelife} is to make expert information on time of lineage divergence easily accesible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is a very fast tool that fulfills the quality of openness and does not require any expert biological knowledge from users --besides the names of the organisms they want to work with-- for any of its functionalities. However, it has many flaws. Some of them can be overcome, some of them might represent limitations.
 
-Up to the time this manuscript was written, \texttt{datelife}'s chronogram database had 231 chronograms, pulled entirely from OpenTree's tree repository, the only public tree repository from where \texttt{datelife} can currently get chronograms to construct its database. This represents 5.79\% of the largest existing chronogram database, TimeTree, which has a collection of 3,998 chronograms as of November 01 2021. Unfortunately, TimeTree's database is not open for scientific reuse nor automatised data mining (Kumar, Stecher, Suleski, \& Hedges, 2017).
+Up to the time this manuscript was written, \texttt{datelife}'s chronogram database had 231 chronograms, pulled entirely from OpenTree's tree repository, the only public tree repository from where \texttt{datelife} can currently get chronograms to construct its database. This represents 5.79\% of the largest existing chronogram database, TimeTree, which has a collection of 3,998 chronograms as of November 02 2021. Unfortunately, TimeTree's database is not open for scientific reuse nor automatised data mining (Kumar et al., 2017).
 In 2015, a synthetic chronogram was constructed from 2,274 chronograms available at the time on the TimeTree database (Hedges, Marin, Suleski, Paymer, \& Kumar, 2015). This is the only synthetic TimeTree chronogram that has been made publicly available and deposited on the OpenTree repository, and is part of datelife's database now. Hence, the amount of lineages represented in datelife's database is at least as substantial as TimeTree's, ensuring that some information will be available for any given taxon or lineage. Regrettably, this does not ensure that the full state of knowledge of time of divergence of the taxon/lineage will be available.
 Incorporation of more published chronograms into \texttt{datelife}'s database is crucial to improve its services. One option to increase our database is the Dryad data repository. Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined on a second step, by a curator.
 Consequently, we would like to emphasize on the importance of sharing chronogram data for the benefit of the scientific community as a whole, into repositories that require expert input and manual curation, such as OpenTree's tree repository (McTavish et al., 2015).
@@ -353,6 +356,9 @@ Chamberlain, S. A., \& Szöcs, E. (2013). taxize : taxonomic search and retrieva
 \leavevmode\hypertarget{ref-claramunt2015new}{}%
 Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's imprint on the evolution of modern birds. \emph{Science Advances}, \emph{1}(11), e1501005.
 
+\leavevmode\hypertarget{ref-Felsenstein1985a}{}%
+Felsenstein, J. (1985). Phylogenies and the Comparative Method. \emph{The American Naturalist}, \emph{125}(1), 1--15. Retrieved from \url{http://www.jstor.org/stable/2461605}
+
 \leavevmode\hypertarget{ref-gibb2015new}{}%
 Gibb, G. C., England, R., Hartig, G., McLenachan, P. A., Taylor Smith, B. L., McComish, B. J., \ldots{} Penny, D. (2015). New zealand passerines help clarify the diversification of major songbird lineages during the oligocene. \emph{Genome Biology and Evolution}, \emph{7}(11), 2983--2995.
 
@@ -383,11 +389,17 @@ McTavish, E. J., Hinchliff, C. E., Allman, J. F., Brown, J. W., Cranston, K. A.,
 \leavevmode\hypertarget{ref-Michonneau2016}{}%
 Michonneau, F., Brown, J. W., \& Winter, D. J. (2016). rotl: an R package to interact with the Open Tree of Life data. \emph{Methods in Ecology and Evolution}, \emph{7}(12), 1476--1481. \url{https://doi.org/10.1111/2041-210X.12593}
 
+\leavevmode\hypertarget{ref-Morlon2014}{}%
+Morlon, H. (2014). Phylogenetic approaches for studying diversification. \emph{Ecology Letters}, \emph{17}(4), 508--525. \url{https://doi.org/10.1111/ele.12251}
+
 \leavevmode\hypertarget{ref-Ooms2018}{}%
 Ooms, J., \& Chamberlain, S. (2018). \emph{Phylocomr: Interface to 'phylocom'}. Retrieved from \url{https://CRAN.R-project.org/package=phylocomr}
 
 \leavevmode\hypertarget{ref-Paradis2004}{}%
 Paradis, E., Claude, J., \& Strimmer, K. (2004). APE: analyses of phylogenetics and evolution in R language. \emph{Bioinformatics}, \emph{20}, 289--290.
+
+\leavevmode\hypertarget{ref-posadas2006historical}{}%
+Posadas, P., Crisci, J. V., \& Katinas, L. (2006). Historical biogeography: A review of its basic concepts and critical issues. \emph{Journal of Arid Environments}, \emph{66}(3), 389--403.
 
 \leavevmode\hypertarget{ref-price2014niche}{}%
 Price, T. D., Hooper, D. M., Buchanan, C. D., Johansson, U. S., Tietze, D. T., Alström, P., \ldots{} others. (2014). Niche filling slows the diversification of himalayan songbirds. \emph{Nature}, \emph{509}(7499), 222.
@@ -416,11 +428,20 @@ Schenk, J. J. (2016). Consequences of secondary calibrations on divergence time 
 \leavevmode\hypertarget{ref-smith2018constructing}{}%
 Smith, S. A., \& Brown, J. W. (2018). Constructing a broadly inclusive seed plant phylogeny. \emph{American Journal of Botany}, \emph{105}(3), 302--314.
 
+\leavevmode\hypertarget{ref-Stoltzfus2013}{}%
+Stoltzfus, A., Lapp, H., Matasci, N., Deus, H., Sidlauskas, B., Zmasek, C. M., \ldots{} Jordan, G. (2013). Phylotastic! Making tree-of-life knowledge accessible, reusable and convenient. \emph{BMC Bioinformatics}, \emph{14}. \url{https://doi.org/10.1186/1471-2105-14-158}
+
 \leavevmode\hypertarget{ref-title2016macrophylogenies}{}%
 Title, P. O., \& Rabosky, D. L. (2016). Do Macrophylogenies Yield Stable Macroevolutionary Inferences? An Example from Squamate Reptiles. \emph{Systematic Biology}, syw102. \url{https://doi.org/10.1093/sysbio/syw102}
 
+\leavevmode\hypertarget{ref-Webb2000}{}%
+Webb, C. O. (2000). Exploring the Phylogenetic Structure of Ecological Communities : An Example for Rain Forest Trees. \emph{The American Naturalist}, \emph{156}(2), 145--155.
+
 \leavevmode\hypertarget{ref-Webb2008}{}%
 Webb, C. O., Ackerly, D. D., \& Kembel, S. W. (2008). Phylocom: Software for the analysis of phylogenetic community structure and trait evolution. \emph{Bioinformatics}, \emph{24}(18), 2098--2100. \url{https://doi.org/10.1093/bioinformatics/btn358}
+
+\leavevmode\hypertarget{ref-webb2005phylomatic}{}%
+Webb, C. O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for applied phylogenetics. \emph{Molecular Ecology Notes}, \emph{5}(1), 181--183.
 
 \endgroup
 

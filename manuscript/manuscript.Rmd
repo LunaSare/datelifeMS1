@@ -65,7 +65,7 @@ abstract: |
 
 
 keywords          : "Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations"
-wordcount         : "2650"
+wordcount         : "2949"
 
 bibliography      : ["paper_references.bib"]
 
@@ -106,6 +106,15 @@ load("../data/dr.rda")
 
 # Introduction
 
+Time of evolutionary origin represents a fundamental piece of information for
+understanding biological processes in many areas of research, from developmental to conservation biology [@Felsenstein1985a; @Webb2000], from historical biogeography to species diversification studies [@posadas2006historical; @Morlon2014].
+The number of studies publishing phylogenies with branch lengths proportional to absolute time (hereafter chronograms) have constantly increased in number for the last two decades [@Kumar2017].
+Still, generating a chronogram is not an easy task unless you have specialized training, and a wealth of time and resources: it requires inferring a phylogenetic tree using genetic markers, obtaining independent time data from the fossil record, and understanding the placement of fossils on the tree as well as their limits for analysis. That is why there has been an urge for promoting and facilitating the reuse of the vast amount of phylogenetic and evolutionary time data that has been made available in publications, for the advantage of research relying on this information [@webb2005phylomatic; @Stoltzfus2013].
+
+A tool for efficient reuse of expert, published data on time of evolutionary origin should have an open and fully public chronogram database storing data in a format suitable for scientific reuse, an automatised way of accessing the information, and straightforward means of comparing and summarizing chronogram information as needed by the user.
+A prototype service aiming to meet this criteria was developed over a series of hackathons at the National Evolutionary Synthesis Center [@Stoltzfus2013].
+Here we present the full implementation of the `datelife` service, constituted by an R package and a web site available at www.datelife.org/query/.
+The current implementation of `datelife` performs the tasks described above. It features an algorithm for automatic curation and maintenance of an open database of chronograms pulled from the OpenTree public repository, methods to summarize and compare source chronograms, and new functions to visualize and graphically compare source and summary chronograms.
 
 # Implementation/Description/Workflow
 
