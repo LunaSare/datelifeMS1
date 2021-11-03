@@ -8,3 +8,4 @@ datelife_paper1.Rproj
 *.html
 .DS_Store
 dev.txt
+*.Rproj
