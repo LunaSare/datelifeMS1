@@ -9,3 +9,6 @@ datelife_paper1.Rproj
 .DS_Store
 dev.txt
 *.Rproj
+*.fff
+*.aux
+*.log
