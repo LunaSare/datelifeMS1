@@ -10,7 +10,7 @@ Description: datelifeMS1 contains all the R code, data and markdown files to rep
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports:
     datelife,
     datelifeplot,

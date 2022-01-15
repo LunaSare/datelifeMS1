@@ -1,21 +1,20 @@
-## code to prepare paper datasets goes here
+## code to prepare paper datasets and figures goes here
 
 utils::data("opentree_chronograms", package = "datelife")
 
-dq = datelife::make_datelife_query(input = "fringilidae", get_spp_from_taxon = TRUE)
-usethis::use_data(dq, overwrite = TRUE)
+dquery = datelife::make_datelife_query(input = "fringilidae", get_spp_from_taxon = TRUE)
 
-dr = datelife::get_datelife_result(input = dq, cache = opentree_chronograms)
-usethis::use_data(dr, overwrite = TRUE)
+usethis::use_data(dquery, overwrite = TRUE)
 
-summ = datelife::get_taxon_summary(datelife_query = dq, datelife_result = dr)
-usethis::use_data(summ, overwrite = TRUE)
+dres = datelife::get_datelife_result(input = dquery, cache = opentree_chronograms)
 
-phyloall = datelife::summarize_datelife_result(datelife_query = dq,
-                                    datelife_result = dr,
-                                    summary_format = "phylo_all",
-                                    taxon_summary = "none")
-usethis::use_data(phyloall, overwrite = TRUE)
+usethis::use_data(dres, overwrite = TRUE)
+
+dsumm = datelife::summary.datelifeResult(datelife_query = dquery, object = dres)
+
+usethis::use_data(dsumm, overwrite = TRUE)
+
+
 
 
 # LTT plot
@@ -38,7 +37,7 @@ cb_cols2 = c("#440154FF",
              "#F0E442",
              "#95D840FF")
 ltt_plot = datelifeplot::plot_ltt_phyloall(taxon = "Fringillidae",
-                             phy = phyloall,
+                             phy = dsumm$phyloall,
                              ltt_colors = cb_cols1,
                              tax_datedotol = NULL,
                              file_name = "ltt_plot_poster.pdf",
