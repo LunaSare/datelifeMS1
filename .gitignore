@@ -12,3 +12,4 @@ dev.txt
 *.fff
 *.aux
 *.log
+inst/doc

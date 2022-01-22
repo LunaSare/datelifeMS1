@@ -1,0 +1,135 @@
+---
+title: "node-age-comparison"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{node-age-comparison}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all()
+```
+
+## Data for node age comparison
+
+We will use the `datelifeQuery`, `datelifeResult` and `datelifeSummary` objects that we created in "Fringillidae.Rmd". These objects are saved in the data folder and can be loaded with the function `data()`:
+
+```{r}
+data("dquery", package = "datelifeMS1")
+data("dres", package = "datelifeMS1")
+data("dsumm", package = "datelifeMS1")
+```
+
+## Extract all available calibrations
+
+We can extract calibrations from pruned chronograms in `dsumm$phylo_all` with the function `datelife::extract_calibrations_phylo`.
+
+
+```{r}
+calibs_all <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
+                                               each = FALSE)
+# length(calibs_all)
+class(calibs_all)
+# names(calibs_all)
+# nrow(calibs_all)
+# unique(calibs_all$reference)
+```
+
+There are only 9 unique studies.
+<!--
+```{r}
+calibs_each <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
+                                               each = TRUE)
+
+# length(calibs_each)
+# class(calibs_each)
+# names(calibs_each)
+# # sapply(calibs_each, nrow)
+# sum(sapply(calibs_each, nrow))
+```
+
+`calibs_all` and `calibs_each` have the same information.
+-->
+
+## Choose a topology
+
+We have several options within the `datelifeSummary` object `dsumm`:
+
+```{r}
+dsumm$phylo_median
+dsumm$phylo_sdm
+dsumm$phylo_biggest
+```
+
+However, none of this contain all of our input taxon names. Our best shot to get a topology with most of our input taxa is getting an Open Tree of Life subtree with `rotl::tol_induced_subtree()`. We will use the Open Tree of Life Taxonomy (OTT) identifier numbers in our `datelifeQuery` object, `dquery$ott_ids` as input:
+
+```{r, eval FALSE}
+rotl::tnrs_match_names("fringillidae")
+#>   search_string  unique_name approximate_match ott_id is_synonym
+#> 1  fringillidae Fringillidae             FALSE 839319      FALSE
+#>   flags number_matches
+#> 1                    1
+
+rotl::is_in_tree(ott_ids = 839319)
+#> [1] FALSE
+
+# rotl::tol_subtree(ott_id = "839319")
+
+ot <- rotl::tol_induced_subtree(ott_ids = dquery$ott_ids, label_format = "name")
+ot
+```
+
+## Match calibrations to a chosen topology
+
+Now we can map secondary calibrations that we extracted to our chosen topology `ot`. We will use the function `datelife::match_all_calibrations()`:
+
+```{r}
+matched <- datelife::match_all_calibrations(phy = ot, calibrations = calibs_all)
+
+class(matched)
+names(matched)
+names(matched$matched_calibrations)
+nrow(matched$matched_calibrations)
+class(matched$matched_calibrations)
+```
+
+Write data down as a csv file for visual inspection and archiving:
+
+```{r}
+write.csv(matched$matched_calibrations, file = "../data-raw/fringillidae-matched-calibrations.csv")
+```
+
+
+## Summarize our `matchedCalibrations` object
+
+We will use the function `datelife::summary.matchedCalibrations()`:
+
+```{r}
+csumm <- datelife:::summary.matchedCalibrations(matched$matched_calibrations)
+names(csumm)
+nrow(csumm$not_in_phy)
+```
+There are 12 taxon pairs that were not present in our target tree topology, as shown in `csumm$not_in_phy`.
+
+Our calibrations of interest are in `csumm$in_phy`:
+
+```{r}
+sapply(colnames(csumm$in_phy),function(i) is.factor(csumm$in_phy[[i]]))
+
+plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", pch = 20, col = csumm$in_phy$mrca_node_name)
+
+plot(-csumm$in_phy$MaxAge[1:85], csumm$in_phy$mrca_node_number[1:85], xlab = "Time (myrs)", ylab = "Node Number", pch = as.character((csumm$in_phy$mrca_node_number-289)[1:85]), col = csumm$in_phy$reference[1:85])
+```
+
+```{r}
+matched$phy$calibration_distribution
+ls(matched$phy)
+```
