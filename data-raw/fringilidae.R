@@ -1,16 +1,27 @@
 ## code to prepare paper datasets and figures goes here
 
+# Load the chronogram database i.e, OpenTree chronograms
+
 utils::data("opentree_chronograms", package = "datelife")
+
+# Prepare your taxon names for a datelife search
 
 dquery = datelife::make_datelife_query(input = "fringilidae", get_spp_from_taxon = TRUE)
 
+length(dquery$cleaned_names) # 289 species names in Fringilidae
+
 usethis::use_data(dquery, overwrite = TRUE)
 
-dres = datelife::get_datelife_result(input = dquery, cache = opentree_chronograms)
+# Run a datelife search: matching at least 2 species name sor mroe in the chronogram database
+
+frin_sample <- sample(x = dquery$cleaned_names, size = 15)
+dres = datelife::get_datelife_result(input = frin_sample, cache = opentree_chronograms)
 
 usethis::use_data(dres, overwrite = TRUE)
 
-dsumm = datelife::summary.datelifeResult(datelife_query = dquery, object = dres)
+# Summarize the datelife result
+
+dsumm = datelife:::summary.datelifeResult(datelife_query = dquery, object = dres)
 
 usethis::use_data(dsumm, overwrite = TRUE)
 

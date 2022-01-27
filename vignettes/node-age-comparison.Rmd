@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::load_all()
+devtools::install_github("phylotastic/datelife")
+
 ```
 
 ## Data for node age comparison
@@ -30,22 +31,57 @@ data("dsumm", package = "datelifeMS1")
 
 ## Extract all available calibrations
 
-We can extract calibrations from pruned chronograms in `dsumm$phylo_all` with the function `datelife::extract_calibrations_phylo`.
+We can extract calibrations directly from the chronograms summarized from the `datelifeResult` object `dres` that are stored in `dsumm$phylo_all`. 
 
+TODO: Create a print method for a phylo_all datelifeResult that summarizes number of studies and number of chronograms available per study.
+
+
+Let's explore them:
 
 ```{r}
-calibs_all <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
-                                               each = FALSE)
-# length(calibs_all)
-class(calibs_all)
-# names(calibs_all)
-# nrow(calibs_all)
-# unique(calibs_all$reference)
+dsumm$phylo_all
+```
+We have 13 chronograms in there. Let's get the reference for the study they were originally published on:
+
+```{r}
+names(dsumm$phylo_all)
 ```
 
-There are only 9 unique studies.
+Reading through the references, we can see that there are some duplicated ones. This means that we have several chronograms from each of those studies.
+We can identify them with the function `duplicated()`:
+
+```{r}
+names(dsumm$phylo_all)[duplicated(names(dsumm$phylo_all))]
+```
+
+
+We will use the function `datelife::extract_calibrations_phylo`.
+
+
+
+
+```{r}
+all_calibrations <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
+                                               each = FALSE)
+class(all_calibrations)
+names(all_calibrations)
+nrow(all_calibrations)
+```
+Our `all_calibrations` object is a `data.frame` of `r nrow(all_calibrations)` rows and 6 columns: 
+ - `$MRCA` 
+ - `$MaxAge`
+ - `$MinAge`
+ - `$taxonA`
+ - `$taxonB`
+ - `$reference`
+
 <!--
 ```{r}
+length(all_calibrations$MRCA)
+length(unique(all_calibrations$MRCA))
+all_calibrations$MRCA[duplicated(all_calibrations$MRCA)]
+
+
 calibs_each <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
                                                each = TRUE)
 
@@ -56,7 +92,7 @@ calibs_each <- datelife::extract_calibrations_phylo(input = dsumm$phylo_all,
 # sum(sapply(calibs_each, nrow))
 ```
 
-`calibs_all` and `calibs_each` have the same information.
+`all_calibrations` and `calibs_each` have the same information.
 -->
 
 ## Choose a topology
@@ -69,7 +105,7 @@ dsumm$phylo_sdm
 dsumm$phylo_biggest
 ```
 
-However, none of this contain all of our input taxon names. Our best shot to get a topology with most of our input taxa is getting an Open Tree of Life subtree with `rotl::tol_induced_subtree()`. We will use the Open Tree of Life Taxonomy (OTT) identifier numbers in our `datelifeQuery` object, `dquery$ott_ids` as input:
+However, none of this contain all of our `r length(dquery$cleaned_names)` input taxon names. Our best shot to get a topology with most of our input taxa is getting an Open Tree of Life subtree with `rotl::tol_induced_subtree()`. We will use the Open Tree of Life Taxonomy (OTT) identifier numbers in our `datelifeQuery` object, `dquery$ott_ids` as input:
 
 ```{r, eval FALSE}
 rotl::tnrs_match_names("fringillidae")
@@ -89,10 +125,10 @@ ot
 
 ## Match calibrations to a chosen topology
 
-Now we can map secondary calibrations that we extracted to our chosen topology `ot`. We will use the function `datelife::match_all_calibrations()`:
+Now we can match the extracted calibrations unto nodes of our chosen tree, `ot`. For this we will use the function `datelife::match_all_calibrations()`:
 
 ```{r}
-matched <- datelife::match_all_calibrations(phy = ot, calibrations = calibs_all)
+matched <- datelife::match_all_calibrations(phy = dsumm$phylo_sdm, calibrations = all_calibrations)
 
 class(matched)
 names(matched)
@@ -104,7 +140,7 @@ class(matched$matched_calibrations)
 Write data down as a csv file for visual inspection and archiving:
 
 ```{r}
-write.csv(matched$matched_calibrations, file = "../data-raw/fringillidae-matched-calibrations.csv")
+write.csv(matched$matched_calibrations, file = "../data-raw/fringillidae-sample-matched-calibrations.csv")
 ```
 
 
@@ -126,10 +162,46 @@ sapply(colnames(csumm$in_phy),function(i) is.factor(csumm$in_phy[[i]]))
 
 plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", pch = 20, col = csumm$in_phy$mrca_node_name)
 
-plot(-csumm$in_phy$MaxAge[1:85], csumm$in_phy$mrca_node_number[1:85], xlab = "Time (myrs)", ylab = "Node Number", pch = as.character((csumm$in_phy$mrca_node_number-289)[1:85]), col = csumm$in_phy$reference[1:85])
+plot(-csumm$in_phy$MaxAge[1:300], csumm$in_phy$mrca_node_number[1:300], xlab = "Time (myrs)", ylab = "Node Number", pch = as.character((csumm$in_phy$mrca_node_number-289)[1:85]), col = csumm$in_phy$reference[1:300])
+
+plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", col = csumm$in_phy$reference, pch = 16)
 ```
+Export as svg
+
+```{r}
+svg(filename = "../figures/node_ages_scatterplot.svg")
+plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", col = csumm$in_phy$reference, pch = 16)
+dev.off()
+
+svg(filename = "../figures/fringillidae_sample_tree.svg")
+ape::plot.phylo(dsumm$phylo_sdm, cex = 0.7)
+dev.off()
+
+
+
+```
+
 
 ```{r}
 matched$phy$calibration_distribution
 ls(matched$phy)
+```
+
+```{r}
+phyloch:::HPDbars
+data(hordeum, package = "phyloch")
+hordeum
+ls(hordeum)
+head(hordeum$`height_95%_HPD_MAX`)
+length(hordeum$`height_95%_HPD_MAX`)
+hordeum$edge[,1] # the first column contains the node numbers
+
+
+plot(hordeum, edge.color = "gray", tip.color = 0, 
+    x.lim = c(-5.24603, 23.26244))
+HPDbars(hordeum, col = "skyblue", lwd = 5, nodes = 1)
+ape::nodelabels()
+
+ot$ages_MIN <- 
+ot$ages_MAX <- 
 ```
