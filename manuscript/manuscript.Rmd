@@ -100,8 +100,8 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 data(opentree_chronograms, package = "datelife")
 rpackage_available <- FALSE
 availability <- ifelse(rpackage_available, "is available", "will be available")
-load("../data/dq.rda")
-load("../data/dr.rda")
+load("../data/dquery.rda")
+load("../data/dres.rda")
 ```
 
 # Introduction
@@ -177,9 +177,9 @@ We illustrate the `datelife` workflow using the family of true finches, Fringill
 
 A college educator wishes to obtain state-of-the-art data on time of evolutionary origin of species belonging to the true finches for their class. They decide to use `datelife` because they require the analysis to be reproducible.
 Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator wants the students to practice their R skills.
-The first step is to run a higher-taxon-name `datelife` query. This will get taxon names for all recognised species within any higher taxon. The Fringillidae has `r length(dq$cleaned_names)` species, according to the Open Tree of Life taxonomy.
+The first step is to run a higher-taxon-name `datelife` query. This will get taxon names for all recognised species within any higher taxon. The Fringillidae has `r length(dquery$cleaned_names)` species, according to the Open Tree of Life taxonomy.
 Once with a curated set of query taxon names, the next step is to run a `datelife` search. This will find all chronograms that contain at least two queried taxon names, and will save the information on time of lineage divergence as (an R "data frame") table.
- There are `r length(dr)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dr)))` different studies (Fig. \ref{fig:schronograms1}).
+ There are `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies (Fig. \ref{fig:schronograms1}).
 <!-- In case we want to cite the studies in here, but they are already cited in the figure caption: [Fig. \ref{fig:schronograms1}; @barker2012going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche]. -->
 The final step is to summarize the available information using the two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix (using the median and the SDM method respectively) and then the available node ages are used as fixed ages over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:summaries}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM. With both methods, ages are generally consistent with source ages, but there are some biological examples in which this is not true (see Discussion).
 <!-- (Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
