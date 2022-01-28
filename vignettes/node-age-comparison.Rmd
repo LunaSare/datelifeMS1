@@ -175,33 +175,66 @@ dev.off()
 
 svg(filename = "../figures/fringillidae_sample_tree.svg")
 ape::plot.phylo(dsumm$phylo_sdm, cex = 0.7)
+ape::axisPhylo(1)
 dev.off()
-
-
-
 ```
 
 
 ```{r}
 matched$phy$calibration_distribution
 ls(matched$phy)
+
 ```
 
 ```{r}
-phyloch:::HPDbars
-data(hordeum, package = "phyloch")
-hordeum
-ls(hordeum)
-head(hordeum$`height_95%_HPD_MAX`)
-length(hordeum$`height_95%_HPD_MAX`)
-hordeum$edge[,1] # the first column contains the node numbers
+# the node position on the y axis is given by pp$yy
+# pp$yy also stores the positions of the tips
+# the y coordinate of nodes start at pp$yy[ape::Ntip + 1]
+#' Add Node Age/Calibration Data to a Plotted Phylogeny
+#' calibration_summary An output of [datelife:::summary.matchedCalibrations()]
+#' color A named vector of colors. Names must correspond to study references. 
+#'       If vector is not named, colors will be recycled.
+plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color) {
 
+  # obtain max x lim from ages
+  x_max <- max(c(calibration_summary$in_phy$MinAge, calibration_summary$in_phy$MaxAge))
+  # plot.phylo
+  ape::plot.phylo(phy,
+                  cex = cex_tips,
+                  plot = FALSE)
+  # get plotting x.lim
+  lastPP_x.lim <- get("last_plot.phylo", envir = .PlotPhyloEnv)$x.lim[2]
+  ape::plot.phylo(phy,
+                  cex = cex_tips,
+                  x.lim = c(-5,lastPP_x.lim))
+  # get recorded plotting parameters
+  lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+  # we use lastPP$xx positions to get plotting coordinates for node ages
+  if (all(calibration_summary$in_phy$MinAge == calibration_summary$in_phy$MaxAge)) {
+    x_ages <- max(lastPP$xx) - calibration_summary$in_phy$MinAge
+  }
+  # we use lastPP$yy positions to get plotting coordinates for node numbers
+  if (all(calibration_summary$in_phy$mrca_node_number > lastPP$Ntip)) {
+    # case in which mrca_node_numbers start at Ntip + 1
+    # we can directly use mrca_node_numbers as index for lastPP$yy
+    y_nodes <- lastPP$yy[calibration_summary$in_phy$mrca_node_number]
+  }
+  # using references to color points
+  if (missing(color)) {
+    color <- calibration_summary$in_phy$reference
+  }
+  points(x_ages,
+         y_nodes,
+         col = color,
+         pch = 16)
+  ape::axisPhylo(1)
+  graphics::mtext("Time (myrs)", side = 1, line = 2, at = max(lastPP$xx) * 0.5)
+}
+svg(filename = "../figures/fringillidae_sample_median_ages.svg")
+plot_node_ages(dsumm$phylo_median, cex_tips = 0.7, calibration_summary = csumm)
+dev.off()
 
-plot(hordeum, edge.color = "gray", tip.color = 0, 
-    x.lim = c(-5.24603, 23.26244))
-HPDbars(hordeum, col = "skyblue", lwd = 5, nodes = 1)
-ape::nodelabels()
-
-ot$ages_MIN <- 
-ot$ages_MAX <- 
+svg(filename = "../figures/fringillidae_sample_sdm_ages.svg")
+plot_node_ages(dsumm$phylo_sdm, cex_tips = 0.7, calibration_summary = csumm)
+dev.off()
 ```

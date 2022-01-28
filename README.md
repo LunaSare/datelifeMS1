@@ -1,4 +1,4 @@
-# Welcome to DateLife's first reproducible manuscript GitHub repository!
+# Welcome to DateLife's reproducible manuscript GitHub repository!
 
 To reproduce any version of this manuscript, you will need the R packages `datelife`, `drake`, `knitr` and `rmarkdown`.
 
