@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::install_github("phylotastic/datelife")
-
+#devtools::install_github("phylotastic/datelife")
+devtools::install()
 ```
 
 ## Data for node age comparison
@@ -47,17 +47,17 @@ We have 13 chronograms in there. Let's get the reference for the study they were
 names(dsumm$phylo_all)
 ```
 
-Reading through the references, we can see that there are some duplicated ones. This means that we have several chronograms from each of those studies.
+Reading through the references, we can see that there are some duplicated ones. This means that we have more than one chronogram for some of those studies.
 We can identify them with the function `duplicated()`:
 
 ```{r}
 names(dsumm$phylo_all)[duplicated(names(dsumm$phylo_all))]
 ```
 
+### Getting node ages for our taxa
 
-We will use the function `datelife::extract_calibrations_phylo`.
 
-
+Now, we can use the function `datelife::extract_calibrations_phylo`.
 
 
 ```{r}
@@ -140,6 +140,7 @@ class(matched$matched_calibrations)
 Write data down as a csv file for visual inspection and archiving:
 
 ```{r}
+write.csv(matched$matched_calibrations, file = "../data-raw/fringillidae-all-matched-calibrations-sdm.csv")
 write.csv(matched$matched_calibrations, file = "../data-raw/fringillidae-sample-matched-calibrations.csv")
 ```
 
@@ -156,35 +157,7 @@ nrow(csumm$not_in_phy)
 There are 12 taxon pairs that were not present in our target tree topology, as shown in `csumm$not_in_phy`.
 
 Our calibrations of interest are in `csumm$in_phy`:
-
-```{r}
-sapply(colnames(csumm$in_phy),function(i) is.factor(csumm$in_phy[[i]]))
-
-plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", pch = 20, col = csumm$in_phy$mrca_node_name)
-
-plot(-csumm$in_phy$MaxAge[1:300], csumm$in_phy$mrca_node_number[1:300], xlab = "Time (myrs)", ylab = "Node Number", pch = as.character((csumm$in_phy$mrca_node_number-289)[1:85]), col = csumm$in_phy$reference[1:300])
-
-plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", col = csumm$in_phy$reference, pch = 16)
-```
-Export as svg
-
-```{r}
-svg(filename = "../figures/node_ages_scatterplot.svg")
-plot(-csumm$in_phy$MaxAge, csumm$in_phy$mrca_node_number, xlab = "Time (myrs)", ylab = "Node Number", col = csumm$in_phy$reference, pch = 16)
-dev.off()
-
-svg(filename = "../figures/fringillidae_sample_tree.svg")
-ape::plot.phylo(dsumm$phylo_sdm, cex = 0.7)
-ape::axisPhylo(1)
-dev.off()
-```
-
-
-```{r}
-matched$phy$calibration_distribution
-ls(matched$phy)
-
-```
+We will use the function `plot_node_ages` defined here (TODO: add it to datelifeplots) to plot the tree and the node ages from the calibrations:
 
 ```{r}
 # the node position on the y axis is given by pp$yy
@@ -194,7 +167,7 @@ ls(matched$phy)
 #' calibration_summary An output of [datelife:::summary.matchedCalibrations()]
 #' color A named vector of colors. Names must correspond to study references. 
 #'       If vector is not named, colors will be recycled.
-plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color) {
+plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color, pch = 16) {
 
   # obtain max x lim from ages
   x_max <- max(c(calibration_summary$in_phy$MinAge, calibration_summary$in_phy$MaxAge))
@@ -203,6 +176,7 @@ plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color) {
                   cex = cex_tips,
                   plot = FALSE)
   # get plotting x.lim
+  library(ape) # we need this so it loads object .PlotPhyloEnv 
   lastPP_x.lim <- get("last_plot.phylo", envir = .PlotPhyloEnv)$x.lim[2]
   ape::plot.phylo(phy,
                   cex = cex_tips,
@@ -226,15 +200,25 @@ plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color) {
   points(x_ages,
          y_nodes,
          col = color,
-         pch = 16)
+         pch = pch)
   ape::axisPhylo(1)
   graphics::mtext("Time (myrs)", side = 1, line = 2, at = max(lastPP$xx) * 0.5)
 }
-svg(filename = "../figures/fringillidae_sample_median_ages.svg")
-plot_node_ages(dsumm$phylo_median, cex_tips = 0.7, calibration_summary = csumm)
+svg(filename = "../figures/fringillidae_all_median_ages.svg",
+    height = 20,
+    width = 10)
+plot_node_ages(dsumm$phylo_median,
+               cex_tips = 0.7,
+               calibration_summary = csumm,
+               pch = 18) # a diamond
 dev.off()
 
-svg(filename = "../figures/fringillidae_sample_sdm_ages.svg")
-plot_node_ages(dsumm$phylo_sdm, cex_tips = 0.7, calibration_summary = csumm)
+svg(filename = "../figures/fringillidae_all_sdm_ages.svg",
+    height = 20,
+    width = 10)
+plot_node_ages(dsumm$phylo_sdm,
+               cex_tips = 0.7,
+               calibration_summary = csumm,
+               pch = 18) # a diamond
 dev.off()
 ```
