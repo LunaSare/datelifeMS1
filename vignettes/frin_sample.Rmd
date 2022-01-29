@@ -1,0 +1,131 @@
+---
+title: "Fringillidae sample"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{frin_sample}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelifeMS1)
+library(datelife)
+data("opentree_chronograms", package = "datelife")
+if(!require()) {
+  devtools::install_github("phylotastic/datelifeplot")
+}
+```
+
+## Get a subsample of Fringiliidae
+
+```{r}
+frin_sample <- c("Fringilla montifringilla",
+             "Loxioides bailleui",
+             "Vestiaria coccinea",
+             "Carpodacus roseus",
+             "Pyrrhula aurantiaca",
+             "Pyrrhula nipalensis",
+             "Serinus syriacus",
+             "Serinus serinus",
+             "Loxia scotica",
+             "Emberiza leucocephalus",
+             "Emberiza citrinella",
+             "Schoeniclus elegans",
+             "Rhodothraupis celaeno",
+             "Peucedramus taeniatus",
+             "Platispiza crassirostris",
+             "Pheucticus tibialis")
+# frin_sample <- sample(x = dquery$cleaned_names, size = 15)
+```
+
+## Get a `datelifeQuery` object
+
+```{r}
+
+frin_sample_dquery <- datelife::make_datelife_query(input = frin_sample,
+                                                    use_tnrs = TRUE)
+
+usethis::use_data(frin_sample_dquery, overwrite = TRUE)
+```
+
+## Get a `datelifeResult` object
+
+```{r}
+frin_sample_dres = datelife::get_datelife_result(input = frin_sample_dquery, cache = opentree_chronograms)
+usethis::use_data(frin_sample_dres, overwrite = TRUE)
+```
+
+
+```{r}
+frin_sample_dsumm <- datelife:::summary.datelifeResult(datelife_query = frin_sample_dquery, object = frin_sample_dres)
+
+usethis::use_data(frin_sample_dsumm, overwrite = TRUE)
+
+```
+
+
+## Get all node ages
+
+```{r}
+frin_sample_all_calibrations <- datelife::extract_calibrations_phylo(input = frin_sample_dsumm$phylo_all, each = FALSE)
+
+usethis::use_data(frin_sample_all_calibrations, overwrite = TRUE)
+
+```
+
+
+## Match to sdm tree and plot
+
+```{r}
+frin_sample_matched_sdm <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_sdm, calibrations = frin_sample_all_calibrations)
+
+usethis::use_data(frin_sample_matched_sdm, overwrite = TRUE)
+
+
+frin_sample_csumm_sdm <- datelife:::summary.matchedCalibrations(frin_sample_matched_sdm$matched_calibrations)
+
+usethis::use_data(frin_sample_csumm_sdm, overwrite = TRUE)
+
+
+
+svg(filename = "../figures/frin_sample_sdm_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_sdm,
+               cex_tips = 0.7,
+               calibration_summary = frin_sample_csumm_sdm)
+dev.off()
+
+```
+
+## Match to median tree and plot
+
+
+```{r}
+frin_sample_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = frin_sample_all_calibrations)
+
+usethis::use_data(frin_sample_matched_median, overwrite = TRUE)
+
+frin_sample_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_matched_median$matched_calibrations)
+
+usethis::use_data(frin_sample_csumm_median, overwrite = TRUE)
+
+svg(filename = "../figures/frin_sample_median_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
+               cex_tips = 0.7,
+               calibration_summary = frin_sample_csumm_median)
+dev.off()
+
+```
+
+
+## Match to phylo biggest and plot

@@ -1,4 +1,4 @@
-## code to prepare paper datasets and figures goes here
+## Code to prepare paper datasets and figures goes here
 
 # Load the chronogram database i.e, OpenTree chronograms
 
@@ -12,9 +12,8 @@ length(dquery$cleaned_names) # 289 species names in Fringilidae
 
 usethis::use_data(dquery, overwrite = TRUE)
 
-# Run a datelife search: matching at least 2 species name sor mroe in the chronogram database
+# Run a datelife search: matching at least 2 species names or mroe in the chronogram database
 
-frin_sample <- sample(x = dquery$cleaned_names, size = 15)
 dres = datelife::get_datelife_result(input = frin_sample, cache = opentree_chronograms)
 
 usethis::use_data(dres, overwrite = TRUE)
@@ -27,7 +26,7 @@ usethis::use_data(dsumm, overwrite = TRUE)
 
 
 
-
+# OLD stuff:
 # LTT plot
 cb_cols1 = c("#0072B2",
              "#D55E00",

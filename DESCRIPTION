@@ -28,7 +28,7 @@ Imports:
     rmarkdown
 Remotes:
     phylotastic/datelife,
-	phylotastic/datelifeplot
+	  phylotastic/datelifeplot
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

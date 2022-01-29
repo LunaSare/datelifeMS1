@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 #devtools::install_github("phylotastic/datelife")
+#devtools::install_github("phylotastic/datelifeplot")
 devtools::install()
 ```
 
@@ -39,7 +40,27 @@ TODO: Create a print method for a phylo_all datelifeResult that summarizes numbe
 Let's explore them:
 
 ```{r}
-dsumm$phylo_all
+x <- dsumm$phylo_all$`Burns, Kevin J., Allison J. Shultz, Pascal O. Title, Nicholas A. Mason, F. Keith Barker, John Klicka, Scott M. Lanyon, Irby J. Lovette. 2014. Phylogenetics and diversification of tanagers (Passeriformes: Thraupidae), the largest radiation of Neotropical songbirds. Molecular Phylogenetics and Evolution 75: 41-77.`$tip.label
+
+x <- dsumm$phylo_all
+ape:::print.multiPhylo(dsumm$phylo_all, details = TRUE)
+#' Print Method for `datelifeSummary` $phylo_all `multiPhylo` Objects
+#' 
+print.multiPhylo.datelifeSummary <- function(x, details = FALSE, ...) {
+  N <- length(x)
+  cat(N, ifelse(N > 1, "chronograms\n", "chronogram\n"))
+  S <- length(unique(names(x)))
+  F <- as.factor(names(x))
+  names(x)[1]
+  as.numeric(F)[1]
+  names(x)[as.numeric(F)]
+  # do the following in summarize_datelife_result object:
+  names(x)[order(names(x))]
+  cat(S, ifelse(S > 1, "studies\n", "study\n"))
+    if (details) 
+        for (i in 1:N) cat("chronogram", i, ":", length(x[[i]]$tip.label), 
+            "tips\n")  
+}
 ```
 We have 13 chronograms in there. Let's get the reference for the study they were originally published on:
 
@@ -160,65 +181,20 @@ Our calibrations of interest are in `csumm$in_phy`:
 We will use the function `plot_node_ages` defined here (TODO: add it to datelifeplots) to plot the tree and the node ages from the calibrations:
 
 ```{r}
-# the node position on the y axis is given by pp$yy
-# pp$yy also stores the positions of the tips
-# the y coordinate of nodes start at pp$yy[ape::Ntip + 1]
-#' Add Node Age/Calibration Data to a Plotted Phylogeny
-#' calibration_summary An output of [datelife:::summary.matchedCalibrations()]
-#' color A named vector of colors. Names must correspond to study references. 
-#'       If vector is not named, colors will be recycled.
-plot_node_ages <- function(phy, cex_tips = 1, calibration_summary, color, pch = 16) {
 
-  # obtain max x lim from ages
-  x_max <- max(c(calibration_summary$in_phy$MinAge, calibration_summary$in_phy$MaxAge))
-  # plot.phylo
-  ape::plot.phylo(phy,
-                  cex = cex_tips,
-                  plot = FALSE)
-  # get plotting x.lim
-  library(ape) # we need this so it loads object .PlotPhyloEnv 
-  lastPP_x.lim <- get("last_plot.phylo", envir = .PlotPhyloEnv)$x.lim[2]
-  ape::plot.phylo(phy,
-                  cex = cex_tips,
-                  x.lim = c(-5,lastPP_x.lim))
-  # get recorded plotting parameters
-  lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-  # we use lastPP$xx positions to get plotting coordinates for node ages
-  if (all(calibration_summary$in_phy$MinAge == calibration_summary$in_phy$MaxAge)) {
-    x_ages <- max(lastPP$xx) - calibration_summary$in_phy$MinAge
-  }
-  # we use lastPP$yy positions to get plotting coordinates for node numbers
-  if (all(calibration_summary$in_phy$mrca_node_number > lastPP$Ntip)) {
-    # case in which mrca_node_numbers start at Ntip + 1
-    # we can directly use mrca_node_numbers as index for lastPP$yy
-    y_nodes <- lastPP$yy[calibration_summary$in_phy$mrca_node_number]
-  }
-  # using references to color points
-  if (missing(color)) {
-    color <- calibration_summary$in_phy$reference
-  }
-  points(x_ages,
-         y_nodes,
-         col = color,
-         pch = pch)
-  ape::axisPhylo(1)
-  graphics::mtext("Time (myrs)", side = 1, line = 2, at = max(lastPP$xx) * 0.5)
-}
 svg(filename = "../figures/fringillidae_all_median_ages.svg",
     height = 20,
     width = 10)
-plot_node_ages(dsumm$phylo_median,
+datelifeplot::plot_node_ages(dsumm$phylo_median,
                cex_tips = 0.7,
-               calibration_summary = csumm,
-               pch = 18) # a diamond
+               calibration_summary = csumm)
 dev.off()
 
 svg(filename = "../figures/fringillidae_all_sdm_ages.svg",
     height = 20,
     width = 10)
-plot_node_ages(dsumm$phylo_sdm,
+datelifeplot::plot_node_ages(dsumm$phylo_sdm,
                cex_tips = 0.7,
-               calibration_summary = csumm,
-               pch = 18) # a diamond
+               calibration_summary = csumm)
 dev.off()
 ```
