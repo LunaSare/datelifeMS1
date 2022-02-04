@@ -52,22 +52,22 @@ frin_sample <- c("Fringilla montifringilla",
 frin_sample_dquery <- datelife::make_datelife_query(input = frin_sample,
                                                     use_tnrs = TRUE)
 
-usethis::use_data(frin_sample_dquery, overwrite = TRUE)
+# usethis::use_data(frin_sample_dquery, overwrite = TRUE)
 ```
 
 ## Get a `datelifeResult` object
 
 ```{r}
 frin_sample_dres = datelife::get_datelife_result(input = frin_sample_dquery, cache = opentree_chronograms)
-usethis::use_data(frin_sample_dres, overwrite = TRUE)
+
+# usethis::use_data(frin_sample_dres, overwrite = TRUE)
 ```
 
 
 ```{r}
 frin_sample_dsumm <- datelife:::summary.datelifeResult(datelife_query = frin_sample_dquery, object = frin_sample_dres)
 
-usethis::use_data(frin_sample_dsumm, overwrite = TRUE)
-
+# usethis::use_data(frin_sample_dsumm, overwrite = TRUE)
 ```
 
 
@@ -76,8 +76,7 @@ usethis::use_data(frin_sample_dsumm, overwrite = TRUE)
 ```{r}
 frin_sample_all_calibrations <- datelife::extract_calibrations_phylo(input = frin_sample_dsumm$phylo_all, each = FALSE)
 
-usethis::use_data(frin_sample_all_calibrations, overwrite = TRUE)
-
+# usethis::use_data(frin_sample_all_calibrations, overwrite = TRUE)
 ```
 
 
@@ -86,12 +85,12 @@ usethis::use_data(frin_sample_all_calibrations, overwrite = TRUE)
 ```{r}
 frin_sample_matched_sdm <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_sdm, calibrations = frin_sample_all_calibrations)
 
-usethis::use_data(frin_sample_matched_sdm, overwrite = TRUE)
+# usethis::use_data(frin_sample_matched_sdm, overwrite = TRUE)
 
 
 frin_sample_csumm_sdm <- datelife:::summary.matchedCalibrations(frin_sample_matched_sdm$matched_calibrations)
 
-usethis::use_data(frin_sample_csumm_sdm, overwrite = TRUE)
+# usethis::use_data(frin_sample_csumm_sdm, overwrite = TRUE)
 
 
 
@@ -126,6 +125,66 @@ datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
 dev.off()
 
 ```
+
+
+```{r}
+
+median_matrix <- datelife::datelife_result_median_matrix(frin_sample_dres)
+
+xx <- datelife::extract_calibrations_dateliferesult(input = frin_sample_dres)
+
+for (i in seq(frin_sample_dres)) {
+  if ("Carpodacus roseus" %in% rownames(frin_sample_dres[[i]])) {
+    print("Carpodacus roseus")
+    rowsies <- which("Carpodacus roseus" == rownames(frin_sample_dres[[i]]))
+    colsies <- NA
+    if ("Loxioides bailleui" %in% colnames(frin_sample_dres[[i]])) {
+      print("Loxioides bailleui")
+      colsies <- which("Loxioides bailleui" == colnames(frin_sample_dres[[i]]))
+    } else if ("Vestiaria coccinea" %in% colnames(frin_sample_dres[[i]])) {
+      print("Vestiaria coccinea")
+      colsies <- which("Vestiaria coccinea" == colnames(frin_sample_dres[[i]]))
+    }
+    if (!is.na(colsies)) {
+    print(names(frin_sample_dres)[i])
+    print(frin_sample_dres[[i]][rowsies, colsies])
+  }
+  }
+}
+x <- c(33.16057, 33, 26.89789, 28.57216)
+median(x)/2
+```
+
+```{r}
+frin_sample_dres$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`[, "Loxioides bailleui"]
+```
+Calibration for "Carpodacus_roseus" vs "Loxioides bailleui" exists in Hedges tree
+but it seems to be dropped on the extract_calibrations step:
+
+```{r}
+hedges_subset_tree <- frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`
+
+hedges_subset_tree$tip.label
+plot(hedges_subset_tree)
+
+extract_calibrations_phylo(input = frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`)
+
+
+```
+The mismatch comes from phylogenetic conflict in the median tree and the Hedges tree. 
+Even though the median tree uses the node ages for "Carpodacus_roseus"/"Loxioides bailleui" pair, when the median matrix is clustered, the new relationships conflict with the clade that includes "Carpodacus_roseus"/"Loxioides bailleui" in Hedges.
+So, when trying to match calibrations from Hedges into the median tree, the node age for "Carpodacus_roseus"/"Loxioides bailleui" pair is dropped (excluded from potentially usable calibrations), because it points to a clade that conflicts with the topology of the median tree.
+
+This shows that we cannot use the output of extract_all_calibrations/matched_all_calibrations to check that the input data is coherent with the median tree results.
+
+Next steps: plot the actual input data on top of the median tree, and SDM tree.
+
+Informative comparison: We could compare actual input data points vs matched calibrations to see how much different the resulting summary topology is from the input trees!
+For example, if node ages from the input trees are close to the node ages of the summary tree, then there is not a lot of conflict across the input trees.
+In contrast, if most node ages from the input tree are far away from the node ages of the summary tree, there might be a lot of phylogenetic conflict across the input trees.
+
+Congruification works similar to how OpenTree conflict resolution works (i.e., the phylogenetic problem algorithm). Basically it takes the most inclusive clade and ignores data from clades that conflict with this most inclusive clades.
+
 
 
 ## Match to phylo biggest and plot

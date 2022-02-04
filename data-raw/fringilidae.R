@@ -12,7 +12,7 @@ length(dquery$cleaned_names) # 289 species names in Fringilidae
 
 usethis::use_data(dquery, overwrite = TRUE)
 
-# Run a datelife search: matching at least 2 species names or mroe in the chronogram database
+# Run a datelife search: matching at least 2 species names or more in the chronogram database
 
 dres = datelife::get_datelife_result(input = frin_sample, cache = opentree_chronograms)
 
