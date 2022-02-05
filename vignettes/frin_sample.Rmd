@@ -18,9 +18,11 @@ knitr::opts_chunk$set(
 library(datelifeMS1)
 library(datelife)
 data("opentree_chronograms", package = "datelife")
-if(!require()) {
-  devtools::install_github("phylotastic/datelifeplot")
-}
+# if(!require("datelife")) {
+#   devtools::install_github("https://github.com/phylotastic/datelife/tree/database_update")
+# }
+data("frin_sample_dres", package = "datelifeMS1")
+devtools::load_all()
 ```
 
 ## Get a subsample of Fringiliidae
@@ -191,23 +193,26 @@ Next step: plot the actual input data on top of the median tree, and SDM tree.
 
 ```{r}
 node_ages <- datelife::matrices_to_table(frin_sample_dres)
-
+head(node_ages, 20)
+nrow(node_ages)
 ```
 
 
 ```{r}
-frin_sample_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = frin_sample_all_calibrations)
+frin_sample_dres_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = node_ages)
+  
+head(frin_sample_dres_matched_median$matched_calibrations, 20)
+frin_sample_dres_matched_median$matched_calibrations$mrca_node_name
+# usethis::use_data(frin_sample_dres_matched_median, overwrite = TRUE)
 
-# usethis::use_data(frin_sample_matched_median, overwrite = TRUE)
-
-frin_sample_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_matched_median$matched_calibrations)
+frin_sample_dres_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_dres_matched_median$matched_calibrations)
 
 svg(filename = "../figures/frin_sample_median_input_ages.svg",
     height = 5,
     width = 7)
 datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
                cex_tips = 0.7,
-               calibration_summary = frin_sample_csumm_median)
+               calibration_summary = frin_sample_dres_csumm_median)
 dev.off()
 
 ```
