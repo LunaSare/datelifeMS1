@@ -110,11 +110,11 @@ dev.off()
 ```{r}
 frin_sample_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = frin_sample_all_calibrations)
 
-usethis::use_data(frin_sample_matched_median, overwrite = TRUE)
+# usethis::use_data(frin_sample_matched_median, overwrite = TRUE)
 
 frin_sample_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_matched_median$matched_calibrations)
 
-usethis::use_data(frin_sample_csumm_median, overwrite = TRUE)
+# usethis::use_data(frin_sample_csumm_median, overwrite = TRUE)
 
 svg(filename = "../figures/frin_sample_median_ages.svg",
     height = 5,
@@ -130,7 +130,11 @@ dev.off()
 ```{r}
 
 median_matrix <- datelife::datelife_result_median_matrix(frin_sample_dres)
-
+names(frin_sample_dres)
+str(median_matrix)
+tt <- as.data.frame(as.table(median_matrix))
+colnames(tt) <- c("taxonA", "taxonB", "age")
+class(tt$age)
 xx <- datelife::extract_calibrations_dateliferesult(input = frin_sample_dres)
 
 for (i in seq(frin_sample_dres)) {
@@ -155,11 +159,14 @@ x <- c(33.16057, 33, 26.89789, 28.57216)
 median(x)/2
 ```
 
+Let's verify that the pair actually is in the input tree:
 ```{r}
 frin_sample_dres$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`[, "Loxioides bailleui"]
 ```
 Calibration for "Carpodacus_roseus" vs "Loxioides bailleui" exists in Hedges tree
-but it seems to be dropped on the extract_calibrations step:
+but it is absent from the extract_calibrations object.
+
+Let's try to extract calibrations from the Hedges subset tree only:
 
 ```{r}
 hedges_subset_tree <- frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`
@@ -167,17 +174,44 @@ hedges_subset_tree <- frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin
 hedges_subset_tree$tip.label
 plot(hedges_subset_tree)
 
-extract_calibrations_phylo(input = frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`)
-
+# code to run congruification on the Hedges subset tree:
+# extract_calibrations_phylo(input = frin_sample_dsumm$phylo_all$`Hedges, S. Blair, Julie Marin, Michael Suleski, Madeline Paymer, Sudhir Kumar. 2015. Tree of life reveals clock-like speciation and diversification. Molecular Biology and Evolution 32 (4): 835-845`)
 
 ```
-The mismatch comes from phylogenetic conflict in the median tree and the Hedges tree. 
-Even though the median tree uses the node ages for "Carpodacus_roseus"/"Loxioides bailleui" pair, when the median matrix is clustered, the new relationships conflict with the clade that includes "Carpodacus_roseus"/"Loxioides bailleui" in Hedges.
+We did not need to extract calibrations from Hedges subset tree. 
+Plotting the tree gives us a very good idea of what is going on:
+The "Carpodacus_roseus"/"Loxioides bailleui" node is conflicting between the Hedges subset input tree and the median tree.
+
+Even though the median tree uses the node ages for "Carpodacus_roseus"/"Loxioides bailleui" pair from Hedges, when the median matrix is clustered, it creates new relationship that conflicts with the "Carpodacus_roseus"/"Loxioides bailleui" clade in Hedges.
 So, when trying to match calibrations from Hedges into the median tree, the node age for "Carpodacus_roseus"/"Loxioides bailleui" pair is dropped (excluded from potentially usable calibrations), because it points to a clade that conflicts with the topology of the median tree.
 
 This shows that we cannot use the output of extract_all_calibrations/matched_all_calibrations to check that the input data is coherent with the median tree results.
 
-Next steps: plot the actual input data on top of the median tree, and SDM tree.
+Next step: plot the actual input data on top of the median tree, and SDM tree.
+
+```{r}
+node_ages <- datelife::matrices_to_table(frin_sample_dres)
+
+```
+
+
+```{r}
+frin_sample_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = frin_sample_all_calibrations)
+
+# usethis::use_data(frin_sample_matched_median, overwrite = TRUE)
+
+frin_sample_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_matched_median$matched_calibrations)
+
+svg(filename = "../figures/frin_sample_median_input_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
+               cex_tips = 0.7,
+               calibration_summary = frin_sample_csumm_median)
+dev.off()
+
+```
+
 
 Informative comparison: We could compare actual input data points vs matched calibrations to see how much different the resulting summary topology is from the input trees!
 For example, if node ages from the input trees are close to the node ages of the summary tree, then there is not a lot of conflict across the input trees.
