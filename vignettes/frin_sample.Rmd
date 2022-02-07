@@ -200,19 +200,22 @@ nrow(node_ages)
 
 ```{r}
 frin_sample_dres_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = node_ages)
+# usethis::use_data(frin_sample_dres_matched_median, overwrite = TRUE)
   
 head(frin_sample_dres_matched_median$matched_calibrations, 20)
-frin_sample_dres_matched_median$matched_calibrations$mrca_node_name
 # usethis::use_data(frin_sample_dres_matched_median, overwrite = TRUE)
 
 frin_sample_dres_csumm_median <- datelife:::summary.matchedCalibrations(frin_sample_dres_matched_median$matched_calibrations)
+
+# usethis::use_data(frin_sample_dres_csumm_median, overwrite = TRUE)
 
 svg(filename = "../figures/frin_sample_median_input_ages.svg",
     height = 5,
     width = 7)
 datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
                cex_tips = 0.7,
-               calibration_summary = frin_sample_dres_csumm_median)
+               calibration_summary = frin_sample_dres_csumm_median,
+               lwd_bars = 5)
 dev.off()
 
 ```
