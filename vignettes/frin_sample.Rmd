@@ -45,6 +45,8 @@ frin_sample <- c("Fringilla montifringilla",
              "Platispiza crassirostris",
              "Pheucticus tibialis")
 # frin_sample <- sample(x = dquery$cleaned_names, size = 15)
+# usethis::use_data(frin_sample, overwrite = TRUE)
+
 ```
 
 ## Get a `datelifeQuery` object
@@ -243,14 +245,14 @@ This shows that we cannot use the output of extract_all_calibrations/matched_all
 Next step: plot the actual input data on top of the median tree, and SDM tree.
 
 ```{r}
-node_ages <- datelife::matrices_to_table(frin_sample_dres)
+node_ages_table <- datelife::matrices_to_table(frin_sample_dres)
 head(node_ages, 20)
 nrow(node_ages)
 ```
 
 
 ```{r}
-frin_sample_dres_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = node_ages)
+frin_sample_dres_matched_median <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = node_ages_table)
 # usethis::use_data(frin_sample_dres_matched_median, overwrite = TRUE)
   
 head(frin_sample_dres_matched_median$matched_calibrations, 20)
