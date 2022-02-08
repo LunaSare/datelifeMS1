@@ -110,11 +110,11 @@ This is where things go weird. `summary_patristic_matrix_array` runs:
 
 ```{r}
 apply(aa, MARGIN = c(1, 2), stats::median, na.rm = TRUE)
-median(aa["Platyspiza crassirostris", c("Pheucticus tibialis"),], na.rm = TRUE)
-median(aa["Platyspiza crassirostris", c("Rhodothraupis celaeno"),], na.rm = TRUE)
+median(aa["Platyspiza crassirostris", c("Pheucticus tibialis"),], na.rm = TRUE)/2
+median(aa["Platyspiza crassirostris", c("Rhodothraupis celaeno"),], na.rm = TRUE)/2
 ```
 Mistery solved!
-Burns et al. 2014 study contains data for one taxon pair but not the other. Moreover, the age of that node differs wildly from the rest of the data ppoints. This results in median ages for two taxon pairs that refer to the same node that are very different. These 
+Burns et al. 2014 study contains data for one taxon pair but not the other. Moreover, the age of that node differs wildly from the rest of the data points. This results in median ages for two taxon pairs that refer to the same node that are very different from each other: 
 
 ```{r}
 summary_matrix_table <- datelife::matrices_to_table(summary_matrix_list)
