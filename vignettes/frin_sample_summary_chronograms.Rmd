@@ -1,0 +1,137 @@
+---
+title: "Summary chronograms"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Summary chronograms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelifeMS1)
+devtools::load_all()
+```
+
+In this vignette we show the steps and functions that `datelife` uses to get a median summary tree from a set of chronograms.
+
+We are using a sample of 16 species within the true finches (Fringillidae).
+
+```{r}
+frin_sample
+```
+
+We conducted a search within an OpenTree chronogram database cached in `datelife`, to find all chronograms matching at least two taxon names from our `frin_sample` vector of species names. These will constitute the source chronograms to summarize.
+
+Results from the chronogram search wearere stored as a `datelifeResults` object, which is a list of matrices that contains data on total distance age between taxon pairs. Each matrix corresponds to a source chronogram. The elements of the list are named with the study reference where the source chronogram was originally published.
+
+```{r}
+unique(names(frin_sample_dres))
+length(frin_sample_dres)
+```
+
+`datelife` found 10 source chronograms belonging to 7 studies.
+
+A `datelifeResult` object is used as input for `summary.datelifeResult` which will return various summary information, including the median and SDM single summary chronograms.
+
+What happens under the hood is the following: `summary.datelifeResult`
+--> `datelife_result_median_and_sdm`
+--> `get_best_grove` and `datelife_result_median`
+--> `datelife_result_median_matrix` and `summary_matrix_to_phylo`
+
+`datelife_result_median_and_sdm` gets the best grove from the set of input 
+```{r}
+best_grove <- datelife::get_best_grove(frin_sample_dres)
+length(best_grove$best_grove)
+node_20_ages <- explore_node(taxonA = "Platyspiza crassirostris",
+             taxonB = c("Pheucticus tibialis", "Rhodothraupis celaeno"), 
+             datelife_result = best_grove$best_grove)
+median(node_20_ages)
+
+node_20_ages2 <- explore_node(taxonA = "Platyspiza crassirostris",
+             taxonB = c("Rhodothraupis celaeno"), 
+             datelife_result = best_grove$best_grove)
+median(node_20_ages2)
+```
+
+Seems like all of the source chronograms made it into the best grove.
+
+Next, `datelife_result_median` first calculates the median summary matrix from the `best_grove` with `datelife_result_median_matrix`, and second, it clusters the summary matrix with `summary_matrix_to_phylo`:
+
+```{r}
+summary_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
+frin_sample_median_tree <- summary_matrix_to_phylo(summary_matrix)
+bt <- ape::branching.times(frin_sample_median_tree)
+names(bt) <- paste0("n", 17:31)
+bt
+ape::Ntip(frin_sample_median_tree)
+```
+
+```{r}
+summary_matrix_list <- list(summary_matrix = summary_matrix)
+explore_node(taxonA = "Platyspiza crassirostris",
+             taxonB = c("Pheucticus tibialis"),
+             datelife_result = summary_matrix_list)
+explore_node(taxonA = "Platyspiza crassirostris",
+             taxonB = c("Rhodothraupis celaeno"),
+             datelife_result = summary_matrix_list)
+
+```
+
+Something does not add up in the `summary_matrix` obtained with `datelife_result_median_matrix`.
+We are getting wildly different total distance ages from the two taxa in the lineage sister to *Platyspiza crassirostris*
+
+```{r}
+aa <- datelife:::patristic_matrix_list_to_array(best_grove$best_grove, pad = TRUE)
+class(aa)
+dim(aa) 
+```
+We have an array of 10 matrices each of 16 rows and 16 columns.
+To see the data from rows with the name "Platyspiza crassirostris" and columns with names "Pheucticus tibialis" and "Rhodothraupis celaeno":
+
+```{r}
+aa["Platyspiza crassirostris", c("Pheucticus tibialis", "Rhodothraupis celaeno"),]
+```
+
+Input data still seems reasonable here.
+The next step is to run `summary_patristic_matrix_array` on the array:
+
+```{r}
+datelife:::summary_patristic_matrix_array(aa)
+
+```
+This is where things go weird. `summary_patristic_matrix_array` runs:
+
+```{r}
+apply(aa, MARGIN = c(1, 2), stats::median, na.rm = TRUE)
+median(aa["Platyspiza crassirostris", c("Pheucticus tibialis"),], na.rm = TRUE)
+median(aa["Platyspiza crassirostris", c("Rhodothraupis celaeno"),], na.rm = TRUE)
+```
+Mistery solved!
+Burns et al. 2014 study contains data for one taxon pair but not the other. Moreover, the age of that node differs wildly from the rest of the data ppoints. This results in median ages for two taxon pairs that refer to the same node that are very different. These 
+
+```{r}
+summary_matrix_table <- datelife::matrices_to_table(summary_matrix_list)
+
+mm <- datelife::match_all_calibrations(phy = frin_sample_dsumm$phylo_median, calibrations = summary_matrix_table)
+
+mm_summ <- datelife:::summary.matchedCalibrations(mm$matched_calibrations)
+
+mm_summ$in_phy
+
+svg(filename = "../figures/frin_sample_median_summary_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
+               cex_tips = 0.7,
+               calibration_summary = mm_summ,
+               lwd_bars = 7,
+               color_bars = "#80808050")
+dev.off()
+```
