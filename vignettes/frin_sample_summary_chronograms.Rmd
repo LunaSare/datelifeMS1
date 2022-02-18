@@ -57,7 +57,13 @@ median(node_20_ages)
 node_20_ages2 <- explore_node(taxonA = "Platyspiza crassirostris",
              taxonB = c("Rhodothraupis celaeno"), 
              datelife_result = best_grove$best_grove)
-median(node_20_ages2)
+median(node_20_ages2)/2
+
+node_20_ages3 <- explore_node(taxonA = "Platyspiza crassirostris",
+             taxonB = c("Pheucticus tibialis"), 
+             datelife_result = best_grove$best_grove)
+node_20_ages3
+median(node_20_ages3)/2
 ```
 
 Seems like all of the source chronograms made it into the best grove.
@@ -66,7 +72,7 @@ Next, `datelife_result_median` first calculates the median summary matrix from t
 
 ```{r}
 summary_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
-frin_sample_median_tree <- summary_matrix_to_phylo(summary_matrix)
+frin_sample_median_tree <- datelife::summary_matrix_to_phylo(summary_matrix, fix_negative_brlen = FALSE)
 bt <- ape::branching.times(frin_sample_median_tree)
 names(bt) <- paste0("n", 17:31)
 bt
@@ -135,3 +141,17 @@ datelifeplot:::plot_node_ages(frin_sample_dsumm$phylo_median,
                color_bars = "#80808050")
 dev.off()
 ```
+
+Still, why are we not using the data from node 20, (_Platyspiza crassirostris_, (_Pheucticus tibialis_, and _Rhodothraupis celaeno_))?. We are NOT getting a negative branch length. Function `summary_matrix_to_phylo` takes the OpenTree synth tree as backbone and uses BLADJ to "date" the topology using the patristic distances. The function that implements BLADJ drops the calibrations that are not consistent. In this case it is just node 20.
+
+The following code shows how the function `patristic_matrix_to_phylo` works. This one builds the tree from scratch. As it only relies on clustering methods, it often returns a topology that does not make biological sense. So it is better to have a fixed topology, whoch is implemented in `summary_matrix_to_phylo`
+
+```{r}
+frin_sample_median_tree <- datelife::patristic_matrix_to_phylo(summary_matrix, fix_negative_brlen = FALSE)
+ape::plot.phylo(frin_sample_median_tree, )
+
+frin_sample_median_tree_TRUE <- datelife::patristic_matrix_to_phylo(summary_matrix, fix_negative_brlen = TRUE)
+ape::plot.phylo(frin_sample_median_tree_TRUE)
+```
+
+

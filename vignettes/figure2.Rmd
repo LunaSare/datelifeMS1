@@ -1,0 +1,81 @@
+---
+title: "figure2"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{figure2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelifeMS1)
+devtools::load_all()
+frin_sample_dsumm$phylo_median
+spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_dq <- datelife::make_datelife_query(spp)
+spp_dr <- datelife::get_datelife_result(spp_dq)
+spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
+spp_summ$phylo_all
+
+mock_spp_names <- gsub(" ", "_", spp_summ$phylo_median$tip.label)
+names(mock_spp_names) <- LETTERS[1:6]
+mock_spp_names
+
+mock_study_names <- names(spp_summ$phylo_all)
+iis <- match(mock_study_names, unique(mock_study_names))
+names(mock_study_names) <- paste("Study", iis)
+names(mock_study_names)
+make.names(names(mock_study_names), unique = TRUE)
+ffs <- table(names(mock_study_names))
+
+is_dupl <- names(mock_study_names) %in% names(ffs)[ffs > 1]
+
+# Add "Chronogram X" to duplicated studies:
+
+for (i in names(ffs)[ffs > 1]) {
+  dds <- i == names(mock_study_names)
+  chrono_names <- paste("- Chronogram", seq(ffs[[i]]))
+  names(mock_study_names)[dds] <- paste(names(mock_study_names)[dds],chrono_names )
+}
+```
+
+Rename source chronograms:
+
+```{r}
+phylo_all_renamed <- c()
+for (phy in spp_summ$phylo_all){
+  is_in_tree <- match(gsub(" ", "_", phy$tip.label), mock_spp_names)
+  # print(is_in_tree)
+  # print(phy$tip.label) 
+  # print(names(mock_spp_names)[is_in_tree])
+  phy$tip.label <- names(mock_spp_names)[is_in_tree]
+  phylo_all_renamed <- c(phylo_all_renamed, list(phy))
+}
+class(phylo_all_renamed) <- "multiPhylo"
+names(phylo_all_renamed) <- names(mock_study_names)
+```
+
+```{r}
+
+for (ss in seq(phylo_all_renamed)) {
+  png(filename = paste0("mock_source_chronogram_", ss, ".png") # , 
+  #     height = 7, 
+  #     width = 7, 
+  #     units = "in", 
+  #     res = 300
+  )
+  datelifeplot::plot_phylo(phylo_all_renamed[[ss]], title = names(phylo_all_renamed)[ss])
+  dev.off()
+}
+
+```
+
+
+
