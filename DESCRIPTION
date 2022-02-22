@@ -25,14 +25,15 @@ Imports:
     datelife,
     datelifeplot,
     knitr,
-    rmarkdown
+    rmarkdown,
+    viridis
 Remotes:
     phylotastic/datelife,
 	  phylotastic/datelifeplot
-Suggests: 
+Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Depends: 
+Depends:
     R (>= 2.10)
 LazyData: true
 VignetteBuilder: knitr

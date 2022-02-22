@@ -13,9 +13,11 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+## Getting source chronograms
 
 ```{r setup}
 # library(datelifeMS1)
+devtools::load_all("../../datelifeplot")
 devtools::load_all()
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
@@ -45,7 +47,7 @@ for (i in names(ffs)[ffs > 1]) {
 }
 ```
 
-Rename source chronograms:
+### Rename source chronograms:
 
 ```{r}
 phylo_all_renamed <- c()
@@ -61,7 +63,10 @@ class(phylo_all_renamed) <- "multiPhylo"
 names(phylo_all_renamed) <- names(mock_study_names)
 ```
 
-Plotting one chronogram as test:
+### Plotting chronograms
+
+Plot one chronogram as test:
+
 ```{r}
 time_depth <- 45
 chronogram <- phylo_all_renamed[[1]]
@@ -89,7 +94,7 @@ datelifeplot::plot_phylo(chronogram,
 ```
 
 
-Plotting ALL source chronograms
+### Plotting ALL source chronograms
 
 
 ```{r}
@@ -117,7 +122,8 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
 ```
 
 
-combine with magick:
+I combined source chronogram plots with ppt because combining with magick was not
+doing waht I needed:
 
 ```{r}
 for (i in seq(phylo_all_renamed)) {
@@ -132,3 +138,80 @@ pdf("stacked.pdf")
 magick::image_append(magick::image_scale(img, "200x"))
 dev.off()
 ```
+
+## Get calibrations
+
+Rename median chronogram tip labels:
+
+```{r}
+phylo_median <- spp_summ$phylo_median
+is_in_tree <- match(gsub(" ", "_", phylo_median$tip.label), mock_spp_names)
+phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
+```
+
+Get calibrations:
+
+```{r}
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all_renamed,
+  each = FALSE)
+matched <- datelife::match_all_calibrations(
+  phy = phylo_median, 
+  calibrations = all_calibrations)
+calib_summ <- datelife:::summary.matchedCalibrations(
+  matched$matched_calibrations)
+
+```
+Plot ages from source chronograms:
+
+```{r}
+# Get references in matched calibrations:
+studies <- as.character(unique(calib_summ$in_phy$reference))
+# order references alphabetically:
+studies <- studies[order(studies)]
+#create a vector of colors with study names:
+color_studies <- viridis::turbo(n = length(studies))
+names(color_studies) <- studies
+
+
+svg(filename = "../figures/figure2/node_ages_matched.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(phylo_median,
+               title = c("Median Summary Chronogram", "with source chronogram ages"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               calibration_summary = calib_summ,
+               pch = 19,
+               color_pch = color_studies,
+               cex_pch = 2,
+               lwd_bars = 15,
+               cex_legend = 1
+               )
+dev.off()
+```
+
+```{r}
+datelifeplot::plot_node_ages(phylo_median,
+               title = c("Median Summary Chronogram", "with source chronogram ages"),
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               edge.width = 2,
+               calibration_summary = calib_summ,
+               pch = 19,
+               color_pch = color_studies,
+               add_legend = TRUE,
+               cex_legend = 0.5
+               )
+
+```
+             
+             
+## Get median ages
+
+##
