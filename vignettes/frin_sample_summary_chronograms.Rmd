@@ -112,7 +112,7 @@ The next step is to run `summary_patristic_matrix_array` on the array:
 datelife:::summary_patristic_matrix_array(aa)
 
 ```
-This is where things go weird. `summary_patristic_matrix_array` runs:
+This is where things go weird, `summary_patristic_matrix_array` runs:
 
 ```{r}
 apply(aa, MARGIN = c(1, 2), stats::median, na.rm = TRUE)

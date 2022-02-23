@@ -122,8 +122,8 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
 ```
 
 
-I combined source chronogram plots with ppt because combining with magick was not
-doing waht I needed:
+I combined source chronogram plots with ppt because combining with `magick` was not
+doing what I needed:
 
 ```{r}
 for (i in seq(phylo_all_renamed)) {
@@ -190,28 +190,100 @@ datelifeplot::plot_node_ages(phylo_median,
                color_pch = color_studies,
                cex_pch = 2,
                lwd_bars = 15,
-               cex_legend = 1
+               cex_legend = 0.7,
+               x_legend = -20
                )
 dev.off()
 ```
+## Get pairwise median age points and plot them:
 
 ```{r}
+
+names(spp_dr)
+spp_dr[[1]]
+
+best_grove <- datelife::get_best_grove(spp_dr)
+
+median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
+colnames(median_matrix)
+
+median_matrix_list <- list(summary_matrix = median_matrix)
+
+median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
+
+matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
+
+mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+
+mm_summ$in_phy
+
+## rename
+
+mm_summ$in_phy$taxonA
+
+is_in_taxonA <- match(gsub(" ", "_", mm_summ$in_phy$taxonA), mock_spp_names)
+mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
+
+is_in_taxonB <- match(gsub(" ", "_", mm_summ$in_phy$taxonB), mock_spp_names)
+mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
+
+mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
+
+AB <- mm_summ$in_phy$taxonA %in% c("A", "B") & mm_summ$in_phy$taxonB %in% c("A", "B")
+
+AC <- mm_summ$in_phy$taxonA %in% c("A", "C") & mm_summ$in_phy$taxonB %in% c("A", "C")
+
+not_used <- AB | AC
+
+mm_summ$in_phy[not_used,]
+
+mm_summ$in_phy[not_used,]$reference <- rep("Excluded from analysis", 4)
+```
+
+
+
+```{r}
+# We have two variables, median ages "used" as calibrations, and median ages "not used" or "excluded from analysis".
+color_reference <- viridis::viridis(2) 
+# c("blue", "gray")
+names(color_reference) <- c("Used as calibration", "Excluded from analysis")
 datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with source chronogram ages"),
+               title = c("Median Summary Chronogram", "with median pairwise ages"),
                plot_type = "phyloch",
                time_depth = 45,
                pos_axis = 2,
                edge.width = 2,
-               calibration_summary = calib_summ,
+               calibration_summary = mm_summ,
                pch = 19,
-               color_pch = color_studies,
+               color_pch = color_reference,
+               transparent_pch = 70,
                add_legend = TRUE,
                cex_legend = 0.5
                )
 
+svg(filename = "../figures/figure2/median_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(phylo_median,
+               title = c("Median Summary Chronogram", "with median pairwise ages"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               calibration_summary = mm_summ,
+               pch = 19,
+               color_pch = color_reference,
+               cex_pch = 2,
+               transparent_pch = 70,
+               lwd_bars = 15,
+               cex_legend = 0.7,
+               x_legend = -20
+               )
+dev.off()
 ```
              
              
-## Get median ages
 
 ##
