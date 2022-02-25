@@ -68,14 +68,14 @@ names(phylo_all_renamed) <- names(mock_study_names)
 Plot one chronogram as test:
 
 ```{r}
-time_depth <- 45
+plot_max_time <- 45
 chronogram <- phylo_all_renamed[[1]]
-chronogram$root.edge <- time_depth - max(ape::branching.times(chronogram))
+chronogram$root.edge <- plot_max_time - max(ape::branching.times(chronogram))
 
 ape::plot.phylo(chronogram,
                 cex = 1, #edge.width = 2,
                 label.offset = 0.5,
-                x.lim = c(0, time_depth),
+                x.lim = c(0, plot_max_time),
                 root.edge = TRUE,
                 plot = TRUE, edge.width = 2)
 ape::axisPhylo(line = 1)
@@ -83,7 +83,7 @@ ape::axisPhylo(line = 1)
 datelifeplot::plot_phylo(chronogram,
                          title = names(phylo_all_renamed)[1],
                          plot_type = "ape",
-                         time_depth = 45,
+                         time_depth = plot_max_time,
                          write = "pdf",
                          file_name = "test.pdf",
                          cex_tiplabels = 2,
@@ -181,7 +181,7 @@ datelifeplot::plot_node_ages(phylo_median,
                title = c("Median Summary Chronogram", "with source chronogram ages"),
                cex_title = 2,
                plot_type = "phyloch",
-               time_depth = 45,
+               time_depth = plot_max_time,
                pos_axis = 2,
                edge.width = 2,
                cex_tiplabels = 2,
@@ -250,7 +250,7 @@ names(color_reference) <- c("Used as calibration", "Excluded from analysis")
 datelifeplot::plot_node_ages(phylo_median,
                title = c("Median Summary Chronogram", "with median pairwise ages"),
                plot_type = "phyloch",
-               time_depth = 45,
+               time_depth = plot_max_time,
                pos_axis = 2,
                edge.width = 2,
                calibration_summary = mm_summ,
@@ -268,7 +268,7 @@ datelifeplot::plot_node_ages(phylo_median,
                title = c("Median Summary Chronogram", "with median pairwise ages"),
                cex_title = 2,
                plot_type = "phyloch",
-               time_depth = 45,
+               time_depth = plot_max_time,
                pos_axis = 2,
                edge.width = 2,
                cex_tiplabels = 2,
@@ -285,5 +285,46 @@ dev.off()
 ```
              
              
+## Phylo median tree as a phylogram (all branches equal length)
 
-##
+```{r}
+# visualize median branching times:
+ape::branching.times(phylo_median)
+# force equal branch lengths, with root age = 1
+pp <- ape::compute.brlen(phylo_median, power = 1)
+# visualize the new branch lengths:
+ape::branching.times(pp)
+pp$edge.length
+plot(pp)
+ape::axisPhylo(side = 1)
+# to make branch lengths proportional to a certain age we have o multiply them by that age, in this case it's the total plot_max_time
+pp$edge.length <- pp$edge.length*plot_max_time 
+```
+
+Plot the tree with source chronogram ages
+
+```{r}
+svg(filename = "../figures/figure2/synth_tree_source_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(pp,
+               title = c("Open Tree synthetic tree", "with source chronogram ages"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               calibration_summary = calib_summ,
+               pch = 19,
+               color_pch = color_studies,
+               cex_pch = 2,
+               lwd_bars = 15,
+               cex_legend = 0.7,
+               x_legend = -20,
+               transparent_pch = 90
+               )
+dev.off()
+```
+
+
