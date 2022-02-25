@@ -91,7 +91,25 @@ names(phylo_all_renamed) <- names(mock_study_names)
 ### Plotting ALL source chronograms
 
 I combined source chronogram plots with ppt.
-
+```{r}
+# as pdf:
+plot_max_time <- 30
+datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
+                             write = "pdf",
+                             folder_name = "../figures/figure1/source_chronograms",
+                             file_name = "phylo_all",
+                             plot_type = "phyloch",
+                             max_depth = plot_max_time,
+                             edge.width = 2,
+                             cex_tiplabels = 2,
+                             cex_axislabel = 1.5,
+                             cex_axis = 2,
+                             cex_title = 2,
+                             pos_title = 2.2,
+                             pos_axis = 2,
+                             axis_label = "",
+                             units = NULL)
+```
 ## Get calibrations
 
 Rename median chronogram tip labels:
@@ -128,7 +146,9 @@ pp$edge.length
 plot(pp)
 ape::axisPhylo(side = 1)
 # to make branch lengths proportional to a certain age we have o multiply them by that age, in this case it's the total plot_max_time
-pp$edge.length <- pp$edge.length*plot_max_time 
+pp$edge.length <- pp$edge.length*45 
+# I decided to make the two oldest branches shorter:
+pp$edge.length[pp$edge.length == 27] <- 9
 ```
 
 Plot ages from source chronograms on top of opentree synth tree:
@@ -139,15 +159,17 @@ studies <- as.character(unique(calib_summ$in_phy$reference))
 # order references alphabetically:
 studies <- studies[order(studies)]
 #create a vector of colors with study names:
-color_studies <- viridis::turbo(n = length(studies))
+color_studies <- viridis::turbo(n = 9)
+color_studies <- color_studies[c(2,8,5)]
 names(color_studies) <- studies
 
+plot_max_time <- 30
 
 svg(filename = "../figures/figure1/opentree_source_ages.svg",
     height = 5,
     width = 7)
 datelifeplot::plot_node_ages(pp,
-               title = c("Open Tree of Life synthetic topology", "with source chronogram ages"),
+               title = c(""),
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
@@ -155,12 +177,13 @@ datelifeplot::plot_node_ages(pp,
                edge.width = 2,
                cex_tiplabels = 2,
                calibration_summary = calib_summ,
-               pch = 19,
+               pch = 18,
                color_pch = color_studies,
                cex_pch = 2,
-               lwd_bars = 15,
+               lwd_bars = 10,
                cex_legend = 0.7,
-               x_legend = -20
+               x_legend = 0,
+               y_legend = 6.5
                )
 dev.off()
 ```
@@ -207,19 +230,6 @@ mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
 color_reference <- viridis::viridis(2) 
 # c("blue", "gray")
 names(color_reference) <- c("Used as calibration", "Excluded from analysis")
-datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               calibration_summary = mm_summ,
-               pch = 19,
-               color_pch = color_reference,
-               transparent_pch = 70,
-               add_legend = TRUE,
-               cex_legend = 0.5
-               )
 
 svg(filename = "../figures/figure1/median_ages.svg",
     height = 5,
