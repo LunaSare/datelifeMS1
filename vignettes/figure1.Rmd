@@ -1,0 +1,250 @@
+---
+title: "figure1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{figure2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+## Getting source chronograms
+
+```{r setup}
+# library(datelifeMS1)
+devtools::load_all("../../datelifeplot")
+devtools::load_all()
+frin_sample_dsumm$phylo_median
+spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_dq <- datelife::make_datelife_query(spp)
+spp_dr <- datelife::get_datelife_result(spp_dq)
+
+```
+
+As you can see in figure 2, there is one chronogram that has inconsistent ages for one node relative to other node ages. It is Study 6, Burns et al.
+To produce a figure that would showcase the datelife workflow in a clear and straightforward way, we decided to keep only 3 source chronograms:
+<!--
+Study 2 - Chronogram 1 and 2, 
+Study 4 - Chronogram 1, and
+Study 6 - 
+These studies correspond to indices 2, 6 and 9 from the datelife result, so we are going to prune those out:-->
+
+Study 1, and
+Study 3 - Chronogram 1 and 2.
+
+These studies correspond to indices 1, 4 and 5 from the datelife result, so we are going to prune those out:
+
+```{r}
+# names(spp_dr)[c(2,3, 6, 9)]
+# spp_dr_fig1 <- spp_dr[-c(2,3,6,9)]
+# names(spp_dr_fig1)
+names(spp_dr)[c(1,4,5)]
+spp_dr_fig1 <- spp_dr[c(1,4,5)]
+names(spp_dr_fig1)
+```
+
+
+```{r}
+class(spp_dr_fig1) <- "datelifeResult"
+spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr_fig1)
+spp_summ$phylo_all
+
+mock_spp_names <- gsub(" ", "_", spp_summ$phylo_median$tip.label)
+names(mock_spp_names) <- LETTERS[1:6]
+mock_spp_names
+
+mock_study_names <- names(spp_summ$phylo_all)
+iis <- match(mock_study_names, unique(mock_study_names))
+names(mock_study_names) <- paste("Study", iis)
+names(mock_study_names)
+ffs <- table(names(mock_study_names))
+
+is_dupl <- names(mock_study_names) %in% names(ffs)[ffs > 1]
+
+# Add "Chronogram X" to duplicated studies:
+
+for (i in names(ffs)[ffs > 1]) {
+  dds <- i == names(mock_study_names)
+  chrono_names <- paste("- Chronogram", seq(ffs[[i]]))
+  names(mock_study_names)[dds] <- paste(names(mock_study_names)[dds],chrono_names )
+}
+```
+
+### Rename source chronograms:
+
+```{r}
+phylo_all_renamed <- c()
+for (phy in spp_summ$phylo_all){
+  is_in_tree <- match(gsub(" ", "_", phy$tip.label), mock_spp_names)
+  phy$tip.label <- names(mock_spp_names)[is_in_tree]
+  phylo_all_renamed <- c(phylo_all_renamed, list(phy))
+}
+class(phylo_all_renamed) <- "multiPhylo"
+names(phylo_all_renamed) <- names(mock_study_names)
+```
+
+### Plotting ALL source chronograms
+
+I combined source chronogram plots with ppt.
+
+## Get calibrations
+
+Rename median chronogram tip labels:
+
+```{r}
+phylo_median <- spp_summ$phylo_median
+is_in_tree <- match(gsub(" ", "_", phylo_median$tip.label), mock_spp_names)
+phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
+```
+
+Get calibrations:
+
+```{r}
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all_renamed,
+  each = FALSE)
+matched <- datelife::match_all_calibrations(
+  phy = phylo_median, 
+  calibrations = all_calibrations)
+calib_summ <- datelife:::summary.matchedCalibrations(
+  matched$matched_calibrations)
+
+```
+## Phylo median tree as a phylogram (all branches equal length)
+
+```{r}
+# visualize median branching times:
+ape::branching.times(phylo_median)
+# force equal branch lengths, with root age = 1
+pp <- ape::compute.brlen(phylo_median, power = 1)
+# visualize the new branch lengths:
+ape::branching.times(pp)
+pp$edge.length
+plot(pp)
+ape::axisPhylo(side = 1)
+# to make branch lengths proportional to a certain age we have o multiply them by that age, in this case it's the total plot_max_time
+pp$edge.length <- pp$edge.length*plot_max_time 
+```
+
+Plot ages from source chronograms on top of opentree synth tree:
+
+```{r}
+# Get references in matched calibrations:
+studies <- as.character(unique(calib_summ$in_phy$reference))
+# order references alphabetically:
+studies <- studies[order(studies)]
+#create a vector of colors with study names:
+color_studies <- viridis::turbo(n = length(studies))
+names(color_studies) <- studies
+
+
+svg(filename = "../figures/figure1/opentree_source_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(pp,
+               title = c("Open Tree of Life synthetic topology", "with source chronogram ages"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               calibration_summary = calib_summ,
+               pch = 19,
+               color_pch = color_studies,
+               cex_pch = 2,
+               lwd_bars = 15,
+               cex_legend = 0.7,
+               x_legend = -20
+               )
+dev.off()
+```
+## Get pairwise median age points and plot them:
+
+```{r}
+
+names(spp_dr_fig1)
+spp_dr_fig1[[1]]
+
+best_grove <- datelife::get_best_grove(spp_dr_fig1)
+
+median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
+colnames(median_matrix)
+
+median_matrix_list <- list(summary_matrix = median_matrix)
+
+median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
+
+matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
+
+mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+
+mm_summ$in_phy
+
+## rename
+
+mm_summ$in_phy$taxonA
+
+is_in_taxonA <- match(gsub(" ", "_", mm_summ$in_phy$taxonA), mock_spp_names)
+mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
+
+is_in_taxonB <- match(gsub(" ", "_", mm_summ$in_phy$taxonB), mock_spp_names)
+mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
+
+mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
+
+```
+
+
+
+```{r}
+# We have two variables, median ages "used" as calibrations, and median ages "not used" or "excluded from analysis".
+color_reference <- viridis::viridis(2) 
+# c("blue", "gray")
+names(color_reference) <- c("Used as calibration", "Excluded from analysis")
+datelifeplot::plot_node_ages(phylo_median,
+               title = c("Median Summary Chronogram", "with median pairwise ages"),
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               edge.width = 2,
+               calibration_summary = mm_summ,
+               pch = 19,
+               color_pch = color_reference,
+               transparent_pch = 70,
+               add_legend = TRUE,
+               cex_legend = 0.5
+               )
+
+svg(filename = "../figures/figure1/median_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(phylo_median,
+               title = c("Median Summary Chronogram", "with median pairwise ages"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               calibration_summary = mm_summ,
+               pch = 19,
+               color_pch = color_reference,
+               cex_pch = 2,
+               transparent_pch = 70,
+               lwd_bars = 15,
+               cex_legend = 0.7,
+               x_legend = -20
+               )
+dev.off()
+```
+             
+             
+
+
+
