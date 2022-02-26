@@ -26,7 +26,8 @@ Imports:
     datelifeplot,
     knitr,
     rmarkdown,
-    viridis
+    viridis,
+    gridExtra
 Remotes:
     phylotastic/datelife,
 	  phylotastic/datelifeplot

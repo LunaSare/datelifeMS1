@@ -100,15 +100,17 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
                              file_name = "phylo_all",
                              plot_type = "phyloch",
                              max_depth = plot_max_time,
-                             edge.width = 2,
+                             edge.width = 3,
                              cex_tiplabels = 2,
                              cex_axislabel = 1.5,
                              cex_axis = 2,
-                             cex_title = 2,
-                             pos_title = 2.2,
+                             cex_title = 2.5,
+                             pos_title = 3,
                              pos_axis = 2,
                              axis_label = "",
-                             units = NULL)
+                             units = NULL,
+                             plot_height = 250,
+                             plot_width = 5)
 ```
 ## Get calibrations
 
@@ -167,24 +169,28 @@ plot_max_time <- 30
 
 svg(filename = "../figures/figure1/opentree_source_ages.svg",
     height = 5,
-    width = 7)
+    width = 5)
 datelifeplot::plot_node_ages(pp,
                title = c(""),
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               edge.width = 2,
+               cex_axis = 1.3,
+               edge.width = 3,
                cex_tiplabels = 2,
                calibration_summary = calib_summ,
                pch = 18,
                color_pch = color_studies,
                cex_pch = 2,
                lwd_bars = 10,
-               cex_legend = 0.7,
+               cex_legend = 1,
+               axis_label = "",
                x_legend = 0,
-               y_legend = 6.5
+               y_legend = 7.5,
+               mai2 = 0
                )
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
 dev.off()
 ```
 ## Get pairwise median age points and plot them:
@@ -218,43 +224,144 @@ mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
 
 is_in_taxonB <- match(gsub(" ", "_", mm_summ$in_phy$taxonB), mock_spp_names)
 mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
+```
 
-mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
 
+Table:
+
+```{r}
+colnames(mm_summ$in_phy)
+pretty <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+pretty
+# Eliminate duplicated taxon pairs:
+## Find the duplicated pairs
+taxon_pairs <- c()
+for (i in seq(nrow(pretty))) {
+  taxon_pair <- as.character(pretty[i, c("taxonA", "taxonB")])
+  taxon_pair <- taxon_pair[order(taxon_pair)]
+  taxon_pair <- paste(taxon_pair, collapse = "")
+  taxon_pairs <- c(taxon_pairs, taxon_pair)
+}
+## Eliminate them:
+pretty <- pretty[!duplicated(taxon_pairs),]
+
+# Reorder ROWS my nodename and taxon names
+pretty <- pretty[order(pretty$mrca_node_number, pretty$taxonA, pretty$taxonB),]
+# Eliminate rownames
+rownames(pretty) <- NULL
+# Reorder COLUMNS
+pretty <- pretty[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+# Modify column names to be informative
+colnames(pretty)[4] <- "Median Pairwise Age"
+colnames(pretty)[1] <- "Node Name"
+# Change node numbers my node names
+pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
+
+# Print table as pdf
+pdf("../figures/figure1/median_table.pdf")       # Export PDF
+gridExtra::grid.table(pretty) # if you do not want row numbers set rows = NULL
+dev.off()
 ```
 
 
 
 ```{r}
-# We have two variables, median ages "used" as calibrations, and median ages "not used" or "excluded from analysis".
-color_reference <- viridis::viridis(2) 
-# c("blue", "gray")
-names(color_reference) <- c("Used as calibration", "Excluded from analysis")
+color_reference <- "blue"
+
+mm_summ$in_phy$reference <- rep("Median pairwise \nnode ages\n", nrow(mm_summ$in_phy))
+
+names(color_reference) <- c("Median pairwise \nnode ages\n")
 
 svg(filename = "../figures/figure1/median_ages.svg",
     height = 5,
-    width = 7)
+    width = 5.5)
 datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
+               title = c("Median Summary Chronogram"),
+               pos_title = 3,
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               edge.width = 2,
+               cex_axis = 1.3,
+               edge.width = 3,
                cex_tiplabels = 2,
                calibration_summary = mm_summ,
-               pch = 19,
+               pch = "|",
                color_pch = color_reference,
                cex_pch = 2,
-               transparent_pch = 70,
                lwd_bars = 15,
-               cex_legend = 0.7,
-               x_legend = -20
+               cex_legend =1.4,
+               x_legend = 0,
+               y_legend = 7.5,
+               mai2 = 0,
+               axis_label = ""
                )
 dev.off()
 ```
              
-             
+# SDM tree
+
+```{r}
+phylo_sdm <- spp_summ$phylo_sdm
+is_in_tree <- match(gsub(" ", "_", phylo_sdm$tip.label), mock_spp_names)
+phylo_sdm$tip.label <- names(mock_spp_names)[is_in_tree]
+
+best_grove <- datelife::get_best_grove(spp_dr_fig1)
+
+sdm_matrix <- datelife::datelife_result_sdm_matrix(best_grove$best_grove)
+colnames(sdm_matrix)
+
+sdm_matrix_list <- list(summary_matrix = sdm_matrix)
+
+sdm_matrix_table <- datelife::matrices_to_table(sdm_matrix_list)
+
+matched_sdm_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_sdm, calibrations = sdm_matrix_table)
+
+sdm_summ <- datelife:::summary.matchedCalibrations(matched_sdm_ages$matched_calibrations)
+
+sdm_summ$in_phy
+
+## rename
+
+sdm_summ$in_phy$taxonA
+
+is_in_taxonA <- match(gsub(" ", "_", sdm_summ$in_phy$taxonA), mock_spp_names)
+mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
+
+is_in_taxonB <- match(gsub(" ", "_", sdm_summ$in_phy$taxonB), mock_spp_names)
+mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
+```
 
 
+Plot:
 
+```{r}
+color_reference <- "purple"
+
+sdm_summ$in_phy$reference <- rep("SDM pairwise \nnode ages\n", nrow(sdm_summ$in_phy))
+
+names(color_reference) <- c("SDM pairwise \nnode ages\n")
+
+svg(filename = "../figures/figure1/sdm_ages.svg",
+    height = 5,
+    width = 7)
+datelifeplot::plot_node_ages(phylo_sdm,
+               title = c("SDM Summary Chronogram"),
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               cex_axis = 1.3,
+               edge.width = 3,
+               cex_tiplabels = 2,
+               calibration_summary = sdm_summ,
+               pch = "|",
+               color_pch = color_reference,
+               cex_pch = 2,
+               lwd_bars = 15,
+               cex_legend = 1.5,
+               x_legend = 0,
+               y_legend = 6
+               )
+dev.off()
+```
