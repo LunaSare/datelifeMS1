@@ -13,3 +13,4 @@ dev.txt
 *.aux
 *.log
 inst/doc
+~$*.*

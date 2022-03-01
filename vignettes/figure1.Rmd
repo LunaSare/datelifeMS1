@@ -193,6 +193,37 @@ datelifeplot::plot_node_ages(pp,
 ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
 dev.off()
 ```
+## Plot tree topology with node labels and no time axis
+
+```{r}
+svg(filename = "../figures/figure1/opentree_topology.svg",
+    height = 5,
+    width = 5)
+datelifeplot::plot_phylo(pp,
+                         title = c("Open Tree of Life synthetic",
+                                   "tree topology",
+                             write = "pdf",
+                             folder_name = "../figures/figure1/source_chronograms",
+                             plot_type = "phyloch",
+                             max_depth = plot_max_time,
+                             edge.width = 3,
+                             cex_tiplabels = 2,
+                             cex_axislabel = 1.5,
+                             cex_axis = 2,
+                             cex_title = 2.5,
+                             pos_title = 3,
+                             pos_axis = 2,
+                             axis_label = "",
+                             units = NULL,
+                             #plot_height = 250,
+                             plot_width = 5
+                             )
+               
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
+dev.off()
+```
+
+
 ## Get pairwise median age points and plot them:
 
 ```{r}
@@ -245,7 +276,7 @@ for (i in seq(nrow(pretty))) {
 ## Eliminate them:
 pretty <- pretty[!duplicated(taxon_pairs),]
 
-# Reorder ROWS my nodename and taxon names
+# Reorder ROWS by node number and taxon names
 pretty <- pretty[order(pretty$mrca_node_number, pretty$taxonA, pretty$taxonB),]
 # Eliminate rownames
 rownames(pretty) <- NULL
@@ -269,6 +300,8 @@ dev.off()
 color_reference <- "blue"
 
 mm_summ$in_phy$reference <- rep("Median pairwise \nnode ages\n", nrow(mm_summ$in_phy))
+length(unique(mm_summ$in_phy$nodeAge))
+# there are 8 different median pairwise ages
 
 names(color_reference) <- c("Median pairwise \nnode ages\n")
 
@@ -286,13 +319,13 @@ datelifeplot::plot_node_ages(phylo_median,
                edge.width = 3,
                cex_tiplabels = 2,
                calibration_summary = mm_summ,
-               pch = "|",
+               pch = "x",
                color_pch = color_reference,
                cex_pch = 2,
                lwd_bars = 15,
                cex_legend =1.4,
                x_legend = 0,
-               y_legend = 7.5,
+               y_legend = 7,
                mai2 = 0,
                axis_label = ""
                )
