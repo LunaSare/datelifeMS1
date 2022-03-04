@@ -27,10 +27,12 @@ Imports:
     knitr,
     rmarkdown,
     viridis,
-    gridExtra
+    gridExtra,
+    wordcountaddin
 Remotes:
     phylotastic/datelife,
 	  phylotastic/datelifeplot
+    benmarwick/wordcountaddin
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
