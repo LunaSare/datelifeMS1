@@ -189,23 +189,24 @@ dev.off()
 ```{r}
 plot_max_time <- 30
 svg(filename = "../figures/figure1/opentree_topology.svg",
+#pdf(file = "../figures/figure1/opentree_topology.pdf",
+#png(filename = "../figures/figure1/opentree_topology.png",
     height = 5,
-    width = 5)
+    width = 5,
+    bg = "transparent")
 datelifeplot::plot_chronogram(pp,
-                         title = c("Open Tree of Life synthetic",
-                                   "tree topology"),
+                         title = c(""),
                          time_depth = plot_max_time,
-                         time_axis = TRUE,
+                         time_axis = FALSE,
                          axis_label = "",
                          edge.width = 3,
                          cex_tiplabels = 2,
                          cex_axislabel = 1.5,
                          cex_axis = 2,
-                         cex_title = 2,
-                         pos_title = 3,
-                         units = NULL
+                         cex_title = 1.5,
+                         pos_title = 2
                              )
-ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white", cex = 1.5)
 dev.off()
 ```
 
