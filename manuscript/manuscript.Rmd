@@ -45,17 +45,14 @@ authornote: |
   Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 425 Hesler Biology Building, Knoxville, TN 37996, USA.
 
 abstract: |
-  Date estimates for times of evolutionary diveregences are key data for research in the natural sciences. These estimates also provide valuable information for for education, science communication and policy decisions.
+  Date estimates for times of evolutionary divergences are key data for research in the natural sciences. These estimates also provide valuable information for for education, science communication and policy decisions.
   Although achieving a high-quality reconstruction of time of evolutionary origin as a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is still a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
   When these estimates are shared in public, open databases this wealth of expertly-curated and peer-reviewed data on time of evolutionary origin is exposed in a programatic and reusable way.
-  Intensive and localized efforts have improved data sharing practices, as well as incentivizited open science in biology. 
-
-  Here we present `datelife`, a service implemented as an R package and an Rshiny website application available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
-
-  The main workflow of `datelife` is to construct a chronogram for any given combination of taxon names, by searching a local chronogram database constructed and curated from the Open Tree of Life (OpenTree), which incorporates phylogenetic data from the TreeBASE database as well.
-  We implement and test methods for summarizing time data from multiple source chronograms using supertree and congruification algorithms. Additionally, time data extracted from source chronograms can be used as secondary calibration points to add branch lengths proportional to absolute time to a tree topology using alternative dating methods external to datelife.
-
-  `datelife` will be useful to increase awereness on the existing variation in expert time of divergence data, and can foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, providing a framework for a more informed interpretation of evolutionary results.
+  Intensive and localized efforts have improved data sharing practices, as well as incentivizited open science in biology.
+  Here we present DateLife, a service implemented as an R package and an Rshiny website application available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
+  The main DateLife workflow constructs a chronogram for any given combination of taxon names, by searching a local chronogram database constructed and curated from the Open Tree of Life Phylesystem phylogenetic database, which incorporates phylogenetic data from TreeBASE database as well.
+  We implement and test methods for summarizing time data from multiple source chronograms using supertree and congruification algorithms, and using age data extracted from source chronograms as secondary calibration points to add branch lengths proportional to absolute time to a tree topology.
+  DateLife will be useful to increase awereness on the existing variation in expert time of divergence data, and can foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, providing a framework for a more informed interpretation of evolutionary results.
 
   <!--  R has become mainstream in the biological-data analyst toolkit. Hence, to improve accessibility of time of evolutionary origin data we developed an R package that facilitates interaction, reanalysis and reuse of it, as well as incorporation of these data into the evolutionary analysis workflow. -->
 
@@ -99,38 +96,62 @@ load("../data/dres.rda")
 ```
 
 # Introduction
-Chronograms are phylogenies with branch lengths proportional to time.
 <!-- If you're aiming for syst bio you don't want to start so general Readers know what chronorgrams and phylogenies are!.-->
-Chronograms provide key data for the study of natural processes in many areas of biological research, such as developmental  biology (cite) to conservation biology [@Felsenstein1985a; @Webb2000], historical biogeography, a species diversification [@posadas2006historical; @Morlon2014].
+Chronograms --phylogenies with branch lengths proportional to time, provide key data for the study of natural processes in many areas of biological research, such as developmental  biology (cite) to conservation biology [@Felsenstein1985a; @Webb2000], historical biogeography, a species diversification [@posadas2006historical; @Morlon2014].
 
 Building a chronogram is not an easy task.
-It requires obtaining and curating data to construct a phylogeny; selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree. 
+It requires obtaining and curating data to construct a phylogeny; selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree.
 Estimating accurate chronograms generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
-Here we present DateLife, available as an R package `datelife` and as a website application with a graphical user interface at www.datelife.org/query/, which captures data from published chronograms, and make these data readily accessible to users.
-`datelife` uses a versioned, open and fully public database [@mctavish2015phylesystem] storing information in a computer readable format [@vos2012nexml], an automated and programatic way of accessing the data [@Stoltzfus2013] and methods to summarize chronograms and compare them.
+Here we present the DateLife software application, available as an R package and as an online Rshiny interactive website at www.datelife.org/query/, which captures data from published chronograms, and make these data readily accessible to users.
+DateLife features a versioned, open and fully public chronogram database [@mctavish2015phylesystem] storing age information in a computer readable format [@vos2012nexml], an automated and programmatic way of accessing the data [@Stoltzfus2013] and methods to summarize and compare age data.
 
 
-# Description of the workflow
+# The DateLife algorithm
 
-The general `datelife` workflow is shown in figure \ref{fig:workflow}, briefly:
+_**Providing an input.--**_ DateLife starts with an input query consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used on the summary steps described below.
 
-1. It starts with an input query consisting of at least two taxon names, which can be provided in two different forms: as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths.
-1. Input taxon names are processed to detect, correct and standardize name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard. To do this, `datelife` implements the Taxonomic Name Resolution Service (TNRS; @Boyle2013) provided by OpenTree [@opentreeAPIs]. TNRS increases the probability of correctly finding the input taxon names in the chronogram database.
-1. The current version of `datelife` only accepts scientific taxonomic names as input. Names can belong to any taxonomic group or binomial specific. If an input taxon name belongs to an "inclusive" taxonomic group, i.e., a taxon above the species level, such as genus, family, etc.), `datelife` has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, `datelife` retrieves all species names within the "inclusive" taxonomic group and adds them to the input. If the flag is inactive, `datelife` will drop the "inclusive" taxon names from input.
-1. The cleaned input taxon names are saved as a special R object (of a newly defined class \texttt{datelifeQuery}) that contains the processed names, the corresponding taxonomic id numbers, and the topology of theinput tree if any was provided. The \texttt{datelifeQuery} object is used next to search the chronogram database.
-1. Chronograms with at least two matching input taxon names are identified and pruned down to preserve only input taxon names as tips. Then, each pruned chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all downstream analyses and summaries. The matrices are associated to the citation of the original study and stored as an R object of class \texttt{datelifeResult}.
-1. At this point, summary data is collected to inform decisions for the next steps of the analysis workflow. Types of summary information provided are: a) all pruned source chronograms, b) age of the MRCA (most recent common ancestor) of the pruned source chronograms, ??? is this only for ones that have all the tax?  c) citations of studies where pruned source chronograms were originally published, d) a summary table with all of the above, e) a single summary chronogram of all or a subset of pruned source chronograms, f) a report of successful matches of input taxon names across pruned source chronograms, and g) the single pruned source chronogram with the most matching input taxon names.
-1. To construct summary trees we use a fixed topology, either provided by the user, taken from the literature <!--The user would have to take it from the literature, ya?--> or obtained from expert phylogenetic information, such as the OpenTree synthetic tree. 
-1. ????? More meat on the methods needed: e.g. how the distances are generated and summarized, how conflict is handled...
-1. Then we summarize source chronograms into a single patristic distance matrix using a method chosen by the user. Summarizing method options available include Super Distance Matrix method [SDM, @Criscuolo2006] and any summary statistics such as median, minimum and maximum ages. Finally, `datelife` applies the summarized time distances as node calibrations to date the given topology with BLADJ [@webb2005phylomatic].
-1. If there is no information available for any input taxon name, users can also create both age and phylogenetic data for the missing branches with a variety of algorithms, ??? like how? 
-1. Users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as view and compare results graphically, or construct their own graphs using \texttt{datelife}'s graphic generation functions.
+Currently, DateLife only accepts scientific names as input, and they can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an "inclusive" taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, the DateLife algorithm retrieves all species names within the "inclusive" taxonomic group and adds them to the input. If the flag is inactive, DateLife ignores the "inclusive" taxon names from the input.
 
-The latest implementation of the `datelife` R package is available on CRAN (v`r packageVersion("datelife")`; @datelifeR).
+Input scientific names are processed using the Taxonomic Name Resolution Service (TNRS; @Boyle2013) provided by OpenTree [@opentreeAPIs]. TNRS increases the probability of correctly finding the query organisms in the chronogram database, as it detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard.
 
-The `datelife` workflow relies on functions from several R packages that we acknowledge: rotl [@Michonneau2016], ape [@paradis2004],
-geiger [@Harmon2008], paleotree [@Bapst2012a], bold [@Chamberlain2018], phytools [@Revell2012], taxize [@Chamberlain2013; @Chamberlain2018], phyloch [@Heibl2008], and phylocomr [@Ooms2018].
+The processed input taxon names are saved as a special R object (of a newly defined class \texttt{datelifeQuery}) that contains the processed names, the corresponding taxonomic id numbers, and the topology of the input tree if any was provided. The \texttt{datelifeQuery} object is used next to search the chronogram database.
+
+_**Searching the database.--**_  Chronograms in the DateLife database with at least two matching processed taxon names are identified and pruned down to preserve only the matched names as tips. Then, each pruned chronogram is transformed to a patristic distance matrix. This format facilitates and greatly speeds up all downstream analyses and summaries. The matrices are associated to the citation of the original study and stored as an R object of class \texttt{datelifeResult}.
+
+_**Summarizing search results.--**_ At this point, summary data is collected to inform decisions for ulterior steps in the user workflow. Types of summary information provided are:
+
+1. The pruned source chronograms are used to get pairwise node ages of your query taxa (Figure \ref{fig:workflow} subfigure X).
+2. Age of the root of pruned source chronograms. This can correspond to the mrca age of your group if the pruned source chronogram has all your query taxa. If not, the root correponds to the mrca of  subgroup withing your query taxa.
+3. Citations of studies where pruned source chronograms were originally published.
+4. A summary table with all of the above.
+5. A single chronogram summarizing all pruned source chronograms, or a subset defined by the user.
+To construct summary trees, `datelife` requires a fixed topology. Users can provide one from the literature, or one of their own making. If no topology is provided, `datelife` chooses one automatically retrieved from an expert phylogenetic information database such as the OpenTree synthetic tree.
+
+????? More meat on the methods needed: e.g. how the distances are generated and summarized, how conflict is handled...
+
+Then we summarize source chronograms into a single patristic distance matrix using a method chosen by the user. Summarizing method options available include Super Distance Matrix method [SDM, @Criscuolo2006] and any summary statistics such as median, minimum and maximum ages. Finally, `datelife` applies the summarized time distances as node calibrations to date the given topology with BLADJ [@webb2005phylomatic].
+
+6. A report of successful matches of input taxon names across pruned source chronograms.
+7. A single pruned source chronogram with the most matching input taxon names.
+
+
+If there is no information available for any input taxon name, users can also create both age and phylogenetic data for the missing branches with a variety of algorithms, ??? like how?
+
+_**Visualizing summaries.--**_ Users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as view and compare results graphically, or construct their own graphs using \texttt{datelife}'s graphic generation functions.
+
+
+The DateLife algorithm illustrated in figure \ref{fig:workflow} is fully implemented using the R language. The latest stable version of the R package `datelife` is available from the CRAN repository (v`r packageVersion("datelife")`; @datelifeR), and relies on functionalities from various biological R packages:
+ape [@paradis2004],
+bold [@Chamberlain2018],
+geiger [@Harmon2008],
+paleotree [@Bapst2012a],
+phyloch [@Heibl2008],
+phylocomr [@Ooms2018],
+phytools [@Revell2012],
+rotl [@Michonneau2016], and
+taxize [@Chamberlain2013; @Chamberlain2018].
+
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
 
 <!-- \item  Alternatively, time of lineage divergence obtained from the pruned chronograms can be used directly as secondary calibration points to date a tree with or without branch lengths containing some or all input taxon names. %a taxonomic tree-->
@@ -163,7 +184,7 @@ present, unit tests cover more than 30% of `datelife`'s code (<https://codecov.i
 
 ## Case study
 
-We illustrate the `datelife` workflow using the family of true finches, Fringillidae as an example.
+We illustrate the `datelife` algorithm using the family of true finches, Fringillidae as an example.
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
 A college educator wishes to obtain state-of-the-art data on time of evolutionary origin of species belonging to the true finches for their class. They decide to use `datelife` because they are teaching best practices for reproducibility.
 Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator wants the students to practice their R skills.
