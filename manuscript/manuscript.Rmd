@@ -46,7 +46,7 @@ authornote: |
 
 abstract: |
   Date estimates for times of evolutionary divergences are key data for research in the natural sciences. These estimates also provide valuable information for for education, science communication and policy decisions.
-  Although achieving a high-quality reconstruction of time of evolutionary origin as a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is still a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
+  Although achieving a high-quality reconstruction of a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
   When these estimates are shared in public, open databases this wealth of expertly-curated and peer-reviewed data on time of evolutionary origin is exposed in a programatic and reusable way.
   Intensive and localized efforts have improved data sharing practices, as well as incentivizited open science in biology.
   Here we present DateLife, a service implemented as an R package and an Rshiny website application available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
@@ -125,13 +125,15 @@ Figure \ref{fig:workflow} provides a graphical summary of the three main steps o
 
 ## Providing an input
 
-DateLife starts with an input query consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used on the summary steps described below.
+DateLife starts with an input query consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used in the summary steps described below.
 
-Currently, DateLife only accepts scientific names as input, and they can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, the DateLife algorithm retrieves all species names within the inclusive taxonomic group and adds them to the input. If the flag is inactive, DateLife ignores the inclusive taxon names from the input.
+DateLife accepts scientific names as input.
+These names can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, the DateLife algorithm retrieves all species names within the inclusive taxonomic group and adds them to the input. If the flag is inactive, DateLife ignores the inclusive taxon names from the input.
 
-Input scientific names are processed using the Taxonomic Name Resolution Service (TNRS; @Boyle2013), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard. DateLife implements TNRS using OpenTree's taxonomic as standard [@opentreeAPIs; @rees2017automated].
+Input scientific names are processed using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard. DateLife implements TNRS using OpenTree's taxonomy as standard [@opentreeAPIs; @rees2017automated].
+<!--_I rewroded a bit, and removed a Boyle citation because it sounded like you were using their TNRS - but you aren't right?  -->
 
-The processed input taxon names are saved as an R object of a newly defined class \texttt{datelifeQuery} that is used in the following steps. It contains the processed names, the corresponding OpenTree taxonomic id numbers, and the topology of the input tree if any was provided.
+The processed input taxon names are saved as an R object of a newly defined class \texttt{datelifeQuery} that is used in the following steps. This object contains the processed names, the corresponding OpenTree taxonomic id numbers, and the topology of the input tree if any was provided.
 
 <!--_**Searching the database.--**_  -->
 
@@ -139,37 +141,52 @@ The processed input taxon names are saved as an R object of a newly defined clas
 
 A DateLife search consists of matching processed taxon names to tip labels in a chronogram database. Chronograms with at least two matching tip labels are identified and pruned down to preserve only the matched tips.
 
-Matching pruned chronograms are stored as individual patristic distance matrices (Figure \ref{fig:workflow} subfigure X). This format speeds up extraction of pairwise taxon ages of the queried taxa, as opposed to searching the ancestor node of a pair of taxa in a "phylo" object or newick string.
+Matching pruned chronograms are stored as individual patristic distance matrices (Figure \ref{fig:workflow} subfigure X). 
+This matrix consists of ... ???? the pairwise distance between pairs of query taxa whcih are in that input tree, in units of millions of years. <!-- is that true? -->
+
+This format speeds up extraction of pairwise taxon ages of the queried taxa, as opposed to searching the ancestor node of a pair of taxa in a "phylo" object or newick string.
 The patristic matrices are also associated to the study citation where the original chronogram was published, and stored as an R object of the newly defined class \texttt{datelifeResult}.
 
 
 DateLife's chronogram database latest version consist of `r length(opentree_chronograms$trees)` chronograms published in `r length(unique(opentree_chronograms$studies))` different studies. It is constructed from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert phylogenetic knowledge with rich metadata [@mctavish2015phylesystem] that allows automatic and reproducible construction of a chronogram database.
 
 
+
 <!-- _**Summarizing search results.--**_ -->
 
 ## Summarizing search results
 
-At this point, summary information is extracted from the \texttt{datelifeResult} object to inform decisions for ulterior steps in the user workflow. Age data from matching pruned chronograms is summarized and used to generate a single summary chronogram. Other basic summary information available is:
+At this point, summary information is extracted from the \texttt{datelifeResult} object to inform decisions for the subsequent steps in the user workflow. Age data from the matching pruned chronograms is summarized and used to generate a single summary chronogram. Other basic summary information available to the user is:
 
 1. The matching pruned chronograms as newick strings or "phylo" objects.
-2. The ages of the root of all matching pruned chronograms. This can correspond to the age of the most recent common ancestor (mrca) of your group of interest if the pruned chronograms have all taxa belonging to the group. If not, the root corresponds to the mrca ofa subgroup withing your group of interest.
+2. The ages of the root of all matching pruned chronograms. This can correspond to the age of the most recent common ancestor (mrca) of your group of interest if the pruned chronograms have all taxa belonging to the group. If not, the root corresponds to the mrca of a subgroup withing your group of interest.
 3. Study citations where original chronograms were published.
 4. A report of input taxon names matches across pruned chronograms.
 5. The single matching pruned chronogram with the most input taxon names.
 
 _**Identifying groves.--**_ To generate a single summary chronogram, the DateLife algorithm starts by identifying the matching pruned chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
+<!--Why do groves matter? Why can't you just use all the trees?-->
 
-_**Choosing a topology.--**_ Due to sampling, DateLife requires a tree topology to summarize age data upon it. Users can provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth].
 
-DateLife can also reconstruct branch lengths proportional to substitution rates on the fixed tree topology from available genetic data from BOLD.
+_**Choosing a topology.--**_ DateLife requires a tree topology to summarize age data upon. Users can provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth].
+
+DateLife can also reconstruct branch lengths proportional to substitution rates on the fixed tree topology using available genetic data from BOLD.
 
 _**Congruifying nodes.--**_ DateLife then implements the congruification method [@Eastman2013] to find nodes belonging to the same clade across matching pruned chronograms.
 Congruified node ages stored as a `congruifiedCalibrations` object are then matched to nodes in the chosen tree topology and stored as a `matchedCalibrations` object.
+<!--This doesn't use the input chronogram pruned patristic distance matricies? Or does it? -->
+ 
 
-_**Summarizing node ages.--**_ DateLife summarizes matched calibrations into a single patristic distance matrix using different methods. Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and summary statistics such as median, minimum and maximum ages.
+_**Summarizing node ages.--**_ DateLife summarizes matched calibrations  ??? How is 'calibrations' defined here? the calibrations from congruification, or the pairwise distances??? into a single patristic distance matrix using different methods. 
+Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and summary statistics such as median, minimum and maximum ages.
+For each node in the output tree topology, the pairiwise distances that traverse that node are ..???
+Under the SDM criterions ??? what happens??
+Using the minimum age criterion ..??
+
 
 _**Dating the tree topology.--**_ Summarized calibrations can be applied as secondary calibrations with different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
+<!--Huh? can you run MrBayes in DateLife?-->
+
 By default, DateLife implements the Branch Length Adjuster (BLADJ) algorithm that assigns ages to nodes with no data evenly between nodes with age data, which minimizes age variance in the resulting chronogram [@Webb2008].
 When there is conflict in ages across node with age data, the algorithm ignores ages that are older than parent nodes and/or younger than descendant nodes.
 
@@ -223,7 +240,7 @@ present, unit tests cover more than 30% of `datelife`'s code (<https://codecov.i
 We illustrate the `datelife` algorithm using the family of true finches, Fringillidae as an example.
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
 A college educator wishes to obtain state-of-the-art data on time of evolutionary origin of species belonging to the true finches for their class. They decide to use `datelife` because they are teaching best practices for reproducibility.
-Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator wants the students to practice their R skills.
+Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator also wants the students to practice their R skills.
 The first step is to run a `datelife` query using the "get species from taxon" flag. This will get all recognised species names within their chosen inclusive taxon. The Fringillidae has `r length(dquery$cleaned_names)` species, according to the Open Tree of Life taxonomy.
 Once with a curated set of species taxon names, the next step is to run a `datelife` search that will find all chronograms that contain at least two species names. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
  There are `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies (Fig. \ref{fig:schronograms1}).
@@ -313,7 +330,7 @@ Code used to generate all versions of this manuscript, the biological examples, 
 
 # Funding
 
-Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572.
+Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572, and the OpenTree grant ABI-1759846.
 
 # Acknowledgements
 
