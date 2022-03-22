@@ -24,43 +24,23 @@ spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
-spp_summ$phylo_all
-
-mock_spp_names <- gsub(" ", "_", spp_summ$phylo_median$tip.label)
-names(mock_spp_names) <- LETTERS[1:6]
-mock_spp_names
-
-mock_study_names <- names(spp_summ$phylo_all)
-iis <- match(mock_study_names, unique(mock_study_names))
-names(mock_study_names) <- paste("Study", iis)
-names(mock_study_names)
-ffs <- table(names(mock_study_names))
-
-is_dupl <- names(mock_study_names) %in% names(ffs)[ffs > 1]
-
-# Add "Chronogram X" to duplicated studies:
-
-for (i in names(ffs)[ffs > 1]) {
-  dds <- i == names(mock_study_names)
-  chrono_names <- paste("- Chronogram", seq(ffs[[i]]))
-  names(mock_study_names)[dds] <- paste(names(mock_study_names)[dds],chrono_names )
-}
+phylo_median <- spp_summ$phylo_median
+phylo_all <- spp_summ$phylo_all
+names(phylo_all)
 ```
 
-### Rename source chronograms:
+We will rename source chronograms to have a shorter study name:
 
 ```{r}
-phylo_all_renamed <- c()
-for (phy in spp_summ$phylo_all){
-  is_in_tree <- match(gsub(" ", "_", phy$tip.label), mock_spp_names)
-  # print(is_in_tree)
-  # print(phy$tip.label)
-  # print(names(mock_spp_names)[is_in_tree])
-  phy$tip.label <- names(mock_spp_names)[is_in_tree]
-  phylo_all_renamed <- c(phylo_all_renamed, list(phy))
-}
-class(phylo_all_renamed) <- "multiPhylo"
-names(phylo_all_renamed) <- names(mock_study_names)
+names(phylo_all) <- c("Hooper et al. 2017",
+                      "Hedges et al. 2015",
+                      "Hedges et al. 2015",
+                      "Barker et al. 2015",
+                      "Barker et al. 2015",
+                      "Jetz et al. 2012",
+                      "Jetz et al. 2012",
+                      "Barker et al. 2013",
+                      "Burns et al. 2014")
 ```
 
 ### Plotting chronograms
@@ -69,7 +49,7 @@ Plot one chronogram as test:
 
 ```{r}
 plot_max_time <- 45
-chronogram <- phylo_all_renamed[[1]]
+chronogram <- phylo_all[[1]]
 chronogram$root.edge <- plot_max_time - max(ape::branching.times(chronogram))
 
 ape::plot.phylo(chronogram,
@@ -81,49 +61,56 @@ ape::plot.phylo(chronogram,
 ape::axisPhylo(line = 1)
 
 datelifeplot::plot_phylo(chronogram,
-                         title = names(phylo_all_renamed)[1],
+                         title = names(phylo_all)[1],
                          plot_type = "ape",
                          time_depth = plot_max_time,
                          write = "pdf",
-                         file_name = "test.pdf",
+                         file_name = "../figures/figure2/test.pdf",
                          cex_tiplabels = 2,
                          cex_axislabel = 1.5,
                          cex_title = 2,
                          pos_title = 2.2,
                          pos_axis = 2)
 ```
+[!Source chronogram test]("../figures/figure2/test.pdf")
 
 
 ### Plotting ALL source chronograms
 
-
+We know that chronogram 9 has the oldest ages.
+Get the maximum age:
 ```{r}
-# as png, but resolution is not good and it is hard to fix within plot_phylo
-# png plots are in vignettes/phylo_all/png
-datelifeplot::plot_phylo_all(trees = phylo_all_renamed,
-                             write = "png")
-
+max(ape::branching.times(phylo_all[[9]]))  # 44.29586
+plot_max_time <- 45
 # as pdf:
-max(ape::branching.times(phylo_all_renamed[[9]]))  # 44.29586
-
-devtools::load_all("../datelifeplot")
-datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
+datelifeplot::plot_phylo_all(chronograms = phylo_all,
+                             folder_name = "../figures/figure2/source_phylo_all",
+                             plot_height = 600,
+                             plot_width = 600,
+                             mai1 = 1,
+                             mai2 = 0,
+                             mai3 = 1,
+                             mai4 = 2.8,
+                             omi1 = 2,
+                             omi2 = 0,
+                             omi3 = 1,
+                             omi4 = 0,
                              write = "pdf",
                              plot_type = "phyloch",
-                             max_depth = 45,
+                             max_depth = plot_max_time,
                              edge.width = 2,
-                             cex_tiplabels = 2,
+                             cex_tiplabels = 1.5,
                              cex_axislabel = 1.5,
                              cex_axis = 2,
                              cex_title = 2,
-                             pos_title = 2.2,
+                             pos_title = -2.8,
                              pos_axis = 2,
                              units = NULL)
 ```
 
 
 I combined source chronogram plots with ppt because combining with `magick` was not
-doing what I needed:
+doing what I needed. This is the code I tried:
 
 ```{r}
 for (i in seq(phylo_all_renamed)) {
@@ -141,19 +128,11 @@ dev.off()
 
 ## Get calibrations
 
-Rename median chronogram tip labels:
-
-```{r}
-phylo_median <- spp_summ$phylo_median
-is_in_tree <- match(gsub(" ", "_", phylo_median$tip.label), mock_spp_names)
-phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
-```
-
 Get calibrations:
 
 ```{r}
 all_calibrations <- datelife::extract_calibrations_phylo(
-  input = phylo_all_renamed,
+  input = phylo_all,
   each = FALSE)
 matched <- datelife::match_all_calibrations(
   phy = phylo_median, 
@@ -162,36 +141,54 @@ calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
 
 ```
-Plot ages from source chronograms:
+Plot ages from source chronograms.
+Choose a color scheme for the studies:
 
 ```{r}
 # Get references in matched calibrations:
 studies <- as.character(unique(calib_summ$in_phy$reference))
+studies
+
 # order references alphabetically:
 studies <- studies[order(studies)]
 #create a vector of colors with study names:
 color_studies <- viridis::turbo(n = length(studies))
 names(color_studies) <- studies
+```
 
+Now, we can plot:
 
+```{r}
 svg(filename = "../figures/figure2/node_ages_matched.svg",
-    height = 5,
+    height = 10,
     width = 7)
 datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with source chronogram ages"),
-               cex_title = 2,
+               title = "Median Summary Chronogram",
                plot_type = "phyloch",
                time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               cex_tiplabels = 2,
                calibration_summary = calib_summ,
                pch = 19,
                color_pch = color_studies,
                cex_pch = 2,
                lwd_bars = 15,
                cex_legend = 0.7,
-               x_legend = -20
+               x_legend = 2,
+               y_legend = 6,
+               mai1 = 1, 
+               mai2 = 0,
+               mai3 = 0.5,
+               mai4 = 2.8,
+               omi1 = 2,
+               omi2 = 0,
+               omi3 = 0.5,
+               omi4 = 0,
+               edge.width = 2,
+               cex_tiplabels = 1.5,
+               cex_axislabel = 1.5,
+               cex_axis = 2,
+               cex_title = 1.2,
+               pos_title = -1,
+               pos_axis = 2
                )
 dev.off()
 ```
