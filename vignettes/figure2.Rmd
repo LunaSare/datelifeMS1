@@ -85,31 +85,31 @@ plot_max_time <- 45
 # as pdf:
 datelifeplot::plot_phylo_all(chronograms = phylo_all,
                              folder_name = "../figures/figure2/source_phylo_all",
-                             plot_height = 600,
+                             plot_height = 440,
                              plot_width = 600,
                              mai1 = 1,
                              mai2 = 0,
                              mai3 = 1,
-                             mai4 = 2.8,
-                             omi1 = 2,
+                             mai4 = 3.72,
+                             omi1 = 1,
                              omi2 = 0,
-                             omi3 = 1,
+                             omi3 = 0,
                              omi4 = 0,
                              write = "pdf",
                              plot_type = "phyloch",
                              max_depth = plot_max_time,
                              edge.width = 2,
-                             cex_tiplabels = 1.5,
+                             cex_tiplabels = 2,
                              cex_axislabel = 1.5,
                              cex_axis = 2,
-                             cex_title = 2,
+                             cex_title = 2.5,
                              pos_title = -2.8,
                              pos_axis = 2,
-                             units = NULL)
+                             axis_label = "")
 ```
 
 
-I combined source chronogram plots with ppt because combining with `magick` was not
+I combined source chronogram plots with ppt (files in figures/figure2/source_phylo_all*.pptx), because combining with `magick` was not
 doing what I needed. This is the code I tried:
 
 ```{r}
@@ -177,7 +177,7 @@ datelifeplot::plot_node_ages(phylo_median,
                mai1 = 1, 
                mai2 = 0,
                mai3 = 0.5,
-               mai4 = 2.8,
+               mai4 = 2,
                omi1 = 2,
                omi2 = 0,
                omi3 = 0.5,
@@ -192,7 +192,7 @@ datelifeplot::plot_node_ages(phylo_median,
                )
 dev.off()
 ```
-## Get pairwise median age points and plot them:
+## Get pairwise median age points
 
 ```{r}
 
@@ -213,76 +213,99 @@ matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_med
 mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
 mm_summ$in_phy
-
-## rename
-
-mm_summ$in_phy$taxonA
-
-is_in_taxonA <- match(gsub(" ", "_", mm_summ$in_phy$taxonA), mock_spp_names)
-mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
-
-is_in_taxonB <- match(gsub(" ", "_", mm_summ$in_phy$taxonB), mock_spp_names)
-mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
-
-mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
-
-AB <- mm_summ$in_phy$taxonA %in% c("A", "B") & mm_summ$in_phy$taxonB %in% c("A", "B")
-
-AC <- mm_summ$in_phy$taxonA %in% c("A", "C") & mm_summ$in_phy$taxonB %in% c("A", "C")
-
-not_used <- AB | AC
-
-mm_summ$in_phy[not_used,]
-
-mm_summ$in_phy[not_used,]$reference <- rep("Excluded from analysis", 4)
 ```
-
-
+Table:
 
 ```{r}
-# We have two variables, median ages "used" as calibrations, and median ages "not used" or "excluded from analysis".
-color_reference <- viridis::viridis(2) 
-# c("blue", "gray")
-names(color_reference) <- c("Used as calibration", "Excluded from analysis")
-datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               calibration_summary = mm_summ,
-               pch = 19,
-               color_pch = color_reference,
-               transparent_pch = 70,
-               add_legend = TRUE,
-               cex_legend = 0.5
-               )
+colnames(mm_summ$in_phy)
+pretty <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+pretty
+# Eliminate duplicated taxon pairs:
+## Find the duplicated pairs
+taxon_pairs <- c()
+for (i in seq(nrow(pretty))) {
+  taxon_pair <- as.character(pretty[i, c("taxonA", "taxonB")])
+  taxon_pair <- taxon_pair[order(taxon_pair)]
+  taxon_pair <- paste(taxon_pair, collapse = "")
+  taxon_pairs <- c(taxon_pairs, taxon_pair)
+}
+## Eliminate them:
+pretty <- pretty[!duplicated(taxon_pairs),]
 
-svg(filename = "../figures/figure2/median_ages.svg",
-    height = 5,
-    width = 7)
-datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
+# Reorder ROWS by node number and taxon names
+pretty <- pretty[order(pretty$mrca_node_number, pretty$taxonA, pretty$taxonB),]
+# Eliminate rownames
+rownames(pretty) <- NULL
+# Reorder COLUMNS
+pretty <- pretty[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+# Modify column names to be informative
+colnames(pretty) <- c("Node Name", "taxon A", "taxon B", "Median Age")
+# Change node numbers my node names
+pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
+
+# substitute underscore by space:
+
+pretty$`taxon A` <- sub("_", " ", pretty$`taxon A`)
+pretty$`taxon B` <- sub("_", " ", pretty$`taxon B`)
+
+
+# Print table as pdf
+## set the theme to have italics in species names:
+
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
+
+pdf("../figures/figure2/median_table.pdf")       # Export PDF
+gridExtra::grid.table(pretty, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+             
+Plotting source ages AND summary ages on the same dated tree
+
+Set colors and data
+
+```{r}
+mm_summ$in_phy$reference <- rep("Median Ages", length(mm_summ$in_phy$reference))
+
+color_median <- "purple" # mustard yellow "#7A0403FF"
+names(color_median) <- mm_summ$in_phy$reference[1]
+
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = calib_summ, a2 = mm_summ)
+point_type <- list(a1 = "/", a2 = "•")
+```
+
+Plot
+
+```{r}
+svg(filename = "../figures/figure2/median_and_calibration_ages.svg",
+    height = 8.5 ,
+    width = 8.5)
+datelifeplot::plot_node_ages2(phylo_median,
+               title = c("Median Summary Chronogram"),
+               pos_title = 3,
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               edge.width = 2,
+               cex_axis = 1.5,
+               edge.width = 3,
                cex_tiplabels = 2,
-               calibration_summary = mm_summ,
-               pch = 19,
-               color_pch = color_reference,
-               cex_pch = 2,
-               transparent_pch = 70,
-               lwd_bars = 15,
-               cex_legend = 0.7,
-               x_legend = -20
+               matched_ages  = all_ages,
+               pch = point_type,
+               pch_color = point_colors,
+               pch_cex = 3,
+               bars_lwd = 15,
+               legend_cex = 1,
+               legend_x = 0,
+               legend_y = 6,
+               mai1 = 1,
+               mai2 = 0,
+               mai4 = 3.6,
+               axis_label = ""
                )
 dev.off()
-```
-             
-             
-## Phylo median tree as a phylogram (all branches equal length)
+```             
+## Phylo median tree as a phylogram (all branches of equal length)
 
 ```{r}
 # visualize median branching times:
@@ -298,30 +321,10 @@ ape::axisPhylo(side = 1)
 pp$edge.length <- pp$edge.length*plot_max_time 
 ```
 
-Plot the tree with source chronogram ages
+Plot the synth tree with node names
 
 ```{r}
-svg(filename = "../figures/figure2/synth_tree_source_ages.svg",
-    height = 5,
-    width = 7)
-datelifeplot::plot_node_ages(pp,
-               title = c("Open Tree synthetic tree", "with source chronogram ages"),
-               cex_title = 2,
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               cex_tiplabels = 2,
-               calibration_summary = calib_summ,
-               pch = 19,
-               color_pch = color_studies,
-               cex_pch = 2,
-               lwd_bars = 15,
-               cex_legend = 0.7,
-               x_legend = -20,
-               transparent_pch = 90
-               )
-dev.off()
+
 ```
 
 
