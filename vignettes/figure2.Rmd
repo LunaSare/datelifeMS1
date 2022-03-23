@@ -27,25 +27,30 @@ spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = 
 phylo_median <- spp_summ$phylo_median
 phylo_all <- spp_summ$phylo_all
 names(phylo_all)
+alphabetic_order <- order(names(phylo_all))
+names(phylo_all)[alphabetic_order]
+phylo_all <- phylo_all[alphabetic_order]
 ```
 
 We will rename source chronograms to have a shorter study name:
 
 ```{r}
-names(phylo_all) <- c("Hooper et al. 2017",
-                      "Hedges et al. 2015",
-                      "Hedges et al. 2015",
-                      "Barker et al. 2015",
-                      "Barker et al. 2015",
-                      "Jetz et al. 2012",
-                      "Jetz et al. 2012",
-                      "Barker et al. 2013",
-                      "Burns et al. 2014")
+names(phylo_all) <- c("Barker et al. 2013",
+                      "Barker et al. 2015 - chronogram 1",
+                      "Barker et al. 2015 - chronogram 2",
+                      "Burns et al. 2014",
+                      "Hedges et al. 2015 - chronogram 1",
+                      "Hedges et al. 2015 - chronogram 2",
+                      "Hooper et al. 2017",
+                      "Jetz et al. 2012 - chronogram 1",
+                      "Jetz et al. 2012 - chronogram 2")
 ```
 
 ### Plotting chronograms
 
-Plot one chronogram as test:
+Plot one chronogram as test.
+
+Create settings and try classic `ape::plot.phylo`:
 
 ```{r}
 plot_max_time <- 45
@@ -59,10 +64,13 @@ ape::plot.phylo(chronogram,
                 root.edge = TRUE,
                 plot = TRUE, edge.width = 2)
 ape::axisPhylo(line = 1)
+```
 
+Plot with `datelifeplot`:
+```{r}
 datelifeplot::plot_phylo(chronogram,
                          title = names(phylo_all)[1],
-                         plot_type = "ape",
+                         plot_type = "phyloch",
                          time_depth = plot_max_time,
                          write = "pdf",
                          file_name = "../figures/figure2/test.pdf",
@@ -82,7 +90,16 @@ Get the maximum age:
 ```{r}
 max(ape::branching.times(phylo_all[[9]]))  # 44.29586
 plot_max_time <- 45
-# as pdf:
+```
+Another way of getting oldest age of all trees in a `multiPhylo ` object:
+
+```{r}
+max(unlist(lapply(phylo_all, ape::branching.times)))
+```
+
+Plot as pdf:
+
+```{r}
 datelifeplot::plot_phylo_all(chronograms = phylo_all,
                              folder_name = "../figures/figure2/source_phylo_all",
                              plot_height = 440,
@@ -112,8 +129,8 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 I combined source chronogram plots with ppt (files in figures/figure2/source_phylo_all*.pptx), because combining with `magick` was not
 doing what I needed. This is the code I tried:
 
-```{r}
-for (i in seq(phylo_all_renamed)) {
+```
+for (i in seq(phylo_all)) {
   ii <- magick::image_read(path = paste0("phylo_all/phylo_all_", i, ".pdf"))
   assign(x = paste0("phy", i), value = ii)
 }
@@ -177,16 +194,16 @@ datelifeplot::plot_node_ages(phylo_median,
                mai1 = 1, 
                mai2 = 0,
                mai3 = 0.5,
-               mai4 = 2,
+               mai4 = 3.73,
                omi1 = 2,
                omi2 = 0,
                omi3 = 0.5,
                omi4 = 0,
                edge.width = 2,
-               cex_tiplabels = 1.5,
+               cex_tiplabels = 2,
                cex_axislabel = 1.5,
                cex_axis = 2,
-               cex_title = 1.2,
+               cex_title = 2,
                pos_title = -1,
                pos_axis = 2
                )
@@ -214,7 +231,7 @@ mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_ca
 
 mm_summ$in_phy
 ```
-Table:
+Table, make it pretty:
 
 ```{r}
 colnames(mm_summ$in_phy)
@@ -272,6 +289,12 @@ names(color_median) <- mm_summ$in_phy$reference[1]
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
 point_type <- list(a1 = "/", a2 = "•")
+
+leg_color<- c(color_studies, color_median)
+# leg_pch <- c(rep("|", length(color_studies)), "•")
+leg_pch <- rep(19, length(leg_color))
+leg_text <- names(leg_color)
+
 ```
 
 Plot
@@ -279,7 +302,7 @@ Plot
 ```{r}
 svg(filename = "../figures/figure2/median_and_calibration_ages.svg",
     height = 8.5 ,
-    width = 8.5)
+    width = 10.5)
 datelifeplot::plot_node_ages2(phylo_median,
                title = c("Median Summary Chronogram"),
                pos_title = 3,
@@ -295,17 +318,20 @@ datelifeplot::plot_node_ages2(phylo_median,
                pch_color = point_colors,
                pch_cex = 3,
                bars_lwd = 15,
-               legend_cex = 1,
-               legend_x = 0,
-               legend_y = 6,
+               legend_cex = 0.9,
+               legend_x = -5,
+               legend_y = 6.2,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
                mai1 = 1,
-               mai2 = 0,
+               mai2 = 0.8,
                mai4 = 3.6,
                axis_label = ""
                )
 dev.off()
 ```             
-## Phylo median tree as a phylogram (all branches of equal length)
+Get phylo median tree as a topology (all branches of equal length)
 
 ```{r}
 # visualize median branching times:
@@ -321,10 +347,27 @@ ape::axisPhylo(side = 1)
 pp$edge.length <- pp$edge.length*plot_max_time 
 ```
 
-Plot the synth tree with node names
+
+Plot median tree topology with node labels and no time axis
 
 ```{r}
-
+svg(filename = "../figures/figure2/median_tree_topology.svg",
+    height = 5,
+    width = 7,
+    bg = "transparent")
+datelifeplot::plot_chronogram(pp,
+                         title = c("Tree topology"),
+                         time_axis = FALSE,
+                         axis_label = "",
+                         edge.width = 3,
+                         cex_tiplabels = 2,
+                         cex_axislabel = 1.5,
+                         cex_axis = 2,
+                         cex_title = 2,
+                         pos_title = 3,
+                         mai4 = 3.6)
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white", cex = 1.5)
+dev.off()
 ```
 
 
