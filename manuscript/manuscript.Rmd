@@ -46,7 +46,7 @@ authornote: |
 
 abstract: |
   Date estimates for times of evolutionary divergences are key data for research in the natural sciences. These estimates also provide valuable information for for education, science communication and policy decisions.
-  Although achieving a high-quality reconstruction of time of evolutionary origin as a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is still a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
+  Although achieving a high-quality reconstruction of a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
   When these estimates are shared in public, open databases this wealth of expertly-curated and peer-reviewed data on time of evolutionary origin is exposed in a programatic and reusable way.
   Intensive and localized efforts have improved data sharing practices, as well as incentivizited open science in biology.
   Here we present DateLife, a service implemented as an R package and an Rshiny website application available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
@@ -125,13 +125,15 @@ Figure \ref{fig:workflow} provides a graphical summary of the three main steps o
 
 ## Providing an input
 
-DateLife starts with an input query consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used on the summary steps described below.
+DateLife starts with an input query consisting of at least two taxon names, which can be provided as a comma separated character string, or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used in the summary steps described below.
 
-Currently, DateLife only accepts scientific names as input, and they can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, the DateLife algorithm retrieves all species names within the inclusive taxonomic group and adds them to the input. If the flag is inactive, DateLife ignores the inclusive taxon names from the input.
+DateLife accepts scientific names as input.
+These names can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, the DateLife algorithm retrieves all species names within the inclusive taxonomic group and adds them to the input. If the flag is inactive, DateLife ignores the inclusive taxon names from the input.
 
-Input scientific names are processed using the Taxonomic Name Resolution Service (TNRS; @Boyle2013), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard. DateLife implements TNRS using OpenTree's taxonomic as standard [@opentreeAPIs; @rees2017automated].
+Input scientific names are processed using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard. DateLife implements TNRS using OpenTree's taxonomy as standard [@opentreeAPIs; @rees2017automated].
+<!--_I reworded a bit, and removed a Boyle citation because it sounded like you were using their TNRS - but you aren't right?  -->
 
-The processed input taxon names are saved as an R object of a newly defined class \texttt{datelifeQuery} that is used in the following steps. It contains the processed names, the corresponding OpenTree taxonomic id numbers, and the topology of the input tree if any was provided.
+The processed input taxon names are saved as an R object of a newly defined class \texttt{datelifeQuery} that is used in the following steps. This object contains the processed names, the corresponding OpenTree taxonomic id numbers, and the topology of the input tree if any was provided.
 
 <!--_**Searching the database.--**_  -->
 
@@ -139,37 +141,53 @@ The processed input taxon names are saved as an R object of a newly defined clas
 
 A DateLife search consists of matching processed taxon names to tip labels in a chronogram database. Chronograms with at least two matching tip labels are identified and pruned down to preserve only the matched tips.
 
-Matching pruned chronograms are stored as individual patristic distance matrices (Figure \ref{fig:workflow} subfigure X). This format speeds up extraction of pairwise taxon ages of the queried taxa, as opposed to searching the ancestor node of a pair of taxa in a "phylo" object or newick string.
+Matching pruned chronograms are stored as individual patristic distance matrices (Figure \ref{fig:workflow} subfigure X). 
+This matrix consists of ... ???? the pairwise distance between pairs of query taxa which are in that input tree, in units of millions of years. <!-- is that true? -->
+
+This format speeds up extraction of pairwise taxon ages of the queried taxa, as opposed to searching the ancestor node of a pair of taxa in a "phylo" object or newick string.
 The patristic matrices are also associated to the study citation where the original chronogram was published, and stored as an R object of the newly defined class \texttt{datelifeResult}.
 
 
 DateLife's chronogram database latest version consist of `r length(opentree_chronograms$trees)` chronograms published in `r length(unique(opentree_chronograms$studies))` different studies. It is constructed from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert phylogenetic knowledge with rich metadata [@mctavish2015phylesystem] that allows automatic and reproducible construction of a chronogram database.
+New chronograms can be added to Phylesystem by any user and are immediately publicly available, and the DateLife database can be updated to include those new data within a run.
+
 
 
 <!-- _**Summarizing search results.--**_ -->
 
 ## Summarizing search results
 
-At this point, summary information is extracted from the \texttt{datelifeResult} object to inform decisions for ulterior steps in the user workflow. Age data from matching pruned chronograms is summarized and used to generate a single summary chronogram. Other basic summary information available is:
+At this point, summary information is extracted from the \texttt{datelifeResult} object to inform decisions for the subsequent steps in the user workflow. Age data from the matching pruned chronograms is summarized and used to generate a single summary chronogram. Other basic summary information available to the user is:
 
 1. The matching pruned chronograms as newick strings or "phylo" objects.
-2. The ages of the root of all matching pruned chronograms. This can correspond to the age of the most recent common ancestor (mrca) of your group of interest if the pruned chronograms have all taxa belonging to the group. If not, the root corresponds to the mrca ofa subgroup withing your group of interest.
+2. The ages of the root of all matching pruned chronograms. This can correspond to the age of the most recent common ancestor (mrca) of your group of interest if the pruned chronograms have all taxa belonging to the group. If not, the root corresponds to the mrca of a subgroup withing your group of interest.
 3. Study citations where original chronograms were published.
 4. A report of input taxon names matches across pruned chronograms.
 5. The single matching pruned chronogram with the most input taxon names.
 
 _**Identifying groves.--**_ To generate a single summary chronogram, the DateLife algorithm starts by identifying the matching pruned chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
+<!--Why do groves matter? Why can't you just use all the trees?-->
 
-_**Choosing a topology.--**_ Due to sampling, DateLife requires a tree topology to summarize age data upon it. Users can provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth].
 
-DateLife can also reconstruct branch lengths proportional to substitution rates on the fixed tree topology from available genetic data from BOLD.
+_**Choosing a topology.--**_ DateLife requires a tree topology to summarize age data upon. Users can provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth].
+
+DateLife can also reconstruct branch lengths proportional to substitution rates on the fixed tree topology using available genetic data from BOLD.
 
 _**Congruifying nodes.--**_ DateLife then implements the congruification method [@Eastman2013] to find nodes belonging to the same clade across matching pruned chronograms.
 Congruified node ages stored as a `congruifiedCalibrations` object are then matched to nodes in the chosen tree topology and stored as a `matchedCalibrations` object.
+<!--This doesn't use the input chronogram pruned patristic distance matricies? Or does it? -->
+ 
 
-_**Summarizing node ages.--**_ DateLife summarizes matched calibrations into a single patristic distance matrix using different methods. Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and summary statistics such as median, minimum and maximum ages.
+_**Summarizing node ages.--**_ DateLife summarizes matched calibrations  ??? How is 'calibrations' defined here? the calibrations from congruification, or the pairwise distances??? into a single patristic distance matrix using different methods. 
+Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and summary statistics such as median, minimum and maximum ages.
+For each node in the output tree topology, the pairwise distances that traverse that node are ..???
+Under the SDM criterion ??? what happens??
+Using the minimum age criterion ..??
+
 
 _**Dating the tree topology.--**_ Summarized calibrations can be applied as secondary calibrations with different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
+<!--Huh? can you run MrBayes in DateLife? You should explain how the BOLD dating with PathD8 works here, and what is needed for the other ones!-->
+
 By default, DateLife implements the Branch Length Adjuster (BLADJ) algorithm that assigns ages to nodes with no data evenly between nodes with age data, which minimizes age variance in the resulting chronogram [@Webb2008].
 When there is conflict in ages across node with age data, the algorithm ignores ages that are older than parent nodes and/or younger than descendant nodes.
 
@@ -223,48 +241,69 @@ present, unit tests cover more than 30% of `datelife`'s code (<https://codecov.i
 We illustrate the `datelife` algorithm using the family of true finches, Fringillidae as an example.
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
 A college educator wishes to obtain state-of-the-art data on time of evolutionary origin of species belonging to the true finches for their class. They decide to use `datelife` because they are teaching best practices for reproducibility.
-Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator wants the students to practice their R skills.
+Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator also wants the students to practice their R skills.
 The first step is to run a `datelife` query using the "get species from taxon" flag. This will get all recognised species names within their chosen inclusive taxon. The Fringillidae has `r length(dquery$cleaned_names)` species, according to the Open Tree of Life taxonomy.
 Once with a curated set of species taxon names, the next step is to run a `datelife` search that will find all chronograms that contain at least two species names. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
  There are `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies (Fig. \ref{fig:schronograms1}).
 <!-- In case we want to cite the studies in here, but they are already cited in the figure caption: [Fig. \ref{fig:schronograms1}; @barker2012going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche]. -->
-The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:summaries}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM. With both methods, ages are generally consistent with source ages, but there are some biological examples in which this is not true (see Discussion).
+The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:summaries}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM. 
+?? Say some things about the results! 
 <!-- (Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
 <!-- and hierarchical clustering method which appears to push ages back -->
 
 # Cross-validation test
 
-Data from source chronograms can be also used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates (Figs. \ref{fig:cvbladj} and \ref{fig:cvbold}). As a form of cross validation, we took tree topologies from each study and calibrated them using time of lineage divergence data from all other source chronograms. In the absence of branch lengths, the ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvbladj}).
+Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates (Figs. \ref{fig:cvbladj} and \ref{fig:cvbold}). As a form of cross validation, we took tree topologies from each input study and calibrated them using time of lineage divergence data from all other source chronograms. 
+<!--I'm confused about why you are talking about branch lengths here... did you use branch lengths?-->
+
+In the absence of branch lengths, the ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvbladj}).
 Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvbladj}).
 <!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this -->
 We also demonstrate the usage of PATHd8 [@Britton2007] as an alternative method to BLADJ. For this, we run a `datelife` branch length reconstruction that searches for DNA sequence data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold] to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
 <!-- two studies when expanding calibrations to make them agree (studies 3 and 5), and from  -->
-three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}). From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD  data for some species is absent from the database. Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
+three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}). 
+<!-- What made it unsuccessful in the other cases? -->
+From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD  data for some species is absent from the database. 
+??? Node ages or maximum ages?? Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
 More examples and code used to generate these trees were developed on an open repository that is available for consultation and reuse at <https://github.com/LunaSare/datelife_examples>.
 
 # Discussion
 
-The main goal of `datelife` is to make state-of-the-art information on time of lineage divergence easily accesible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the organisms they want to work with, for any of its functionalities.
+The main goal of `datelife` is to make state-of-the-art information on time of lineage divergence easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the organisms they want to work with, for any of its functionality.
 
 At the time of writing of this manuscript (`r format(Sys.time(), "%b %d, %Y")`), `datelife`'s database has `r length(opentree_chronograms$trees)` chronograms, pulled entirely from OpenTree's database, the Phylesystem [@mctavish2015phylesystem]. A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated `datelife`'s database that is assigned a new version number, followed by a package release on CRAN. `datelife`'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
-Users can also upload new chronograms to OpenTree themselves, and trigger an update of the `datelife` database to incorporate the new chronograms, to have them immediately available for analysis.
+Users can also upload new chronograms to OpenTree themselves, and trigger an update of their local `datelife` database to incorporate the new chronograms, to have them immediately available for analysis.
 
 Incorporation of more chronograms into `datelife`'s database is crucial to improve its services. One option to increase chronogram number in the database is the Dryad data repository.  Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a curator.
 
-The only summary chronogram encompassing all life that is currently openly available from OpenTree
-was constructed using age data from 2,274 published chronograms [@Hedges2015]. However source chronograms are not available in computer readable format for reuse or reanalysis. As this tree is part of datelife's database, the amount of lineages that can be queried using `datelife` (`r length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label")))))` unique terminal taxa) is substantial, yet it can be improved.
-Consequently, we would like to emphasize on the importance of sharing chronogram data for the benefit of the scientific community as a whole, into repositories that require expert input and manual curation, such as OpenTree's Phylesystem [@mctavish2015phylesystem].
+The largest, and taxonomically broadest, summary chronogram currently available from OpenTree
+was constructed using age data from 2,274 published chronograms [@Hedges2015]. However the source chronograms used as input data for this tree are not available in computer readable format for reuse or reanalysis. As this tree is part of datelife's database, the amount of lineages that can be queried using `datelife` (`r length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label")))))` unique terminal taxa) is substantial.
+Access to the input chronograms used to generate the Hedges et al. summary tree would improve measures of uncertainty in DateLife, but they are available only as image files and not as usable data (timetree.org).
+<!--IN VIOLATION OF NSF RULES! but I don't suppose we should say that.-->
+We would like to emphasize on the importance of sharing chronogram data for the benefit of the scientific community as a whole, into repositories that require expert input and manual curation, such as OpenTree's Phylesystem [@mctavish2015phylesystem].
 
-By default, `datelife` currently summarizes all source chronograms that overlap with at least two species names. Users can exclude source chronograms if they have reasons to do so. Strictly speaking, the best chronogram should reflect the real time of lineage divergence accurately and precisely. To our knowledge, there are no good measures to determine if a chronogram is better than another. Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used [@magallon2010using, @magallon2015metacalibrated]. Scientists usually also favor chronograms constructed using primary calibrations (ages obtained from the fossil or geological record) to ones constructed with secondary calibrations (ages coming from other chronograms)[@schenk2016sec]. It has been observed with simulations that divergence times inferred with secondary calibrations are significantly younger than those inferred with primary calibrations in analyses performed with bayesian inference methods when priors are implemented in similar ways in both analyses [@schenk2016sec]. However, secondary calibrations
+By default, `datelife` currently summarizes all source chronograms that overlap with at least two species names. Users can exclude source chronograms if they have reasons to do so. 
+Strictly speaking, the best chronogram should reflect the real time of lineage divergence accurately and precisely. 
+To our knowledge, there are no good measures to determine independently if a chronogram is better than another.
+Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used [@magallon2010using, @magallon2015metacalibrated]. 
+Several characteristics of the data used for dating analyses as well as from the output chronogram itself, could be used to score quality of source chronograms. 
+Some characteristics that are often cited in published studies as a measure of improved age estimates as compared to previously published estimates are: quality of alignment (missing data, GC content), lineage sampling (strategy and proportion), phylogenetic and dating inference method, number of fossils used as calibrations, support for nodes and ages, and magnitude of confidence intervals. 
+DateLife provides an opportunity to capture concordance and conflict among date estimates, which can also be used as a metric for chronogram reliability.
+
+Scientists usually also favor chronograms constructed using primary calibrations (ages obtained from the fossil or geological record) to ones constructed with secondary calibrations (ages coming from other chronograms)[@schenk2016sec]. It has been observed with simulations that divergence times inferred with secondary calibrations are significantly younger than those inferred with primary calibrations in analyses performed with Bayesian inference methods when priors are implemented in similar ways in both analyses [@schenk2016sec]. However, secondary calibrations
 can be applied using other dating methods that do not require setting priors, such as penalized likelihood [@sanderson2003r8s], or as fixed ages,
-potentially mitigating the bias reported with bayesian methods. Certainly, further studies are required to fully understand the effect of using secondary calibrations on time estimates and downstream anlyses.
+potentially mitigating the bias reported with Bayesian methods. 
+Certainly, further studies are required to fully understand the effect of using secondary calibrations on time estimates and downstream analyses.
 
 Furthermore, even chronograms obtained with primary fossil data can vary substantially in time estimates between lineages, as observed from the comparison of source chronograms in the Fringillidae example.
+<!--I think that one very odd one didn't have any fossils though! Maybe worth mentioning here?-->
 This observation is often encountered in the literature
 <!-- Different source chronograms often show substantial variation in clade ages  -->
 (see, for example, the ongoing debate about crown group age of angiosperms [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time]. For some studies, especially ones based on branch lengths (e.g., studies of species diversification, timing of evolutionary events, phenotypic trait evolution), using a different chronogram may return different results [@title2016macrophylogenies]. Stitching together these chronograms can create a larger tree that uses information from multiple studies, but the effect of uncertainties and errors at this level on downstream analyses is still largely unknown.
 
-Summarizing chronograms might also imply summarizing fundamentally distinct evolutionary hypotheses. For example, two different researchers working on the same clade both carefully select and argument their choices of fossil calibrations. Still, if one researcher decides a fossil will calibrate the ingroup of a clade, while another researcher uses the same one to calibrate outside the clade, the resulting age estimates will often differ substantially, as the placement of calibrations as stem or crown group is proved to deeply affect estimated times of lineage divergence [@sauquet2013practical]. Trying to summarize the resulting chronograms into a single one using simple summary statistics might erase all types of relevant information from the source chronograms. Accordingly, the prevailing view in our research community is that we should favor time of lineage divergence estimates obtained from a single analysis, using fossil data as primary sources of calibrations, and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data used in the analysis reflect a coherent evolutionary history [@antonelli2017supersmart]. <!-- Will this be implemented in future `datelife` versions? Probably not-->
+Summarizing chronograms might also imply summarizing fundamentally distinct evolutionary hypotheses. 
+For example, two different researchers working on the same clade both carefully select and argument their choices of fossil calibrations. 
+Still, if one researcher decides a fossil will calibrate the ingroup of a clade, while another researcher uses the same one to calibrate outside the clade, the resulting age estimates will often differ substantially, as the placement of calibrations as stem or crown group is proved to deeply affect estimated times of lineage divergence [@sauquet2013practical]. Trying to summarize the resulting chronograms into a single one using simple summary statistics can erase many types of relevant information from the source chronograms. Accordingly, the prevailing view is that we should favor time of lineage divergence estimates obtained from a single analysis, using fossil data as primary sources of calibrations, and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data used in the analysis reflect a coherent evolutionary history [@antonelli2017supersmart]. <!-- Will this be implemented in future `datelife` versions? Probably not-->
 However, the exercise of summarizing different chronograms has the potential to help getting a single global evolutionary history for a lineage by putting together evidence from different hypothesis. Choosing the elements of the chronograms that we are going to keep and the ones that we are going to discard is key, since we are potentially loosing important parts of the evolutionary history of a lineage that might only be reflected in source chronograms and not on the summary chronogram [@sauquet2021age]. <!-- Example -->
 
 
@@ -273,11 +312,14 @@ However, the exercise of summarizing different chronograms has the potential to 
 <!-- Comparison of available age data for a wide range of organisms shown here suggest that this is a widespread phenomenon that requires further attention. -->
 <!-- In the case of the example presented here, most chronograms are new, meaning that we expect that data was generated with high quality and the software used should be very advanced. However, this is just an assumption.  -->
 
-Alternatively, one could try to choose the "best" chronogram from a set of possible evolutionary hypotheses. Several characteristics of the data used for dating analyses as well as from the output chronogram itself, could be used to score quality of source chronograms. Some characteristics that are often cited in published studies as a measure of improved age estimates as compared to previously published estimates are: quality of alignment (missing data, GC content), lineage sampling (strategy and proportion), phylogenetic and dating inference method, number of fossils used as calibrations, support for nodes and ages, and magnitude of confidence intervals. To facilitate subsetting of source chronograms following different criteria by the users, this information should be included as metadata manually entered by curators in the future.
-
 <!-- Still, even if all source chronograms have been generated by excellent standards and using similar methods, the evolutionary history they depict might be very different.  -->
 
-In other areas of biological research, such as ecology and conservation biology, it has been shown that at least some data on lineage divergence represents a relevant improvement for testing alternative hypothesis using phylogenetic distance [@Webb2008]. Hence, we integrated into datelife's workflow different ways of creating branch lengths in the absence of starting branch length information for taxa lacking this information (using the BLADJ option). "Making up" branch lengths is an accepted practice in scientific publications: @Jetz2012, created a time-calibrated tree of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a time-calibrated tree of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a tree of 353,185 seed plants where only 23% had molecular data. Taken to the extreme, one could make a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration with the polytomy resolution and branch assignation methods. There has yet to be a thorough analysis of what can go wrong when one goes beyond the data in this way, so we urge caution; we also urge readers to follow the example of many of the large tree papers cited above and make sure results are substantially similar between trees fully reconstructed with molecular or other data, and trees that are reconstructed using taxonomy by resolving polytomies at random following a statistical model.
+Nonetheless, in ecology and conservation biology, incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance [@Webb2008]. 
+Hence, we integrated into datelife's workflow different ways of estimating node ages in the absence of calibrations and branch length information for taxa lacking this information. 
+"Making up" branch lengths is an accepted practice in scientific publications: @Jetz2012, created a time-calibrated tree of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a time-calibrated tree of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a tree of 353,185 seed plants where only 23% had molecular data. 
+Obviously, there are risks in this practice!
+Taken to the extreme, one could make a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration with the polytomy resolution and branch estimation methods.
+There has yet to be a thorough analysis of what can go wrong when one extends inferences beyond the data in this way, so we urge caution; we also urge readers to follow the example of many of the large tree papers cited above and make carefully consider the statistical assumptions being made, and assess the consistency of the results with prior work.
 
 <!-- There is evidence that different chronograms will result in very different macroevolutionary histories inferred from them [@title2016macrophylogenies]. However, it is unknown how using very different age data could affect hypothesis testing in other areas of research and more effort is needed in that directions -->
 
@@ -291,6 +333,7 @@ do not have the time to acquire and develop the necessary knowledge and data cur
 <!--Mention again uses shown here and outline potential uses not shown here-->
 The `datelife` R package allows easy and fast summarization of publicly available information
 on time of lineage divergence. This provides a straightforward way to get an informed idea on the state of knowledge of the time frame of evolution of different regions of the tree of life, and allows identification of regions that require more research or that have conflicting information.
+It is available as an R package, or a web-based R shiny app at dates.opentreeloflife.org/datelife.
 <!-- It can also summarize public data, or use it to generate new chronograms based on trees provided by the user. -->
 Both summary and newly generated trees are useful to evaluate evolutionary hypotheses in different areas of research. The DateLife project helps with awareness of the existing variation in expert time of divergence data, and will foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
 
@@ -313,7 +356,7 @@ Code used to generate all versions of this manuscript, the biological examples, 
 
 # Funding
 
-Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572.
+Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572, and the OpenTree grant ABI-1759846.
 
 # Acknowledgements
 
