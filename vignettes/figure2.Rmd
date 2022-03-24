@@ -212,7 +212,6 @@ dev.off()
 ## Get pairwise median age points
 
 ```{r}
-
 names(spp_dr)
 spp_dr[[1]]
 
@@ -231,59 +230,110 @@ mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_ca
 
 mm_summ$in_phy
 ```
-Table, make it pretty:
+Table, make it pretty first:
 
 ```{r}
 colnames(mm_summ$in_phy)
-pretty <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
-pretty
+pretty_median <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+pretty_median
 # Eliminate duplicated taxon pairs:
 ## Find the duplicated pairs
 taxon_pairs <- c()
-for (i in seq(nrow(pretty))) {
-  taxon_pair <- as.character(pretty[i, c("taxonA", "taxonB")])
+for (i in seq(nrow(pretty_median))) {
+  taxon_pair <- as.character(pretty_median[i, c("taxonA", "taxonB")])
   taxon_pair <- taxon_pair[order(taxon_pair)]
   taxon_pair <- paste(taxon_pair, collapse = "")
   taxon_pairs <- c(taxon_pairs, taxon_pair)
 }
 ## Eliminate them:
-pretty <- pretty[!duplicated(taxon_pairs),]
+pretty_median <- pretty_median[!duplicated(taxon_pairs),]
 
 # Reorder ROWS by node number and taxon names
-pretty <- pretty[order(pretty$mrca_node_number, pretty$taxonA, pretty$taxonB),]
+pretty_median <- pretty_median[order(pretty_median$mrca_node_number, pretty_median$taxonA, pretty_median$taxonB),]
 # Eliminate rownames
-rownames(pretty) <- NULL
+rownames(pretty_median) <- NULL
 # Reorder COLUMNS
-pretty <- pretty[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+pretty_median <- pretty_median[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
 # Modify column names to be informative
-colnames(pretty) <- c("Node Name", "taxon A", "taxon B", "Median Age")
+colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Median Age")
 # Change node numbers my node names
-pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
+pretty_median$`Node Name` <- paste0("n", pretty_median$`Node Name`-6)
 
 # substitute underscore by space:
+pretty_median$`taxon A` <- sub("_", " ", pretty_median$`taxon A`)
+pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
 
-pretty$`taxon A` <- sub("_", " ", pretty$`taxon A`)
-pretty$`taxon B` <- sub("_", " ", pretty$`taxon B`)
-
+pretty_median
+```
 
 # Print table as pdf
+```{r}
 ## set the theme to have italics in species names:
-
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
 
-pdf("../figures/figure2/median_table.pdf")       # Export PDF
-gridExtra::grid.table(pretty, theme = tt1) # if you do not want row numbers set rows = NULL
+# Export PDF
+pdf("../figures/figure2/median_table.pdf")
+gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+
+Simplifying pretty_median table.
+Let's explore the grid and gridExtra package (code from https://cyancey95.github.io/CompBiol_2018/gridExtraPresentation.html):
+
+```{r}
+g <- lapply(1:11, 
+            function(i) { 
+              grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = i, alpha = .5)),
+                 grid::textGrob(i))
+            }
+    )
+pattern <- rbind(c(1,1,2,2,3),
+                 c(1,1,2,2,4),
+                 c(1,1,5,5,6),
+                 c(7,8,9,10,11))
+gridExtra::grid.arrange(grobs = g, layout_matrix = pattern)
+```
+
+```{r}
+# if you do not want row numbers set rows = NULL
+gridExtra::grid.arrange(layout_matrix = pretty_median, theme = tt1) 
+
+# Getting the median per node:
+median_singletons <- c()
+for (i in unique(pretty_median$`Node Name`)) {
+  print(i)
+  x <- median(pretty_median$`Median Age`[pretty_median$`Node Name` == i])
+  median_singletons <- c(median_singletons, x)
+}
+
+# Detecting node names that are duplicated 
+duplos <- duplicated(pretty_median$`Node Name`)
+# Making node names pretty:
+pretty_median$`Node Name`[!duplos]
+pretty_median$`Node Name`[duplos] <- ""
+# putting "n1" node name in the middle
+pretty_median$`Node Name`[1] <- ""
+pretty_median$`Node Name`[5] <- "n1"
+
+# Simplifying median ages:
+pretty_median$`Median Age`[duplos] <- ""
+pretty_median$`Median Age`[!duplos] <- median_singletons
+pretty_median$`Median Age`[1] <- ""
+pretty_median$`Median Age`[5] <- median_singletons[1]
+
+# Writing the table out:
+pdf("../figures/figure2/median_table_simple.pdf")       # Export PDF
+gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
              
 Plotting source ages AND summary ages on the same dated tree
 
-Set colors and data
+Set colors and data:
 
 ```{r}
-mm_summ$in_phy$reference <- rep("Median Ages", length(mm_summ$in_phy$reference))
-
 color_median <- "purple" # mustard yellow "#7A0403FF"
+mm_summ$in_phy$reference <- rep("Pairwsie median of node ages", length(mm_summ$in_phy$reference))
 names(color_median) <- mm_summ$in_phy$reference[1]
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
@@ -294,10 +344,9 @@ leg_color<- c(color_studies, color_median)
 # leg_pch <- c(rep("|", length(color_studies)), "•")
 leg_pch <- rep(19, length(leg_color))
 leg_text <- names(leg_color)
-
 ```
 
-Plot
+Plot:
 
 ```{r}
 svg(filename = "../figures/figure2/median_and_calibration_ages.svg",
@@ -330,7 +379,80 @@ datelifeplot::plot_node_ages2(phylo_median,
                axis_label = ""
                )
 dev.off()
-```             
+```        
+
+Simplifying median ages on tree plot:
+
+```{r}
+# Getting the median per node:
+median_singletons <- c()
+for (i in unique(mm_summ$in_phy$mrca_node_name)) {
+  print(i)
+  x <- median(unique(mm_summ$in_phy$nodeAge[mm_summ$in_phy$mrca_node_name == i]))
+  median_singletons <- c(median_singletons, x)
+}
+
+ape::branching.times(phylo_median)
+
+# Detecting node names that are duplicated 
+duplos <- duplicated(mm_summ$in_phy$mrca_node_name)
+# Simplifying median ages:
+mm_summ$in_phy$nodeAge[!duplos] <- median_singletons
+# Removing duplicates:
+mm_summ$in_phy <- mm_summ$in_phy[!duplos,]
+```
+
+Plotting parameters:
+
+```{r}
+color_median <- "purple" # mustard yellow "#7A0403FF"
+mm_summ$in_phy$reference <- rep("Median of node ages", length(mm_summ$in_phy$reference))
+names(color_median) <- mm_summ$in_phy$reference[1]
+
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = calib_summ, a2 = mm_summ)
+point_type <- list(a1 = "/", a2 = "•")
+
+leg_color<- c(color_studies, color_median)
+# leg_pch <- c(rep("|", length(color_studies)), "•")
+leg_pch <- rep(19, length(leg_color))
+leg_text <- names(leg_color)
+```
+
+Plot again:
+```{r}
+svg(filename = "../figures/figure2/median_and_calibration_ages_simple.svg",
+    height = 8.5 ,
+    width = 10.5)
+datelifeplot::plot_node_ages2(phylo_median,
+               title = c("Median Summary Chronogram"),
+               pos_title = 3,
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               cex_axis = 1.5,
+               edge.width = 3,
+               cex_tiplabels = 2,
+               matched_ages  = all_ages,
+               pch = point_type,
+               pch_color = point_colors,
+               pch_cex = 3,
+               bars_lwd = 15,
+               legend_cex = 0.9,
+               legend_x = -5,
+               legend_y = 6.2,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+               mai1 = 1,
+               mai2 = 0.8,
+               mai4 = 3.6,
+               axis_label = ""
+               )
+dev.off()
+```        
+
 Get phylo median tree as a topology (all branches of equal length)
 
 ```{r}
