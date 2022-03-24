@@ -168,9 +168,35 @@ studies
 
 # order references alphabetically:
 studies <- studies[order(studies)]
+```
+
+Visualize plotting colors:
+
+```{r}
 #create a vector of colors with study names:
-color_studies <- viridis::turbo(n = length(studies))
+xx <- viridis::turbo(n = length(studies))
+
+plot(-1:10, -1:10, type = "n")
+text(1:9, 1:9, xx, col = xx)
+
+xx <- viridis::turbo(n = 20)
+plot(-2:length(xx)+1, -2:length(xx)+1, type = "n")
+text(1:(length(xx)), 1:length(xx), paste(1:length(xx),"=",xx), col = xx)
+
+```
+
+Choose plotting colors:
+
+```{r}
+#create a vector of colors with study names:
+color_studies <- xx[c(12,
+                      3,4,
+                      15,
+                      18,17,
+                      20,
+                      8,9)]
 names(color_studies) <- studies
+
 ```
 
 Now, we can plot:
@@ -400,23 +426,32 @@ duplos <- duplicated(mm_summ$in_phy$mrca_node_name)
 mm_summ$in_phy$nodeAge[!duplos] <- median_singletons
 # Removing duplicates:
 mm_summ$in_phy <- mm_summ$in_phy[!duplos,]
+# Columns MinAge and MaxAge need to be equal to nodeAge
+mm_summ$in_phy$MinAge <- mm_summ$in_phy$MaxAge <- mm_summ$in_phy$nodeAge
+
 ```
 
 Plotting parameters:
 
 ```{r}
-color_median <- "purple" # mustard yellow "#7A0403FF"
-mm_summ$in_phy$reference <- rep("Median of node ages", length(mm_summ$in_phy$reference))
-names(color_median) <- mm_summ$in_phy$reference[1]
+mm_summ$in_phy$reference <- rep("Used as calibration", length(mm_summ$in_phy$reference))
+mm_summ$in_phy$reference[2] <- "Not used"
+gplots::col2hex("purple") # "#A020F0"
+color_median <- c("#A020F070", "purple") # mustard yellow "#7A0403FF"
+
+names(color_median) <- unique(mm_summ$in_phy$reference)
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
-point_type <- list(a1 = "/", a2 = "•")
+point_type <- list(a1 = "/", a2 = c(19, 8, 19, 19, 19))
 
-leg_color<- c(color_studies, color_median)
+
+leg_color<- list(a1 = color_studies, a2 = color_median)
 # leg_pch <- c(rep("|", length(color_studies)), "•")
-leg_pch <- rep(19, length(leg_color))
-leg_text <- names(leg_color)
+leg_pch <- list(a1 = 19, a2 = c(19, 8))
+leg_text <- lapply(leg_color, names)
+leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
 ```
 
 Plot again:
@@ -439,12 +474,14 @@ datelifeplot::plot_node_ages2(phylo_median,
                pch_color = point_colors,
                pch_cex = 3,
                bars_lwd = 15,
-               legend_cex = 0.9,
-               legend_x = -5,
-               legend_y = 6.2,
+               legend_cex = c(0.9, 0.9),
+               legend_x = c(-5, 18),
+               legend_y = c(6.2, 6.2),
                legend_text = leg_text,
                legend_pch = leg_pch,
                legend_color = leg_color,
+               legend_title = leg_title,
+               legend_box = leg_box,
                mai1 = 1,
                mai2 = 0.8,
                mai4 = 3.6,
@@ -475,7 +512,7 @@ Plot median tree topology with node labels and no time axis
 ```{r}
 svg(filename = "../figures/figure2/median_tree_topology.svg",
     height = 5,
-    width = 7,
+    width = 6,
     bg = "transparent")
 datelifeplot::plot_chronogram(pp,
                          title = c("Tree topology"),
