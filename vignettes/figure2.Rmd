@@ -21,20 +21,26 @@ devtools::load_all("../../datelifeplot")
 devtools::load_all()
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_write <- sub("_", " ", spp)
+spp_write <- spp_write[order(spp_write)]
+write(spp_write, file = "../figures/fringillidae_species_sample.txt")
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
 phylo_median <- spp_summ$phylo_median
 phylo_all <- spp_summ$phylo_all
+# Reorder chronogram list alphabetically:
 names(phylo_all)
 alphabetic_order <- order(names(phylo_all))
 names(phylo_all)[alphabetic_order]
 phylo_all <- phylo_all[alphabetic_order]
+spp_summ$citations
 ```
 
 We will rename source chronograms to have a shorter study name:
 
 ```{r}
+
 names(phylo_all) <- c("Barker et al. 2013",
                       "Barker et al. 2015 - chronogram 1",
                       "Barker et al. 2015 - chronogram 2",
@@ -184,29 +190,37 @@ if (any(duplicated(taxon_pairs_ref))) {
 # Reorder ROWS by node number, reference, age and taxon names
 pretty_calibs <- pretty_calibs[order(pretty_calibs$mrca_node_number, pretty_calibs$MaxAge, pretty_calibs$reference, pretty_calibs$taxonA, pretty_calibs$taxonB),]
 # Eliminate rownames
-rownames(pretty_m) <- NULL
+rownames(pretty_calibs) <- NULL
 # Reorder COLUMNS
-pretty_median <- pretty_median[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+pretty_calibs <- pretty_calibs[, c("mrca_node_number", "taxonA", "taxonB", "MaxAge", "reference")]
 # Modify column names to be informative
-colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Median Age")
+colnames(pretty_calibs) <- c("Node Name", "taxon A", "taxon B", "Node Age", "Study chronogram")
 # Change node numbers my node names
-pretty_median$`Node Name` <- paste0("n", pretty_median$`Node Name`-6)
+pretty_calibs$`Node Name` <- paste0("n", pretty_calibs$`Node Name`-6)
 
 # substitute underscore by space:
-pretty_median$`taxon A` <- sub("_", " ", pretty_median$`taxon A`)
-pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
+pretty_calibs$`taxon A` <- sub("_", " ", pretty_calibs$`taxon A`)
+pretty_calibs$`taxon B` <- sub("_", " ", pretty_calibs$`taxon B`)
 
-pretty_median
+# order taxa alphabetically by column
+for (i in seq(nrow(pretty_calibs))) {
+  original <- as.character(pretty_calibs[i, c("taxon A", "taxon B")])
+  reordered <- original[order(original)]
+  pretty_calibs[i, c("taxon A", "taxon B")] <- reordered
+}
+
+
+pretty_calibs
 ```
 
 Print table as pdf
 ```{r}
 ## set the theme to have italics in species names:
-tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 28), rep("italic", 28*2), rep("plain", 28*2)))))
 
 # Export PDF
-pdf("../figures/figure2/median_table.pdf")
-gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
+pdf("../figures/figure2/calibs_table.pdf", height = 10, width = 10)
+gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
 
