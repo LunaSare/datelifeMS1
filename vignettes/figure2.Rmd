@@ -158,7 +158,60 @@ calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
 
 ```
-Plot ages from source chronograms.
+### Table of matched calibrations
+
+Make it pretty.
+
+```{r}
+colnames(calib_summ$in_phy)
+# keep columns of interest:
+pretty_calibs <- calib_summ$in_phy[,c("taxonA", "taxonB", "MaxAge", "mrca_node_number", "reference")]
+pretty_calibs
+# Eliminate duplicated taxon pairs:
+## Find the duplicated pairs within studies:
+taxon_pairs_ref <- c()
+for (i in seq(nrow(pretty_calibs))) {
+  tax_pair_ref <- as.character(pretty_calibs[i, c("taxonA", "taxonB", "reference")])
+  tax_pair_ref <- tax_pair_ref[order(tax_pair_ref)]
+  tax_pair_ref <- paste(tax_pair_ref, collapse = "")
+  taxon_pairs_ref <- c(taxon_pairs_ref, tax_pair_ref)
+}
+## Eliminate duplicated rows:
+if (any(duplicated(taxon_pairs_ref))) {
+  pretty_calibs <- pretty_median[!duplicated(taxon_pairs_ref),]
+}
+
+# Reorder ROWS by node number, reference, age and taxon names
+pretty_calibs <- pretty_calibs[order(pretty_calibs$mrca_node_number, pretty_calibs$MaxAge, pretty_calibs$reference, pretty_calibs$taxonA, pretty_calibs$taxonB),]
+# Eliminate rownames
+rownames(pretty_m) <- NULL
+# Reorder COLUMNS
+pretty_median <- pretty_median[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+# Modify column names to be informative
+colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Median Age")
+# Change node numbers my node names
+pretty_median$`Node Name` <- paste0("n", pretty_median$`Node Name`-6)
+
+# substitute underscore by space:
+pretty_median$`taxon A` <- sub("_", " ", pretty_median$`taxon A`)
+pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
+
+pretty_median
+```
+
+Print table as pdf
+```{r}
+## set the theme to have italics in species names:
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
+
+# Export PDF
+pdf("../figures/figure2/median_table.pdf")
+gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+
+### Plot matched calibrations from source chronograms.
+
 Choose a color scheme for the studies:
 
 ```{r}
@@ -235,6 +288,8 @@ datelifeplot::plot_node_ages(phylo_median,
                )
 dev.off()
 ```
+
+
 ## Get pairwise median age points
 
 ```{r}
@@ -252,15 +307,18 @@ median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
 
 matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
 
-mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+calib_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
-mm_summ$in_phy
+calib_summ$in_phy
 ```
-Table, make it pretty first:
+
+### Table of median of node ages
+
+Make it pretty first:
 
 ```{r}
-colnames(mm_summ$in_phy)
-pretty_median <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+colnames(calib_summ$in_phy)
+pretty_median <- calib_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
 pretty_median
 # Eliminate duplicated taxon pairs:
 ## Find the duplicated pairs
@@ -292,7 +350,7 @@ pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
 pretty_median
 ```
 
-# Print table as pdf
+Print table as pdf
 ```{r}
 ## set the theme to have italics in species names:
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
@@ -353,7 +411,7 @@ gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbe
 dev.off()
 ```
              
-Plotting source ages AND summary ages on the same dated tree
+### Plotting source ages AND summary ages on the same dated tree
 
 Set colors and data:
 
@@ -489,6 +547,8 @@ datelifeplot::plot_node_ages2(phylo_median,
                )
 dev.off()
 ```        
+
+## The tree topology
 
 Get phylo median tree as a topology (all branches of equal length)
 
