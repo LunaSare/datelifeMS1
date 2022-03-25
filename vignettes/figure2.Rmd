@@ -312,6 +312,7 @@ spp_dr[[1]]
 
 best_grove <- datelife::get_best_grove(spp_dr)
 
+# Take a list of chronograms as tables and summarize age data per taxon pair into a single matrix:
 median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
 colnames(median_matrix)
 
@@ -319,11 +320,12 @@ median_matrix_list <- list(summary_matrix = median_matrix)
 
 median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
 
+# match taxon pairs to nodes on a tree topology
 matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
 
-calib_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
-calib_summ$in_phy
+mm_summ$in_phy
 ```
 
 ### Table of median of node ages
@@ -331,9 +333,10 @@ calib_summ$in_phy
 Make it pretty first:
 
 ```{r}
-colnames(calib_summ$in_phy)
-pretty_median <- calib_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+colnames(mm_summ$in_phy)
+pretty_median <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
 pretty_median
+# Because patristic matrices are symmetrical, going from a patristic matrix to a table creates a duplicate for all taxon pairs
 # Eliminate duplicated taxon pairs:
 ## Find the duplicated pairs
 taxon_pairs <- c()
@@ -343,6 +346,8 @@ for (i in seq(nrow(pretty_median))) {
   taxon_pair <- paste(taxon_pair, collapse = "")
   taxon_pairs <- c(taxon_pairs, taxon_pair)
 }
+# Duplicated pairs should sum to 30/2 = 15
+sum(duplicated(taxon_pairs))
 ## Eliminate them:
 pretty_median <- pretty_median[!duplicated(taxon_pairs),]
 
@@ -353,24 +358,36 @@ rownames(pretty_median) <- NULL
 # Reorder COLUMNS
 pretty_median <- pretty_median[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
 # Modify column names to be informative
-colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Median Age")
-# Change node numbers my node names
+colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Pairwise Median Age")
+# Change node numbers to node names
 pretty_median$`Node Name` <- paste0("n", pretty_median$`Node Name`-6)
 
 # substitute underscore by space:
 pretty_median$`taxon A` <- sub("_", " ", pretty_median$`taxon A`)
 pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
 
+# Add a column of node median age
+## Calculate the node median age per node:
+node_median <- c()
+for (i in unique(pretty_median$`Node Name`)) {
+  print(i)
+  x <- median(pretty_median$`Pairwise Median Age`[pretty_median$`Node Name` == i])
+  print(x)
+  node_median <- c(node_median, rep(x, sum(pretty_median$`Node Name` == i)))
+}
+## Create a column
+pretty_median$`Node Median Age` <- node_median
+# Look atthe final result!
 pretty_median
 ```
 
 Print table as pdf
 ```{r}
 ## set the theme to have italics in species names:
-tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 15)))))
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 30)))))
 
 # Export PDF
-pdf("../figures/figure2/median_table.pdf")
+pdf("../figures/figure2/median_table.pdf", width = 10)
 gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
@@ -394,15 +411,6 @@ gridExtra::grid.arrange(grobs = g, layout_matrix = pattern)
 
 ```{r}
 # if you do not want row numbers set rows = NULL
-gridExtra::grid.arrange(layout_matrix = pretty_median, theme = tt1) 
-
-# Getting the median per node:
-median_singletons <- c()
-for (i in unique(pretty_median$`Node Name`)) {
-  print(i)
-  x <- median(pretty_median$`Median Age`[pretty_median$`Node Name` == i])
-  median_singletons <- c(median_singletons, x)
-}
 
 # Detecting node names that are duplicated 
 duplos <- duplicated(pretty_median$`Node Name`)
@@ -413,14 +421,41 @@ pretty_median$`Node Name`[duplos] <- ""
 pretty_median$`Node Name`[1] <- ""
 pretty_median$`Node Name`[5] <- "n1"
 
-# Simplifying median ages:
-pretty_median$`Median Age`[duplos] <- ""
-pretty_median$`Median Age`[!duplos] <- median_singletons
-pretty_median$`Median Age`[1] <- ""
-pretty_median$`Median Age`[5] <- median_singletons[1]
+# Simplifying node median ages:
+pretty_median$`Node Median Age`[duplos] <- ""
+pretty_median$`Node Median Age`[!duplos] <- node_median[!duplos]
+pretty_median$`Node Median Age`[1] <- ""
+pretty_median$`Node Median Age`[5] <- node_median[!duplos][1]
+```
 
-# Writing the table out:
-pdf("../figures/figure2/median_table_simple.pdf")       # Export PDF
+Plotting:
+
+Setting up a color theme
+
+```{r}
+tt1 <- gridExtra::ttheme_default(core=list(
+  fg_params=list(fontface = c(rep("plain", 15), 
+                              rep("italic", 30), 
+                              rep("plain", 30))),
+  bg_params = list(fill = c(rep(c("grey95"), length.out=9), 
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95"), length.out=9), 
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey90"), length.out=2),
+                            "grey95"))))
+```
+
+Writing the table out:
+
+```{r}
+pdf("../figures/figure2/median_table_simple.pdf", width = 10)       # Export PDF
 gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
