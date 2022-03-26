@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+writing_dir <- "../figures/figure2/"
 ```
 ## Getting source chronograms
 
@@ -184,7 +185,7 @@ for (i in seq(nrow(pretty_calibs))) {
 }
 ## Eliminate duplicated rows:
 if (any(duplicated(taxon_pairs_ref))) {
-  pretty_calibs <- pretty_median[!duplicated(taxon_pairs_ref),]
+  pretty_calibs <- pretty_calibs[!duplicated(taxon_pairs_ref),]
 }
 
 # Reorder ROWS by node number, reference, age and taxon names
@@ -213,13 +214,16 @@ for (i in seq(nrow(pretty_calibs))) {
 pretty_calibs
 ```
 
-Print table as pdf
+Print table as pdf.
+Trick to print in multiple pages from https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page
+
 ```{r}
 ## set the theme to have italics in species names:
-tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 28), rep("italic", 28*2), rep("plain", 28*2)))))
+number_of_rows <- nrow(pretty_calibs)
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
 
 # Export PDF
-pdf("../figures/figure2/calibs_table.pdf", height = 10, width = 10)
+pdf(paste0(writing_dir, "/calibs_table.pdf"), width = 10)
 gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
