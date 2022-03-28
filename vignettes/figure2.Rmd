@@ -567,8 +567,8 @@ leg_box <- c(TRUE, TRUE)
 
 Plot again:
 ```{r}
-svg(filename = "../figures/figure2/median_and_calibration_ages_simple.svg",
-    height = 8.5 ,
+pdf(file = "../figures/figure2/median_and_calibration_ages_simple.pdf",
+    height = 8.5,
     width = 10.5)
 datelifeplot::plot_node_ages2(phylo_median,
                title = c("Median Summary Chronogram"),

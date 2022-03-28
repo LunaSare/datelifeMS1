@@ -140,7 +140,7 @@
   {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{DateLife: revealing the dated Tree of Life}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4199}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4204}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -341,9 +341,9 @@ A college educator wishes to obtain state-of-the-art data on time of evolutionar
 Students have the option to go to the website at www.datelife.org and perform an interactive run. However, the educator also wants the students to practice their R skills.
 The first step is to run a \texttt{datelife} query using the ``get species from taxon'' flag. This will get all recognised species names within their chosen inclusive taxon. The Fringillidae has 289 species, according to the Open Tree of Life taxonomy.
 Once with a curated set of species taxon names, the next step is to run a \texttt{datelife} search that will find all chronograms that contain at least two species names. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
-There are 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Fig. \ref{fig:schronograms1}).
-The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the ``Description'' section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:summaries}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
-?? Say some things about the results!
+There are 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Barker et al., 2013, 2015; Burns et al., 2014; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hedges et al., 2015; Hooper \& Price, 2017; Jetz et al., 2012; Price et al., 2014).
+The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the ``Description'' section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:fringillidages}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
+????????????????? Say some things about the results!
 
 \hypertarget{cross-validation-test}{%
 \section{Cross-validation test}\label{cross-validation-test}}
@@ -363,7 +363,7 @@ More examples and code used to generate these trees were developed on an open re
 
 The main goal of \texttt{datelife} is to make state-of-the-art information on time of lineage divergence easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the organisms they want to work with, for any of its functionality.
 
-At the time of writing of this manuscript (Mar 24, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
+At the time of writing of this manuscript (Mar 28, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
 Users can also upload new chronograms to OpenTree themselves, and trigger an update of their local \texttt{datelife} database to incorporate the new chronograms, to have them immediately available for analysis.
 
 Incorporation of more chronograms into \texttt{datelife}'s database is crucial to improve its services. One option to increase chronogram number in the database is the Dryad data repository. Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a curator.
@@ -681,14 +681,13 @@ to be formatted in the same way as the general text (double spaced and linenumbe
 % \end{center}
 \newpage
 \begin{figure}[!h]
-\includegraphics{../figures/fig_crossval_bladj.pdf}
+\includegraphics{../figures/figure-fringillidae/median_and_calibration_ages_simple.pdf}
 \caption{}
 \label{fig:cvbladj}
 \end{figure}
 % \begin{center}
-% \textsc{Figure \ref{fig:cvbladj}}
+% \textsc{Figure \ref{fig:fringillidages}}
 % \end{center}
-LTT plots showing results from the cross-validation analyses of trees without branch lengths dated using BLADJ. The dating analysis can only be performed in trees with more than 2 tips, thus excluding chronogram from study 4; its data was still used as calibration for the other source chronograms.
 \newpage
 \begin{figure}[!h]
 \includegraphics{../figures/fig_crossval_boldsumm.pdf}

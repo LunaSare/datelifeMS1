@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 devtools::load_all("../../datelifeplot")
-writing_dir <- "../figures/figure-fringillidae"
+writing_dir <- "../figures/figure-fringillidae/"
 ```
 
 ## Get a `datelifeQuery` object
@@ -45,7 +45,13 @@ frin_dsumm <- datelife:::summary.datelifeResult(datelife_query = frin_dquery, ob
 
 # usethis::use_data(frin_dsumm, overwrite = TRUE)
 ```
+## Save objects and load them
 
+```{r}
+
+# usethis::use_data(frin_sample_dquery, overwrite = TRUE)
+
+```
 Make an object with all source chronograms, and reorder chronogram list alphabetically:
 
 ```{r}
@@ -135,7 +141,7 @@ matched <- datelife::match_all_calibrations(
   calibrations = all_calibrations)
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
-
+nrow(calib_summ$in_phy)
 ```
 
 ### Table of matched calibrations
@@ -186,6 +192,7 @@ for (i in seq(nrow(pretty_calibs))) {
 
 pretty_calibs
 ```
+
 Print table as pdf.
 Trick to print in multiple pages from https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page
 
@@ -320,7 +327,7 @@ matched_median_ages <- datelife::match_all_calibrations(phy = phylo_median, cali
 
 mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
-mm_summ$in_phy
+nrow(mm_summ$in_phy)
 ```
 
 
@@ -407,20 +414,19 @@ Plotting parameters:
 
 ```{r}
 mm_summ$in_phy$reference <- rep("Used as calibration", length(mm_summ$in_phy$reference))
-mm_summ$in_phy$reference[2] <- "Not used"
+# mm_summ$in_phy$reference[2] <- "Not used"
 gplots::col2hex("purple") # "#A020F0"
-color_median <- c("#A020F070", "purple") # mustard yellow "#7A0403FF"
+color_median <- c("#A020F0")  # purple with no transparency
 
 names(color_median) <- unique(mm_summ$in_phy$reference)
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
-point_type <- list(a1 = "/", a2 = c(19, 8, 19, 19, 19))
+point_type <- list(a1 = 19, a2 = "/")
 
 
 leg_color<- list(a1 = color_studies, a2 = color_median)
-# leg_pch <- c(rep("|", length(color_studies)), "•")
-leg_pch <- list(a1 = 19, a2 = c(19, 8))
+leg_pch <- list(a1 = 19, a2 = "/")
 leg_text <- lapply(leg_color, names)
 leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
 leg_box <- c(TRUE, TRUE)
@@ -428,35 +434,41 @@ leg_box <- c(TRUE, TRUE)
 
 Plot again:
 ```{r}
-svg(filename = "../figures/figure2/median_and_calibration_ages_simple.svg",
-    height = 8.5 ,
-    width = 10.5)
+pdf(file = paste0(writing_dir, "median_and_calibration_ages_simple.pdf"),
+    height = 11.75*2,
+    width = 8.25*2)
 datelifeplot::plot_node_ages2(phylo_median,
                title = c("Median Summary Chronogram"),
-               pos_title = 3,
+               pos_title = -5,
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               cex_axis = 1.5,
-               edge.width = 3,
-               cex_tiplabels = 2,
+               cex_axis = 1,
+               edge.width = 2,
+               cex_tiplabels = 0.6,
                matched_ages  = all_ages,
                pch = point_type,
                pch_color = point_colors,
-               pch_cex = 3,
-               bars_lwd = 15,
+               pch_transparency = 90,
+               pch_cex = 1,
+               bars_lwd = 10,
+               bars_color = "#DCDCDC50",
                legend_cex = c(0.9, 0.9),
-               legend_x = c(-5, 18),
-               legend_y = c(6.2, 6.2),
+               legend_x = c(-10, -10),
+               legend_y = c(190, 150),
                legend_text = leg_text,
                legend_pch = leg_pch,
                legend_color = leg_color,
                legend_title = leg_title,
                legend_box = leg_box,
-               mai1 = 1,
-               mai2 = 0.8,
+               mai1 = 0,
+               mai2 = 2.5,
+               mai3 = 1,
                mai4 = 3.6,
+               omi1 = 0,
+               omi2 = 0,
+               omi3 = 0,
                axis_label = ""
                )
 dev.off()
