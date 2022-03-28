@@ -422,11 +422,11 @@ names(color_median) <- unique(mm_summ$in_phy$reference)
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
-point_type <- list(a1 = 19, a2 = "/")
+point_type <- list(a1 = 19, a2 = 8)
 
 
 leg_color<- list(a1 = color_studies, a2 = color_median)
-leg_pch <- list(a1 = 19, a2 = "/")
+leg_pch <- list(a1 = 19, a2 = 8)
 leg_text <- lapply(leg_color, names)
 leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
 leg_box <- c(TRUE, TRUE)
@@ -450,13 +450,12 @@ datelifeplot::plot_node_ages2(phylo_median,
                matched_ages  = all_ages,
                pch = point_type,
                pch_color = point_colors,
-               pch_transparency = 90,
                pch_cex = 1,
                bars_lwd = 10,
                bars_color = "#DCDCDC50",
                legend_cex = c(0.9, 0.9),
                legend_x = c(-10, -10),
-               legend_y = c(190, 150),
+               legend_y = c(190, 140),
                legend_text = leg_text,
                legend_pch = leg_pch,
                legend_color = leg_color,
