@@ -254,15 +254,18 @@ Choose plotting colors:
 
 length(xx) / length(unique(names(frin_dsumm$phylo_all)))
 color_studies <- c("blue", 
-                   xx[15:16],
+                   xx[c(25, 26)],
                    xx[1],
-                   "purple", 
+                   "deeppink", 
                    "orchid",
-                   xx[65:66],
+                   xx[c(65, 66)],
                    "pink",
-                   xx[c( 95:96, 115:116)],
+                   xx[c(95, 96)], 
+                   xx[c(121, 122)],
                    "skyblue",
-                   xx[c(145:146, 175:176, 190)])
+                   xx[c(141, 142)], 
+                   xx[c(165, 166)], 
+                   xx[190])
 names(color_studies) <- studies
 
 ```
@@ -392,12 +395,9 @@ Simplifying median ages on tree plot:
 # Getting the median per node:
 median_singletons <- c()
 for (i in unique(mm_summ$in_phy$mrca_node_name)) {
-  print(i)
   x <- median(unique(mm_summ$in_phy$nodeAge[mm_summ$in_phy$mrca_node_name == i]))
   median_singletons <- c(median_singletons, x)
 }
-
-ape::branching.times(phylo_median)
 
 # Detecting node names that are duplicated 
 duplos <- duplicated(mm_summ$in_phy$mrca_node_name)
@@ -432,39 +432,39 @@ leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
 leg_box <- c(TRUE, TRUE)
 ```
 
-Plot again:
+Plot Median summary Chronogram again:
 ```{r}
-pdf(file = paste0(writing_dir, "median_and_calibration_ages_simple.pdf"),
+svg(filename = paste0(writing_dir, "median_and_calibration_ages_simple.svg"),
     height = 11.75*2,
     width = 8.25*2)
-datelifeplot::plot_node_ages2(phylo_median,
-               title = c("Median Summary Chronogram"),
+ee <- datelifeplot::plot_node_ages2(phylo_median,
+               title = NULL,
                pos_title = -5,
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               cex_axis = 1,
+               cex_axis = 2,
                edge.width = 2,
                cex_tiplabels = 0.6,
                matched_ages  = all_ages,
                pch = point_type,
                pch_color = point_colors,
                pch_cex = 1,
-               bars_lwd = 10,
-               bars_color = "#DCDCDC50",
-               legend_cex = c(0.9, 0.9),
-               legend_x = c(-10, -10),
-               legend_y = c(190, 140),
+               bars_lwd = 7,
+               # bars_color = "#DCDCDC50", # defaulto to "#80808050"
+               legend_cex = c(1.2, 1.2),
+               legend_x = c(1, 1),
+               legend_y = c(140, 80),
                legend_text = leg_text,
                legend_pch = leg_pch,
                legend_color = leg_color,
                legend_title = leg_title,
                legend_box = leg_box,
                mai1 = 0,
-               mai2 = 2.5,
-               mai3 = 1,
-               mai4 = 3.6,
+               mai2 = 0,
+               mai3 = 0,
+               mai4 = 1,
                omi1 = 0,
                omi2 = 0,
                omi3 = 0,
