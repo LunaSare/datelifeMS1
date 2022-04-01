@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
 writing_dir <- "../figures/figure-fringillidae/"
 ```
 
@@ -31,8 +32,6 @@ frin_dquery <- datelife::make_datelife_query(input = "fringillidae",
 
 ```{r, eval=FALSE}
 frin_dres = datelife::get_datelife_result(input = frin_dquery, cache = opentree_chronograms)
-frin_dres_file <- paste0("frin_dres_", Sys.Date())
-usethis::use_data(frin_dres, name = frin_dres_file, overwrite = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -44,19 +43,32 @@ load(file = "../data/frin_dres.rda")
 frin_dsumm <- datelife:::summary.datelifeResult(datelife_query = frin_dquery, object = frin_dres)
 
 # usethis::use_data(frin_dsumm, overwrite = TRUE)
+load(file = "../data/frin_dsumm.rda")
+
 ```
-## Save objects and load them
+## Save data objects 
 
 ```{r}
+opentree_chronograms$version
 
-# usethis::use_data(frin_sample_dquery, overwrite = TRUE)
+frin_data_filename <- paste0("frin_data_v", opentree_chronograms$version)
 
+usethis::use_data(frin_dquery, 
+                  frin_dres, 
+                  frin_dsumm, 
+                  overwrite = TRUE)
 ```
+
+## Load data objects 
+
+```{r}
+load(file = "../data/frin_data_.rda")
+```
+
 Make an object with all source chronograms, and reorder chronogram list alphabetically:
 
 ```{r}
 phylo_all <- frin_dsumm$phylo_all
-names(phylo_all)
 alphabetic_order <- order(names(phylo_all))
 phylo_all <- phylo_all[alphabetic_order]
 names(phylo_all)
@@ -64,7 +76,6 @@ names(phylo_all)
 We will rename source chronograms to have a shorter study name:
 
 ```{r}
-
 names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Barker et al. 2015 - chronogram 1",  # 2
                       "Barker et al. 2015 - chronogram 2",  # 3
@@ -84,13 +95,11 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Roquet et al. 2014 - chronogram 1", # 17
                       "Roquet et al. 2014 - chronogram 2", # 18 
                       "Uyeda et al 2017") # 19
-                      
-
 ```
 
 ### Plotting source chronograms
 
-getting oldest age of all trees in a `multiPhylo ` object:
+getting oldest age among all trees in a `multiPhylo` object:
 
 ```{r}
 max(unlist(lapply(phylo_all, ape::branching.times)))

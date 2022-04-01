@@ -161,6 +161,8 @@ all_calibrations <- datelife::extract_calibrations_phylo(
 matched <- datelife::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
+ls(matched)
+class(matched)
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
 

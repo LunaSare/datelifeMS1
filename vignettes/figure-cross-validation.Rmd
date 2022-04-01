@@ -1,0 +1,210 @@
+---
+title: "figure-cross-validation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{figure-cross-validation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelifeMS1)
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+writing_dir <- "../figures/figure-cross-validation/"
+
+# Based on function use_othercals3 from https://github.com/LunaSare/datelife_examples/blob/master/R/functions_data.R#L36
+use_other_calibrations <- function(trees, other_calibrations, ...){
+    res <- lapply(seq(trees), function(i){
+      phy <- trees[[i]]
+      phy$edge.length <- NULL
+      print(i)
+        xx <- suppressMessages(suppressWarnings(datelife::use_calibrations_bladj(phy,
+            calibrations = other_calibrations[[i]], ...)))
+        return(xx)
+    })
+    class(res) <- "multiPhylo"
+    names(res) <- names(trees)
+    res
+}
+
+# Function based on https://github.com/LunaSare/datelife_examples/blob/master/R/functions_data.R#L3
+# get calibrations form all other chronograms not belonging to the same study
+extract_other_calibrations <- function(phyloall){
+    # dd <- duplicated(names(phyloall))
+    res <- lapply(seq(phyloall), function(i){
+        dd <- names(phyloall) %in% names(phyloall)[i]
+        datelife::extract_calibrations_phylo(phyloall[!dd], each = FALSE)
+    })
+    names(res) <- names(phyloall)
+    res
+}
+```
+
+## Cross validation of Fringillidae source chronograms.
+
+We are using the object `frin_dsumm` and getting all source chronograms, and reordering the chronogram list alphabetically:
+
+```{r}
+phylo_all <- frin_dsumm$phylo_all
+names(phylo_all)
+alphabetic_order <- order(names(phylo_all))
+phylo_all <- phylo_all[alphabetic_order]
+```
+
+Next, get calibrations for all other chronograms:
+
+```{r}
+frin_other_calibs <- extract_other_calibrations(phylo_all)
+class(frin_other_calibs)
+length(frin_other_calibs)
+names(frin_other_calibs) <- names(phylo_all)
+```
+
+Date the topology based on other calibrations:
+
+```{r}
+cross_validation <- use_other_calibrations(trees = phylo_all, other_calibrations = frin_other_calibs)
+
+# target = the tree topology that is going to be dated
+# reference = the chronogram with dates to time-scale `target`
+cc <- geiger::congruify.phylo(reference = phylo_all[[1]],
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)
+cc <- geiger::congruify.phylo(reference = phylo_all[[1]],
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)$calibrations
+
+cc <- geiger::congruify.phylo(reference = c(list(phylo_median), phylo_all),
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)
+names(cc) <- c("phylo_median", names(phylo_all))
+cc[is.na(cc)]
+unname(which(is.na(cc)))
+```
+
+Congruification of all chronograms at the same time returns `NA` for some chronograms (`r paste0(names(cc)[is.na(cc)], collapse, = ", ")`).
+
+So, I am testing congruification one on one:
+
+```{r}
+# Function
+# Congruify a source chronogram with the target and itself
+run_congruification <- function(phylo_median, phylo_all, index) {
+    cc <- geiger::congruify.phylo(reference = list(median = phylo_median, 
+                                                    self = phylo_all[[index]]),
+                            target = phylo_all[[index]],
+                            scale = NA,
+                            ncores = 1)
+    names(cc) <- c("median", "self")
+    cc
+}
+```
+
+
+Test: Check that hashes from congruification do correspond to the same node in target and reference
+
+```{r}
+names(phylo_all)[5]
+
+cc5 <- run_congruification(phylo_median, phylo_all, index = 5)
+
+cc5$median$reference$node.label
+cc5$self$reference$node.label
+cc5$self$target$hash
+cc5$median$target$hash
+
+
+pdf(file = paste0(writing_dir, "cc5_self_reference.pdf"))
+ape::plot.phylo(cc5$self$reference)
+ape::nodelabels(cc5$self$reference$node.label, adj = 0)
+dev.off()
+
+pdf(file = paste0(writing_dir, "cc5_median_reference.pdf"),
+    height = 25)
+ape::plot.phylo(cc5$median$reference, cex = 0.5)
+ape::nodelabels(cc5$median$reference$node.label, adj = 0, cex = 0.5)
+dev.off()
+
+# Function:
+# Plot congruified trees with hash labels as node labels
+# @description plots an output of run_congruification
+plot_congruification <- function(cc, 
+                                 id = "",
+                                 writing_dir, 
+                                 height_self = 7, 
+                                 height_target = 25) {
+  phylo <- cc$self$reference
+  pho <- phylo_height_omi(phy = phylo)
+  pdf(file = paste0(writing_dir, 
+                    deparse(substitute(cc)),
+                    id,
+                    "_congruification_reference2self.pdf"),
+      height = pho$height/72)
+  ape::plot.phylo(phylo)
+  ape::nodelabels(phylo$node.label, adj = 0)
+  dev.off()
+
+  phylo <- cc$median$reference
+  pho <- phylo_height_omi(phy = phylo)
+  pdf(file = paste0(writing_dir,
+                    deparse(substitute(cc)), 
+                    "_congruification_reference2target.pdf"),
+      height = pho$height/72)
+  ape::plot.phylo(phylo, cex = 0.5)
+  ape::nodelabels(phylo$node.label, adj = 0, cex = 0.5)
+  dev.off() 
+}
+
+# run congruification and plot for all source chronograms
+
+for (i in seq(phylo_all)) {
+  print(names(phylo_all)[i])
+  cc <- run_congruification(phylo_median, phylo_all, index = i)
+  plot_congruification(cc, id = i, writing_dir)
+}
+
+
+
+
+
+# get congruification hashes:
+nn <- lapply(cc, function(x) {
+                tryCatch(x$reference$node.label, error = function(e) NA)
+})
+# Test that hash names are congruent in target and reference
+for (i in seq(nn)) {
+  xx <- match(nn[[1]], nn[[i]])
+  print(i)
+  print(xx)
+  yy <- nn[[i]][xx]
+  print(yy)
+}
+```
+Conclusion: Hash labels are different between reference trees, even if they correspond to the same node in target.
+
+However, hashed nodes do correspond to the same clade between reference chronograms.
+Then, we can use taxon pairs from hashed nodes to identify corresponding node labels on target.
+
+What part from congruification output do we need?
+
+```{r}
+ls(cc19)
+cc19$self$calibrations
+cc19$median$calibrations
+```
+TODO:
+
+test that MRCA from congruification corresponds to the same node obtained with phytools::find.mrca()
+
+
