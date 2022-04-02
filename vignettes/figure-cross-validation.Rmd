@@ -366,8 +366,146 @@ TODO:
 - get node label from target tree corresponding to absent hashes
 - add them to `output$calibrations` data.frame
 
+```{r}
+# Cross congruify source chronograms and target tree to source_chronograms
+run_congruification_self <- function(phy, chronograms, index) {
+  self <- chronograms[[index]]
+  phy$tip.label <- sub(" ", "_", phy$tip.label)
+  self$tip.label <- sub(" ", "_", self$tip.label)
+  cc <- geiger::congruify.phylo(reference = list(phy = phy,
+                                                 self = self),
+                          target = self,
+                          scale = NA,
+                          ncores = 1)
+  names(cc) <- c("phy", "self")
+  cc
+}
+congruified_self <- lapply(seq(phylo_all), 
+                          function(i) run_congruification_self(phylo_median, 
+                                                               phylo_all, 
+                                                               index = i))
+names(congruified_self) <- names(phylo_all)
+
+ls(congruified_self[[19]])
+congruified_self[[1]]$phy$calibrations
+congruified_self[[1]]$self$calibrations
+
+run_congruification_phy <- function(phy, chronograms, index) {
+  self <- chronograms[[index]]
+  phy$tip.label <- sub(" ", "_", phy$tip.label)
+  self$tip.label <- sub(" ", "_", self$tip.label)
+  cc <- geiger::congruify.phylo(reference = list(phy = phy,
+                                                 self = self),
+                          target = phy,
+                          scale = NA,
+                          ncores = 1)
+  names(cc) <- c("phy", "self")
+  cc
+}
+
+phy_calibrations <- suppressWarnings(
+                      geiger::congruify.phylo(reference = phylo_median,
+                                              target = phylo_median,
+                                              scale = NA,
+                                              ncores = 1)$calibrations)
+phy_matched <- mrca_calibrations(phy = phylo_median, 
+                                 calibrations = phy_calibrations)
+
+  
+congruified_all_phy <- lapply(seq(phylo_all), 
+                          function(i) run_congruification_phy(phylo_median, 
+                                                               phylo_all, 
+                                                               index = i))
+names(congruified_all_phy) <- names(phylo_all)
 
 
+# Cross congruify source chronograms and target tree
+index = 8
+
+  fix_congruification <- function(congruified_self,
+                                  index = 1,
+                                  extracted_calibrations) {
+    source_chronogram <- congruified_self[[index]]$self$reference
+    target_tree <- congruified_self[[index]]$phy$reference
+    xx <- target_tree$node.label
+     # if number of congruified nodes in target tree is the same as node number from source chronogram
+    if (length(xx[ xx!= ""]) == source_chronogram$Nnode) {
+        # take extracted calibrations data frame as is
+        calibs <- extracted_calibrations[[index]]
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # TODO: check that the following works:
+        # col_names <- colnames(calibs_matched$matched_calibrations)
+        # ii <- col_names %in% c("mrca_node_number", "mrca_node_name")
+        # col_names[ii] <- c("source_mrca_node_number", "source_mrca_node_name")
+        # colnames(calibs_matched$matched_calibrations) <- col_names
+      } else {
+        # case for index = 11, 10, 8, 7
+        # take congruified calibrations data frame
+        # TODO: needs checking, as the number of congruent nodes in target tree is higher than nodes available in output$calibrations, meaning, that some valid node data is being dropped from final results for some reason
+        # first, get most complete calibrations data.frame
+        # it is usually the one extracted from target tree
+        calibs <- congruified_self[[index]]$phy$calibrations
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # use actual ages from source chronogram
+        mrca_node_name <- calibs_matched$matched_calibrations$mrca_node_name
+        source_bt <- ape::branching.times(calibs_matched$matched_phy)
+        source_ages <- source_bt[mrca_node_name]
+        calibs$MaxAge <- calibs$MinAge <- unname(source_ages)
+        # add congruent column
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        # add source node numbers and names
+        calibs$source_mrca_node_name <- mrca_node_name
+        calibs$source_mrca_node_number <- as.numeric(sub("n", "", mrca_node_name))
+        # add nodes that were not congruent
+        nn <- is.na(match(names(source_bt), mrca_node_name))
+        nn_ages <- ape::branching.times(calibs_matched$matched_phy)[nn]
+        nn_node_name <- names(nn_ages)
+        nn_node_number <- as.numeric(sub("n", "", nn_node_name))
+
+        non_congruent <- data.frame(MinAge = unname(nn_ages),
+                                    MaxAge = unname(nn_ages),
+                                    congruent = rep(FALSE, length(nn_ages)),
+                                    source_mrca_node_number = nn_node_number,
+                                    source_mrca_node_name = nn_node_name)
+        calibs <- data.table::rbindlist(list(calibs, non_congruent),
+                                        fill = TRUE)
+      }
+    calibs$reference <- rep(names(congruified_self)[index], nrow(calibs))
+    return(calibs)
+  }
+
+fix_congruification(congruified_self, index = 8, extracted_calibrations)
+
+fixed_congruification <- lapply(seq(congruified_self), 
+                                  function(i) {
+                                    fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations)})
+
+calibrations <-   data.table::rbindlist(fixed_congruification, fill = TRUE)
+
+calibrations_results <- mrca_calibrations(phy = phylo_median,
+                                            calibrations = calibrations)
+structure(calibrations_results,
+                   class = "congruifiedCalibrations")
+```
+
+```{r}
+extracted_calibrations <- extract_calibrations_phylo(input = phylo_all,
+                                                         each = TRUE)
+fixed_congruification <- lapply(seq(congruified_self), 
+                                  function(i) {
+                                    fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations)})
+names(fixed_congruification) <- names(phylo_all)
+fixed_congruification[[7]]
+colnames(calibs_matched$matched_calibrations)
+
+```
 test that MRCA from congruification corresponds to the same node obtained with phytools::find.mrca()
 
 
