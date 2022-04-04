@@ -225,7 +225,7 @@ Query processing time increases roughly linearly with number of input taxon name
 increases considerably if TNRS is activated.
 <!-- Defining tnrs here again, bc we only talk about it two times, so it easy to forget it -->
 Up to ten thousand names can be processed and searched in less than 30 minutes with the most time consuming settings.
-Once names have been processed as described in methods, a name search through the chronogram database can be performed in less than a minute, even with a very large number of taxon names (Fig. \ref{fig:benchmark}).
+Once names have been processed as described in methods, a name search through the chronogram database can be performed in less than a minute, even with a very large number of taxon names (Fig. \ref{fig:runtime_main}).
 <!--Speed of other datelife workflows? NO, bc it reflects speed from other software mainly. But I will put a sentence about it...
 Summarizing `datelife` results processing times: shows sdm speed, clustering methods speed;
 generating new trees: shows bladj speed;
@@ -279,18 +279,19 @@ The final step is to summarize the available information using two alternative t
 
 # Cross-validation test
 
-Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates (Figs. \ref{fig:cvbladj} and \ref{fig:cvbold}). As a form of cross validation, we took tree topologies from each input study and calibrated them using time of lineage divergence data from all other source chronograms.
+Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates (Figs. \ref{fig:cv1} to \ref{fig:cv10}). As a form of cross validation, we took tree topologies from each input study and calibrated them using time of lineage divergence data from all other source chronograms.
 <!--I'm confused about why you are talking about branch lengths here... did you use branch lengths?-->
 
 In the absence of branch lengths, the ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvbladj}).
-Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvbladj}).
+Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cv2}).
 <!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this -->
-We also demonstrate the usage of PATHd8 [@Britton2007] as an alternative method to BLADJ. For this, we run a `datelife` branch length reconstruction that searches for DNA sequence data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold] to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
+We also demonstrate the usage of PATHd8 [@Britton2007] as an dating method alternative to BLADJ. For this, we run a `datelife` branch length reconstruction that searches for DNA sequence data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold] to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
 <!-- two studies when expanding calibrations to make them agree (studies 3 and 5), and from  -->
 three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}).
 <!-- What made it unsuccessful in the other cases? -->
 From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD  data for some species is absent from the database.
-??? Node ages or maximum ages?? Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
+<!-- ??? Node ages or maximum ages?? -->
+Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
 More examples and code used to generate these trees were developed on an open repository that is available for consultation and reuse at <https://github.com/LunaSare/datelife_examples>.
 
 # Discussion
