@@ -1,0 +1,518 @@
+---
+title: "congruification-tests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{congruification-tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelifeMS1)
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+writing_dir <- "../figures/figure-cross-validation/"
+phylo_all <- frin_dsumm$phylo_all
+names(phylo_all)
+alphabetic_order <- order(names(phylo_all))
+phylo_all <- phylo_all[alphabetic_order]
+phylo_median <- frin_dsumm$phylo_median
+```
+
+```{r}
+# target = the tree topology that is going to be dated
+# reference = the chronogram with dates to time-scale `target`
+cc1 <- geiger::congruify.phylo(reference = phylo_all[[1]],
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)
+ls(cc1)
+cc1_alt <- geiger::congruify.phylo(reference = phylo_median,
+                        target = phylo_all[[1]],
+                        scale = NA,
+                        ncores = 1)$calibrations
+
+cc_all <- geiger::congruify.phylo(reference = c(list(phylo_median), phylo_all),
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)
+names(cc_all) <- c("phylo_median", names(phylo_all))
+unname(which(is.na(cc_all)))
+cc_all[is.na(cc_all)]
+```
+
+Congruification of all chronograms at the same time returns `NA` for some chronograms (`r paste0(names(cc)[is.na(cc)], collapse, = ", ")`).
+
+So, I am testing congruification one-on-one, on chronograms with index = 5, 6, 12, 13, 14, 15, 19:
+
+```{r}
+# Function
+# Congruify a source chronogram with the target tree and itself
+run_congruification <- function(phylo_median, phylo_all, index) {
+  
+    self <- phylo_all[[index]]
+    phylo_median$tip.label <- sub(" ", "_", phylo_median$tip.label)
+    self$tip.label <- sub(" ", "_", self$tip.label)
+    cc <- geiger::congruify.phylo(reference = list(median = phylo_median, 
+                                                   self = self),
+                            target = self,
+                            scale = NA,
+                            ncores = 1)
+    names(cc) <- c("median", "self")
+    cc
+}
+```
+
+
+Test: congruification one-on-one
+
+```{r}
+names(phylo_all)[5]
+
+cc5 <- run_congruification(phylo_median, phylo_all, index = 5)
+
+cc5$median$reference$node.label[cc5$median$reference$node.label != ""]
+cc5$self$reference$node.label
+cc5$self$target$hash
+cc5$median$target$hash
+
+
+pdf(file = paste0(writing_dir, "cc5_self_reference.pdf"))
+ape::plot.phylo(cc5$self$reference)
+ape::nodelabels(cc5$self$reference$node.label, adj = 0)
+dev.off()
+
+pdf(file = paste0(writing_dir, "cc5_median_reference.pdf"),
+    height = 25)
+ape::plot.phylo(cc5$median$reference, cex = 0.5)
+ape::nodelabels(cc5$median$reference$node.label, adj = 0, cex = 0.5)
+dev.off()
+
+cc15 <- run_congruification(phylo_median, phylo_all, index = 15)
+
+cc15$median$reference$node.label[cc15$median$reference$node.label != ""]
+cc15$self$reference$node.label
+cc15$self$target$hash
+cc15$median$target$hash
+```
+
+Resut: The chronograms do not return NA when congruified individually.
+
+Next test: Check that hashes from congruification do correspond to the same node in target and reference
+```{r}
+# Function:
+# Plot congruified trees with hash labels as node labels
+# @description plots an output of run_congruification
+plot_congruification <- function(cc, 
+                                 id = "",
+                                 title_text = "",
+                                 writing_dir, 
+                                 height_self = 7, 
+                                 height_target = 25) {
+  phylo <- cc$self$reference
+  pho <- phylo_height_omi(phy = phylo)
+  pdf(file = paste0(writing_dir, 
+                    deparse(substitute(cc)),
+                    id,
+                    "_congruification_reference2self.pdf"),
+      height = pho$height/72)
+  ape::plot.phylo(phylo)
+  title(main = c(title_text, "source chronogram to self"))
+  ape::nodelabels(phylo$node.label, adj = 0)
+  dev.off()
+
+  phylo <- cc$median$reference
+  pho <- phylo_height_omi(phy = phylo)
+  pdf(file = paste0(writing_dir,
+                    deparse(substitute(cc)),
+                    id,
+                    "_congruification_reference2target.pdf"),
+      height = pho$height/72)
+  ape::plot.phylo(phylo, cex = 0.5)
+  title(main = c(title_text, "source chronogram to topology of interest"))
+  ape::nodelabels(phylo$node.label, adj = 0, cex = 0.5)
+  dev.off() 
+}
+```
+
+```{r}
+# run congruification and plot for all source chronograms
+
+for (i in seq(phylo_all)) {
+  cc <- c()
+  title_text <- paste(i, "--", names(phylo_all)[i])
+  cat(title_text, "\n")
+  cc <- suppressWarnings(run_congruification(phylo_median, phylo_all, index = i))
+  plot_congruification(cc = cc, 
+                       id = ifelse(i<10, paste0(0, i), i), 
+                       writing_dir = writing_dir,
+                       title_text = title_text)
+}
+```
+Conclusion: It seems like the hash is coherent on some chronograms (e.g., `chronograms[12]`), but not all (e.g., `chronograms[19]`, hash 6191e33766a4bcc213ce01bd8914ed80)
+
+Create a report of congruified nodes and hashes:
+
+```{r}
+filename <- paste0(writing_dir, "congruified_node_labels.txt")
+separator <- paste(rep("#", 50), collapse = "")
+write("", 
+      file = filename)
+for (i in seq(phylo_all)) {
+
+  title_text <- paste(i, "--", names(phylo_all)[i])
+
+  write(paste0(separator, "\n\n", title_text, "\n"), 
+        file = paste0(writing_dir, "congruified_node_labels.txt"), 
+        append = TRUE)
+  
+  cc <- c()
+  cc <- suppressWarnings(run_congruification(phylo_median, phylo_all, index = i))
+
+  xx <- cc$median$reference$node.label[cc$median$reference$node.label != ""]
+  write(paste0("\nTarget topology to source chronogram node labels -- n = ", 
+               length(xx),
+               "\n"), 
+        file = filename, 
+        append = TRUE)
+  write(xx, 
+        file = filename, 
+        append = TRUE)
+  
+  xx <- cc$self$reference$node.label
+  write(paste0("\nSource chronogram to self node labels -- n = ", 
+               length(xx),
+               "\n"),
+        file = filename, 
+        append = TRUE)
+  write(xx, 
+        file = filename, 
+        append = TRUE)
+  
+  xx <- cc$median$target$hash
+  write(paste0("\nTarget to target hash -- n = ", 
+               length(xx),
+               "\n"), 
+        file = filename, 
+        append = TRUE)
+  write(xx, 
+        file = filename, 
+        append = TRUE)
+  
+  xx <- cc$self$target$hash
+  write(paste0("\nSource chronogram to target hash -- n = ", 
+               length(xx),
+               "\n"), 
+        file = filename, 
+        append = TRUE)
+  write(xx, 
+        file = filename, 
+        append = TRUE)
+  write("\n", 
+        file = filename, 
+        append = TRUE)
+}
+```
+Conclusion: Hash labels can be different between source chronograms (references), even if they correspond to the same node in target topology.
+
+However, hashed nodes do correspond to the same clade between source chronograms (references).
+
+Then, we can use taxon pairs from hashed nodes in source chronograms (references) to identify corresponding node labels on target.
+
+
+Question: What part from congruification output do we need?
+
+```{r}
+
+cc_all <- vector(mode = "list")
+
+for (i in seq(phylo_all)) {
+  cat(i, "--", names(phylo_all)[i], "\n")
+  cc <- c()
+  cc <- suppressWarnings(run_congruification(phylo_median, phylo_all, index = i))
+  cc_all <- c(cc_all, list(cc))
+}
+names(cc_all) <- names(phylo_all)
+ls(cc_all)
+ls(cc_all[[19]])
+ls(cc_all[[19]]$median)
+cc_all[[19]]$median$reference
+cc_all[[19]]$median$calibrations
+cc_all[[19]]$self$calibrations
+# get congruified node labels:
+# hashed nodes are always in cc$reference (not in cc$target)
+for (i in seq(cc_all)){
+    cat(names(cc_all[i]), "\n")
+    cc <- cc_all[[i]]
+    
+    xx <- cc$self$reference$node.label
+    cat("hashed source chronogram nodes = ",
+        length(xx[xx != ""]),
+        "\n")
+    cat("source chronogram calibrations table row number = ", 
+        length(cc$self$calibrations$MRCA),
+        "\n\n")
+    
+    xx <- cc$median$reference$node.label
+    cat("hashed median tree nodes = ",
+        length(xx[xx != ""]),
+        "\n")
+    cat("median tree calibrations table row number = ", 
+        length(cc$median$calibrations$MRCA),
+        "\n\n\n")
+}
+```
+Conclusion: Number of rows in calibrations object is different that hashed nodes in target or reference.
+
+
+```
+# Test that hash names are congruent in target and reference
+for (i in seq(nn)) {
+  xx <- match(nn[[1]], nn[[i]])
+  print(i)
+  print(xx)
+  yy <- nn[[i]][xx]
+  print(yy)
+}
+```
+
+Question: Why are `output$calibrations` tables different between self and median??
+I thought they should be the same...
+
+```{r}
+cc19 <- geiger::congruify.phylo(reference = phylo_all[[19]],
+                        target = phylo_median,
+                        scale = NA,
+                        ncores = 1)
+cc19 <- geiger::congruify.phylo(reference = phylo_median,
+                        target = phylo_all[[19]],
+                        scale = NA,
+                        ncores = 1)
+cc19 <- geiger::congruify.phylo(reference = phylo_all[[19]],
+                        target = phylo_all[[19]],
+                        scale = NA,
+                        ncores = 1)
+ls(cc19)
+cc19$calibrations
+cc19$reference$node.label[cc19$reference$node.label != ""]
+```
+Conclusion: `output$calibrations` table does not have all nodes that have been congruified... the horror!!!
+
+Important to take into account when using `geiger::congruify.phylo()`
+
+- Hashed node labels in `output$reference$node.label` seem to be correct and to be complete.
+- however, these hashed node labels are not ordered correctly in `output$reference$node.label`.
+- Some congruent nodes are dropped from `output$calibrations` because they do not contain all taxa (see function `geiger:::.build_calibrations()`.
+
+
+TODO:
+
+- match target tree node labels to extracted calibrations from source chronograms
+- if number of hashed nodes in target tree is equal to row number of `output$calibrations`, take `output$calibrations` as is.
+- if not, get absent hashes from`output$calibrations`
+- get node label from target tree corresponding to absent hashes
+- add them to `output$calibrations` data.frame
+
+```{r}
+# Cross congruify source chronograms and target tree to source_chronograms
+run_congruification_self <- function(phy, chronograms, index) {
+  self <- chronograms[[index]]
+  phy$tip.label <- sub(" ", "_", phy$tip.label)
+  self$tip.label <- sub(" ", "_", self$tip.label)
+  cc_phy <- geiger::congruify.phylo(reference = phy,
+                          target = self,
+                          scale = NA,
+                          ncores = 1)
+  cc_self <- geiger::congruify.phylo(reference = self,
+                          target = self,
+                          scale = NA,
+                          ncores = 1)
+  list(phy = cc_phy, self = cc_self)
+}
+geiger::congruify.phylo(reference = phy,
+                          target = self,
+                          scale = NA,
+                          ncores = 1)
+
+congruified_self <- lapply(seq(phylo_all), 
+                          function(i) run_congruification_self(phylo_median, 
+                                                               phylo_all, 
+                                                               index = i))
+any(is.na(congruified_self))
+
+names(congruified_self) <- names(phylo_all)
+
+ls(congruified_self[[19]])
+congruified_self[[1]]$phy$calibrations
+congruified_self[[1]]$self$calibrations
+
+run_congruification_phy <- function(phy, chronograms, index) {
+  self <- chronograms[[index]]
+  phy$tip.label <- sub(" ", "_", phy$tip.label)
+  self$tip.label <- sub(" ", "_", self$tip.label)
+  cc <- geiger::congruify.phylo(reference = list(phy = phy,
+                                                 self = self),
+                          target = phy,
+                          scale = NA,
+                          ncores = 1)
+  names(cc) <- c("phy", "self")
+  cc
+}
+
+phy_calibrations <- suppressWarnings(
+                      geiger::congruify.phylo(reference = phylo_median,
+                                              target = phylo_median,
+                                              scale = NA,
+                                              ncores = 1)$calibrations)
+phy_matched <- mrca_calibrations(phy = phylo_median, 
+                                 calibrations = phy_calibrations)
+
+  
+congruified_all_phy <- lapply(seq(phylo_all), 
+                          function(i) run_congruification_phy(phylo_median, 
+                                                               phylo_all, 
+                                                               index = i))
+names(congruified_all_phy) <- names(phylo_all)
+
+
+# Cross congruify source chronograms and target tree
+index = 5
+
+  fix_congruification <- function(congruified_self,
+                                  index = 1,
+                                  extracted_calibrations) {
+    cat(index, " -- ", names(congruified_self)[index], "\n")
+    source_chronogram <- congruified_self[[index]]$self$reference
+    target_tree <- congruified_self[[index]]$phy$reference
+    xx <- target_tree$node.label
+     # if number of congruified nodes in target tree is the same as node number from source chronogram
+    if (length(xx[ xx!= ""]) == source_chronogram$Nnode) {
+        # take extracted calibrations data frame as is
+        calibs <- extracted_calibrations[[index]]
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # TODO: check that the following works:
+        # col_names <- colnames(calibs_matched$matched_calibrations)
+        # ii <- col_names %in% c("mrca_node_number", "mrca_node_name")
+        # col_names[ii] <- c("source_mrca_node_number", "source_mrca_node_name")
+        # colnames(calibs_matched$matched_calibrations) <- col_names
+      } else {
+        # case for index = 11, 10, 8, 7
+        # take congruified calibrations data frame
+        # TODO: needs checking, as the number of congruent nodes in target tree is higher than nodes available in output$calibrations, meaning, that some valid node data is being dropped from final results for some reason
+        # first, get most complete calibrations data.frame
+        # it is usually the one extracted from target tree
+        calibs <- congruified_self[[index]]$phy$calibrations
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # use actual ages from source chronogram
+        mrca_node_name <- calibs_matched$matched_calibrations$mrca_node_name
+        source_bt <- ape::branching.times(calibs_matched$matched_phy)
+        source_ages <- source_bt[mrca_node_name]
+        calibs$MaxAge <- calibs$MinAge <- unname(source_ages)
+        # add congruent column
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        # add source node numbers and names
+        calibs$source_mrca_node_name <- mrca_node_name
+        calibs$source_mrca_node_number <- as.numeric(sub("n", "", mrca_node_name))
+        # add nodes that were not congruent
+        nn <- is.na(match(names(source_bt), mrca_node_name))
+        nn_ages <- ape::branching.times(calibs_matched$matched_phy)[nn]
+        nn_node_name <- names(nn_ages)
+        nn_node_number <- as.numeric(sub("n", "", nn_node_name))
+
+        non_congruent <- data.frame(MinAge = unname(nn_ages),
+                                    MaxAge = unname(nn_ages),
+                                    congruent = rep(FALSE, length(nn_ages)),
+                                    source_mrca_node_number = nn_node_number,
+                                    source_mrca_node_name = nn_node_name)
+        calibs <- data.table::rbindlist(list(calibs, non_congruent),
+                                        fill = TRUE)
+      }
+    calibs$reference <- rep(names(congruified_self)[index], nrow(calibs))
+    return(calibs)
+  }
+
+fix_congruification(congruified_self, index = 8, extracted_calibrations)
+
+fixed_congruification <- lapply(seq(congruified_self), 
+                                  function(i) {
+                                    fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations)})
+
+calibrations <-   data.table::rbindlist(fixed_congruification, fill = TRUE)
+
+calibrations_results <- mrca_calibrations(phy = phylo_median,
+                                            calibrations = calibrations)
+structure(calibrations_results,
+                   class = "congruifiedCalibrations")
+```
+
+```{r}
+extracted_calibrations <- extract_calibrations_phylo(input = phylo_all,
+                                                         each = TRUE)
+fixed_congruification <- lapply(seq(congruified_self), 
+                                  function(i) {
+                                    fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations)})
+names(fixed_congruification) <- names(phylo_all)
+fixed_congruification[[7]]
+colnames(calibs_matched$matched_calibrations)
+
+```
+TODO: test that MRCA from congruification corresponds to the same node obtained with phytools::find.mrca()
+
+```{r}
+i = 5
+        cat(i, " -- ", names(phylo_all)[i], "\n")
+        dd <- names(phylo_all) %in% names(phylo_all)[i]
+        datelife::congruify_calibrations(phy = phylo_all[dd][[1]],
+                                         chronograms = phylo_all[!dd])
+```
+
+Test previous code that errored:
+```{r}
+extracted_calibrations <- extract_calibrations_phylo(input = chronograms,
+                                                         each = TRUE)
+
+  phy_calibrations <- suppressWarnings(
+                        geiger::congruify.phylo(reference = phy,
+                                                target = phy,
+                                                scale = NA,
+                                                ncores = 1)$calibrations)
+  phy_matched <- mrca_calibrations(phy = phy,
+                                   calibrations = phy_calibrations)
+
+  i = 18
+  congruified_self <- lapply(seq(chronograms), function(i) { 
+    cat(i, " -- ", "\n")
+    run_congruification_self(phy = phy_matched$matched_phy, 
+                             chronograms,
+                             index = i)
+  })
+
+names(congruified_self) <- names(chronograms)
+
+fixed_congruification <- lapply(seq(congruified_self),
+                                  function(i) {
+                                    tryCatch(fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations), error = function(e) NA)})
+
+errored <- is.na(fixed_congruification)
+  message("fixing congruification errored for:\n",
+            paste(which(errored), "--", names(congruified_self)[errored], "\n"))
+
+```
+
+

@@ -12,64 +12,56 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+writing_dir <- "../figures/figure2/"
 ```
 ## Getting source chronograms
 
-```{r setup}
+```{r}
 # library(datelifeMS1)
 devtools::load_all("../../datelifeplot")
 devtools::load_all()
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_write <- sub("_", " ", spp)
+spp_write <- spp_write[order(spp_write)]
+write(spp_write, file = "../figures/fringillidae_species_sample.txt")
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
-spp_summ$phylo_all
-
-mock_spp_names <- gsub(" ", "_", spp_summ$phylo_median$tip.label)
-names(mock_spp_names) <- LETTERS[1:6]
-mock_spp_names
-
-mock_study_names <- names(spp_summ$phylo_all)
-iis <- match(mock_study_names, unique(mock_study_names))
-names(mock_study_names) <- paste("Study", iis)
-names(mock_study_names)
-ffs <- table(names(mock_study_names))
-
-is_dupl <- names(mock_study_names) %in% names(ffs)[ffs > 1]
-
-# Add "Chronogram X" to duplicated studies:
-
-for (i in names(ffs)[ffs > 1]) {
-  dds <- i == names(mock_study_names)
-  chrono_names <- paste("- Chronogram", seq(ffs[[i]]))
-  names(mock_study_names)[dds] <- paste(names(mock_study_names)[dds],chrono_names )
-}
+phylo_median <- spp_summ$phylo_median
+phylo_all <- spp_summ$phylo_all
+# Reorder chronogram list alphabetically:
+names(phylo_all)
+alphabetic_order <- order(names(phylo_all))
+names(phylo_all)[alphabetic_order]
+phylo_all <- phylo_all[alphabetic_order]
+spp_summ$citations
 ```
 
-### Rename source chronograms:
+We will rename source chronograms to have a shorter study name:
 
 ```{r}
-phylo_all_renamed <- c()
-for (phy in spp_summ$phylo_all){
-  is_in_tree <- match(gsub(" ", "_", phy$tip.label), mock_spp_names)
-  # print(is_in_tree)
-  # print(phy$tip.label)
-  # print(names(mock_spp_names)[is_in_tree])
-  phy$tip.label <- names(mock_spp_names)[is_in_tree]
-  phylo_all_renamed <- c(phylo_all_renamed, list(phy))
-}
-class(phylo_all_renamed) <- "multiPhylo"
-names(phylo_all_renamed) <- names(mock_study_names)
+
+names(phylo_all) <- c("Barker et al. 2013",
+                      "Barker et al. 2015 - chronogram 1",
+                      "Barker et al. 2015 - chronogram 2",
+                      "Burns et al. 2014",
+                      "Hedges et al. 2015 - chronogram 1",
+                      "Hedges et al. 2015 - chronogram 2",
+                      "Hooper et al. 2017",
+                      "Jetz et al. 2012 - chronogram 1",
+                      "Jetz et al. 2012 - chronogram 2")
 ```
 
 ### Plotting chronograms
 
-Plot one chronogram as test:
+Plot one chronogram as test.
+
+Create settings and try classic `ape::plot.phylo`:
 
 ```{r}
 plot_max_time <- 45
-chronogram <- phylo_all_renamed[[1]]
+chronogram <- phylo_all[[1]]
 chronogram$root.edge <- plot_max_time - max(ape::branching.times(chronogram))
 
 ape::plot.phylo(chronogram,
@@ -79,54 +71,73 @@ ape::plot.phylo(chronogram,
                 root.edge = TRUE,
                 plot = TRUE, edge.width = 2)
 ape::axisPhylo(line = 1)
+```
 
+Plot with `datelifeplot`:
+```{r}
 datelifeplot::plot_phylo(chronogram,
-                         title = names(phylo_all_renamed)[1],
-                         plot_type = "ape",
+                         title = names(phylo_all)[1],
+                         plot_type = "phyloch",
                          time_depth = plot_max_time,
                          write = "pdf",
-                         file_name = "test.pdf",
+                         file_name = "../figures/figure2/test.pdf",
                          cex_tiplabels = 2,
                          cex_axislabel = 1.5,
                          cex_title = 2,
                          pos_title = 2.2,
                          pos_axis = 2)
 ```
+[!Source chronogram test]("../figures/figure2/test.pdf")
 
 
 ### Plotting ALL source chronograms
 
+We know that chronogram 9 has the oldest ages.
+Get the maximum age:
+```{r}
+max(ape::branching.times(phylo_all[[9]]))  # 44.29586
+plot_max_time <- 45
+```
+Another way of getting oldest age of all trees in a `multiPhylo ` object:
 
 ```{r}
-# as png, but resolution is not good and it is hard to fix within plot_phylo
-# png plots are in vignettes/phylo_all/png
-datelifeplot::plot_phylo_all(trees = phylo_all_renamed,
-                             write = "png")
+max(unlist(lapply(phylo_all, ape::branching.times)))
+```
 
-# as pdf:
-max(ape::branching.times(phylo_all_renamed[[9]]))  # 44.29586
+Plot as pdf:
 
-devtools::load_all("../datelifeplot")
-datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
+```{r}
+datelifeplot::plot_phylo_all(chronograms = phylo_all,
+                             folder_name = "../figures/figure2/source_phylo_all",
+                             plot_height = 440,
+                             plot_width = 600,
+                             mai1 = 1,
+                             mai2 = 0,
+                             mai3 = 1,
+                             mai4 = 3.72,
+                             omi1 = 1,
+                             omi2 = 0,
+                             omi3 = 0,
+                             omi4 = 0,
                              write = "pdf",
                              plot_type = "phyloch",
-                             max_depth = 45,
+                             max_depth = plot_max_time,
                              edge.width = 2,
                              cex_tiplabels = 2,
                              cex_axislabel = 1.5,
                              cex_axis = 2,
-                             cex_title = 2,
-                             pos_title = 2.2,
+                             cex_title = 2.5,
+                             pos_title = -2.8,
                              pos_axis = 2,
-                             units = NULL)
+                             axis_label = "")
 ```
 
 
-I combined source chronogram plots with ppt because combining with `magick` was not
-doing what I needed:
+I combined source chronogram plots with ppt (files in figures/figure2/source_phylo_all*.pptx), because combining with `magick` was not
+doing what I needed. This is the code I tried:
 
-```{r}
-for (i in seq(phylo_all_renamed)) {
+```
+for (i in seq(phylo_all)) {
   ii <- magick::image_read(path = paste0("phylo_all/phylo_all_", i, ".pdf"))
   assign(x = paste0("phy", i), value = ii)
 }
@@ -141,69 +152,174 @@ dev.off()
 
 ## Get calibrations
 
-Rename median chronogram tip labels:
-
-```{r}
-phylo_median <- spp_summ$phylo_median
-is_in_tree <- match(gsub(" ", "_", phylo_median$tip.label), mock_spp_names)
-phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
-```
-
 Get calibrations:
 
 ```{r}
 all_calibrations <- datelife::extract_calibrations_phylo(
-  input = phylo_all_renamed,
+  input = phylo_all,
   each = FALSE)
 matched <- datelife::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
+ls(matched)
+class(matched)
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
 
 ```
-Plot ages from source chronograms:
+### Table of matched calibrations
+
+Make it pretty.
+
+```{r}
+colnames(calib_summ$in_phy)
+# keep columns of interest:
+pretty_calibs <- calib_summ$in_phy[,c("taxonA", "taxonB", "MaxAge", "mrca_node_number", "reference")]
+pretty_calibs
+# Eliminate duplicated taxon pairs:
+## Find the duplicated pairs within studies:
+taxon_pairs_ref <- c()
+for (i in seq(nrow(pretty_calibs))) {
+  tax_pair_ref <- as.character(pretty_calibs[i, c("taxonA", "taxonB", "reference")])
+  tax_pair_ref <- tax_pair_ref[order(tax_pair_ref)]
+  tax_pair_ref <- paste(tax_pair_ref, collapse = "")
+  taxon_pairs_ref <- c(taxon_pairs_ref, tax_pair_ref)
+}
+## Eliminate duplicated rows:
+if (any(duplicated(taxon_pairs_ref))) {
+  pretty_calibs <- pretty_calibs[!duplicated(taxon_pairs_ref),]
+}
+
+# Reorder ROWS by node number, reference, age and taxon names
+pretty_calibs <- pretty_calibs[order(pretty_calibs$mrca_node_number, pretty_calibs$MaxAge, pretty_calibs$reference, pretty_calibs$taxonA, pretty_calibs$taxonB),]
+# Eliminate rownames
+rownames(pretty_calibs) <- NULL
+# Reorder COLUMNS
+pretty_calibs <- pretty_calibs[, c("mrca_node_number", "taxonA", "taxonB", "MaxAge", "reference")]
+# Modify column names to be informative
+colnames(pretty_calibs) <- c("Node Name", "taxon A", "taxon B", "Node Age", "Study chronogram")
+# Change node numbers my node names
+pretty_calibs$`Node Name` <- paste0("n", pretty_calibs$`Node Name`-6)
+
+# substitute underscore by space:
+pretty_calibs$`taxon A` <- sub("_", " ", pretty_calibs$`taxon A`)
+pretty_calibs$`taxon B` <- sub("_", " ", pretty_calibs$`taxon B`)
+
+# order taxa alphabetically by column
+for (i in seq(nrow(pretty_calibs))) {
+  original <- as.character(pretty_calibs[i, c("taxon A", "taxon B")])
+  reordered <- original[order(original)]
+  pretty_calibs[i, c("taxon A", "taxon B")] <- reordered
+}
+
+
+pretty_calibs
+```
+
+Print table as pdf.
+Trick to print in multiple pages from https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page
+
+```{r}
+## set the theme to have italics in species names:
+number_of_rows <- nrow(pretty_calibs)
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
+
+# Export PDF
+pdf(paste0(writing_dir, "/calibs_table.pdf"), width = 10)
+gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+
+### Plot matched calibrations from source chronograms.
+
+Choose a color scheme for the studies:
 
 ```{r}
 # Get references in matched calibrations:
 studies <- as.character(unique(calib_summ$in_phy$reference))
+
 # order references alphabetically:
 studies <- studies[order(studies)]
+studies
+
+```
+
+Visualize plotting colors:
+
+```{r}
 #create a vector of colors with study names:
-color_studies <- viridis::turbo(n = length(studies))
+xx <- viridis::turbo(n = length(studies))
+
+plot(-1:10, -1:10, type = "n")
+text(1:9, 1:9, xx, col = xx)
+
+xx <- viridis::turbo(n = 20)
+plot(-2:length(xx)+1, -2:length(xx)+1, type = "n")
+text(1:(length(xx)), 1:length(xx), paste(1:length(xx),"=",xx), col = xx)
+
+```
+
+Choose plotting colors:
+
+```{r}
+#create a vector of colors with study names:
+color_studies <- xx[c(12,
+                      3,4,
+                      15,
+                      18,17,
+                      20,
+                      8,9)]
 names(color_studies) <- studies
+usethis::use_data(color_studies)
+```
 
+Now, we can plot:
 
+```{r}
 svg(filename = "../figures/figure2/node_ages_matched.svg",
-    height = 5,
+    height = 10,
     width = 7)
 datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with source chronogram ages"),
-               cex_title = 2,
+               title = "Median Summary Chronogram",
                plot_type = "phyloch",
                time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               cex_tiplabels = 2,
                calibration_summary = calib_summ,
                pch = 19,
                color_pch = color_studies,
                cex_pch = 2,
                lwd_bars = 15,
                cex_legend = 0.7,
-               x_legend = -20
+               x_legend = 2,
+               y_legend = 6,
+               mai1 = 1, 
+               mai2 = 0,
+               mai3 = 0.5,
+               mai4 = 3.73,
+               omi1 = 2,
+               omi2 = 0,
+               omi3 = 0.5,
+               omi4 = 0,
+               edge.width = 2,
+               cex_tiplabels = 2,
+               cex_axislabel = 1.5,
+               cex_axis = 2,
+               cex_title = 2,
+               pos_title = -1,
+               pos_axis = 2
                )
 dev.off()
 ```
-## Get pairwise median age points and plot them:
+
+
+## Get pairwise median age points
 
 ```{r}
-
 names(spp_dr)
 spp_dr[[1]]
 
 best_grove <- datelife::get_best_grove(spp_dr)
 
+# Take a list of chronograms as tables and summarize age data per taxon pair into a single matrix:
 median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
 colnames(median_matrix)
 
@@ -211,81 +327,286 @@ median_matrix_list <- list(summary_matrix = median_matrix)
 
 median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
 
+# match taxon pairs to nodes on a tree topology
 matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
 
 mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
 mm_summ$in_phy
-
-## rename
-
-mm_summ$in_phy$taxonA
-
-is_in_taxonA <- match(gsub(" ", "_", mm_summ$in_phy$taxonA), mock_spp_names)
-mm_summ$in_phy$taxonA <- names(mock_spp_names)[is_in_taxonA]
-
-is_in_taxonB <- match(gsub(" ", "_", mm_summ$in_phy$taxonB), mock_spp_names)
-mm_summ$in_phy$taxonB <- names(mock_spp_names)[is_in_taxonB]
-
-mm_summ$in_phy$reference <- rep("Used as calibration", nrow(mm_summ$in_phy))
-
-AB <- mm_summ$in_phy$taxonA %in% c("A", "B") & mm_summ$in_phy$taxonB %in% c("A", "B")
-
-AC <- mm_summ$in_phy$taxonA %in% c("A", "C") & mm_summ$in_phy$taxonB %in% c("A", "C")
-
-not_used <- AB | AC
-
-mm_summ$in_phy[not_used,]
-
-mm_summ$in_phy[not_used,]$reference <- rep("Excluded from analysis", 4)
 ```
 
+### Table of median of node ages
 
+Make it pretty first:
 
 ```{r}
-# We have two variables, median ages "used" as calibrations, and median ages "not used" or "excluded from analysis".
-color_reference <- viridis::viridis(2) 
-# c("blue", "gray")
-names(color_reference) <- c("Used as calibration", "Excluded from analysis")
-datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               calibration_summary = mm_summ,
-               pch = 19,
-               color_pch = color_reference,
-               transparent_pch = 70,
-               add_legend = TRUE,
-               cex_legend = 0.5
-               )
+colnames(mm_summ$in_phy)
+pretty_median <- mm_summ$in_phy[,c("taxonA", "taxonB", "nodeAge", "mrca_node_number")]
+pretty_median
+# Because patristic matrices are symmetrical, going from a patristic matrix to a table creates a duplicate for all taxon pairs
+# Eliminate duplicated taxon pairs:
+## Find the duplicated pairs
+taxon_pairs <- c()
+for (i in seq(nrow(pretty_median))) {
+  taxon_pair <- as.character(pretty_median[i, c("taxonA", "taxonB")])
+  taxon_pair <- taxon_pair[order(taxon_pair)]
+  taxon_pair <- paste(taxon_pair, collapse = "")
+  taxon_pairs <- c(taxon_pairs, taxon_pair)
+}
+# Duplicated pairs should sum to 30/2 = 15
+sum(duplicated(taxon_pairs))
+## Eliminate them:
+pretty_median <- pretty_median[!duplicated(taxon_pairs),]
 
-svg(filename = "../figures/figure2/median_ages.svg",
-    height = 5,
-    width = 7)
-datelifeplot::plot_node_ages(phylo_median,
-               title = c("Median Summary Chronogram", "with median pairwise ages"),
+# Reorder ROWS by node number and taxon names
+pretty_median <- pretty_median[order(pretty_median$mrca_node_number, pretty_median$taxonA, pretty_median$taxonB),]
+# Eliminate rownames
+rownames(pretty_median) <- NULL
+# Reorder COLUMNS
+pretty_median <- pretty_median[, c("mrca_node_number", "taxonA", "taxonB", "nodeAge")]
+# Modify column names to be informative
+colnames(pretty_median) <- c("Node Name", "taxon A", "taxon B", "Pairwise Median Age")
+# Change node numbers to node names
+pretty_median$`Node Name` <- paste0("n", pretty_median$`Node Name`-6)
+
+# substitute underscore by space:
+pretty_median$`taxon A` <- sub("_", " ", pretty_median$`taxon A`)
+pretty_median$`taxon B` <- sub("_", " ", pretty_median$`taxon B`)
+
+# Add a column of node median age
+## Calculate the node median age per node:
+node_median <- c()
+for (i in unique(pretty_median$`Node Name`)) {
+  print(i)
+  x <- median(pretty_median$`Pairwise Median Age`[pretty_median$`Node Name` == i])
+  print(x)
+  node_median <- c(node_median, rep(x, sum(pretty_median$`Node Name` == i)))
+}
+## Create a column
+pretty_median$`Node Median Age` <- node_median
+# Look atthe final result!
+pretty_median
+```
+
+Print table as pdf
+```{r}
+## set the theme to have italics in species names:
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 30)))))
+
+# Export PDF
+pdf("../figures/figure2/median_table.pdf", width = 10)
+gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+
+Simplifying pretty_median table.
+Let's explore the grid and gridExtra package (code from https://cyancey95.github.io/CompBiol_2018/gridExtraPresentation.html):
+
+```{r}
+g <- lapply(1:11, 
+            function(i) { 
+              grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = i, alpha = .5)),
+                 grid::textGrob(i))
+            }
+    )
+pattern <- rbind(c(1,1,2,2,3),
+                 c(1,1,2,2,4),
+                 c(1,1,5,5,6),
+                 c(7,8,9,10,11))
+gridExtra::grid.arrange(grobs = g, layout_matrix = pattern)
+```
+
+```{r}
+# if you do not want row numbers set rows = NULL
+
+# Detecting node names that are duplicated 
+duplos <- duplicated(pretty_median$`Node Name`)
+# Making node names pretty:
+pretty_median$`Node Name`[!duplos]
+pretty_median$`Node Name`[duplos] <- ""
+# putting "n1" node name in the middle
+pretty_median$`Node Name`[1] <- ""
+pretty_median$`Node Name`[5] <- "n1"
+
+# Simplifying node median ages:
+pretty_median$`Node Median Age`[duplos] <- ""
+pretty_median$`Node Median Age`[!duplos] <- node_median[!duplos]
+pretty_median$`Node Median Age`[1] <- ""
+pretty_median$`Node Median Age`[5] <- node_median[!duplos][1]
+```
+
+Plotting:
+
+Setting up a color theme
+
+```{r}
+tt1 <- gridExtra::ttheme_default(core=list(
+  fg_params=list(fontface = c(rep("plain", 15), 
+                              rep("italic", 30), 
+                              rep("plain", 30))),
+  bg_params = list(fill = c(rep(c("grey95"), length.out=9), 
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95", "grey90"), length.out=15),
+                            rep(c("grey95"), length.out=9), 
+                            rep(c("grey90"), length.out=2),
+                            "grey95",
+                            rep(c("grey90"), length.out=2),
+                            "grey95"))))
+```
+
+Writing the table out:
+
+```{r}
+pdf("../figures/figure2/median_table_simple.pdf", width = 10)       # Export PDF
+gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+             
+### Plotting source ages AND summary ages on the same dated tree
+
+Set colors and data:
+
+```{r}
+color_median <- "purple" # mustard yellow "#7A0403FF"
+mm_summ$in_phy$reference <- rep("Pairwsie median of node ages", length(mm_summ$in_phy$reference))
+names(color_median) <- mm_summ$in_phy$reference[1]
+
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = calib_summ, a2 = mm_summ)
+point_type <- list(a1 = "/", a2 = "•")
+
+leg_color<- c(color_studies, color_median)
+# leg_pch <- c(rep("|", length(color_studies)), "•")
+leg_pch <- rep(19, length(leg_color))
+leg_text <- names(leg_color)
+```
+
+Plot:
+
+```{r}
+svg(filename = "../figures/figure2/median_and_calibration_ages.svg",
+    height = 8.5 ,
+    width = 10.5)
+datelifeplot::plot_node_ages2(phylo_median,
+               title = c("Median Summary Chronogram"),
+               pos_title = 3,
                cex_title = 2,
                plot_type = "phyloch",
                time_depth = plot_max_time,
                pos_axis = 2,
-               edge.width = 2,
+               cex_axis = 1.5,
+               edge.width = 3,
                cex_tiplabels = 2,
-               calibration_summary = mm_summ,
-               pch = 19,
-               color_pch = color_reference,
-               cex_pch = 2,
-               transparent_pch = 70,
-               lwd_bars = 15,
-               cex_legend = 0.7,
-               x_legend = -20
+               matched_ages  = all_ages,
+               pch = point_type,
+               pch_color = point_colors,
+               pch_cex = 3,
+               bars_lwd = 15,
+               legend_cex = 0.9,
+               legend_x = -5,
+               legend_y = 6.2,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+               mai1 = 1,
+               mai2 = 0.8,
+               mai4 = 3.6,
+               axis_label = ""
                )
 dev.off()
+```        
+
+Simplifying median ages on tree plot:
+
+```{r}
+# Getting the median per node:
+median_singletons <- c()
+for (i in unique(mm_summ$in_phy$mrca_node_name)) {
+  print(i)
+  x <- median(unique(mm_summ$in_phy$nodeAge[mm_summ$in_phy$mrca_node_name == i]))
+  median_singletons <- c(median_singletons, x)
+}
+
+ape::branching.times(phylo_median)
+
+# Detecting node names that are duplicated 
+duplos <- duplicated(mm_summ$in_phy$mrca_node_name)
+# Simplifying median ages:
+mm_summ$in_phy$nodeAge[!duplos] <- median_singletons
+# Removing duplicates:
+mm_summ$in_phy <- mm_summ$in_phy[!duplos,]
+# Columns MinAge and MaxAge need to be equal to nodeAge
+mm_summ$in_phy$MinAge <- mm_summ$in_phy$MaxAge <- mm_summ$in_phy$nodeAge
+
 ```
-             
-             
-## Phylo median tree as a phylogram (all branches equal length)
+
+Plotting parameters:
+
+```{r}
+mm_summ$in_phy$reference <- rep("Used as calibration", length(mm_summ$in_phy$reference))
+mm_summ$in_phy$reference[2] <- "Not used"
+gplots::col2hex("purple") # "#A020F0"
+color_median <- c("#A020F070", "purple") # mustard yellow "#7A0403FF"
+
+names(color_median) <- unique(mm_summ$in_phy$reference)
+
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = calib_summ, a2 = mm_summ)
+point_type <- list(a1 = "/", a2 = c(19, 8, 19, 19, 19))
+
+
+leg_color<- list(a1 = color_studies, a2 = color_median)
+# leg_pch <- c(rep("|", length(color_studies)), "•")
+leg_pch <- list(a1 = 19, a2 = c(19, 8))
+leg_text <- lapply(leg_color, names)
+leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
+```
+
+Plot again:
+```{r}
+pdf(file = "../figures/figure2/median_and_calibration_ages_simple.pdf",
+    height = 8.5,
+    width = 10.5)
+datelifeplot::plot_node_ages2(phylo_median,
+               title = c("Median Summary Chronogram"),
+               pos_title = 3,
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               pos_axis = 2,
+               cex_axis = 1.5,
+               edge.width = 3,
+               cex_tiplabels = 2,
+               matched_ages  = all_ages,
+               pch = point_type,
+               pch_color = point_colors,
+               pch_cex = 3,
+               bars_lwd = 15,
+               legend_cex = c(0.9, 0.9),
+               legend_x = c(-5, 18),
+               legend_y = c(6.2, 6.2),
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+               legend_title = leg_title,
+               legend_box = leg_box,
+               mai1 = 1,
+               mai2 = 0.8,
+               mai4 = 3.6,
+               axis_label = ""
+               )
+dev.off()
+```        
+
+## The tree topology
+
+Get phylo median tree as a topology (all branches of equal length)
 
 ```{r}
 # visualize median branching times:
@@ -301,29 +622,26 @@ ape::axisPhylo(side = 1)
 pp$edge.length <- pp$edge.length*plot_max_time 
 ```
 
-Plot the tree with source chronogram ages
+
+Plot median tree topology with node labels and no time axis
 
 ```{r}
-svg(filename = "../figures/figure2/synth_tree_source_ages.svg",
+svg(filename = "../figures/figure2/median_tree_topology.svg",
     height = 5,
-    width = 7)
-datelifeplot::plot_node_ages(pp,
-               title = c("Open Tree synthetic tree", "with source chronogram ages"),
-               cex_title = 2,
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               edge.width = 2,
-               cex_tiplabels = 2,
-               calibration_summary = calib_summ,
-               pch = 19,
-               color_pch = color_studies,
-               cex_pch = 2,
-               lwd_bars = 15,
-               cex_legend = 0.7,
-               x_legend = -20,
-               transparent_pch = 90
-               )
+    width = 6,
+    bg = "transparent")
+datelifeplot::plot_chronogram(pp,
+                         title = c("Tree topology"),
+                         time_axis = FALSE,
+                         axis_label = "",
+                         edge.width = 3,
+                         cex_tiplabels = 2,
+                         cex_axislabel = 1.5,
+                         cex_axis = 2,
+                         cex_title = 2,
+                         pos_title = 3,
+                         mai4 = 3.6)
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white", cex = 1.5)
 dev.off()
 ```
 
