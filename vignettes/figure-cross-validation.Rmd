@@ -34,6 +34,7 @@ use_other_calibrations <- function(trees, other_calibrations, ...){
     names(res) <- names(trees)
     res
 }
+load(file = "../data/frin_color_studies.rda")
 ```
 
 ## Cross validation of Fringillidae source chronograms.
@@ -41,6 +42,7 @@ use_other_calibrations <- function(trees, other_calibrations, ...){
 We are using the object `frin_dsumm` and getting all source chronograms, and reordering the chronogram list alphabetically:
 
 ```{r}
+load(file = "../data/frin_dsumm.rda")
 phylo_all <- frin_dsumm$phylo_all
 alphabetic_order <- order(names(phylo_all))
 phylo_all <- phylo_all[alphabetic_order]
@@ -67,7 +69,7 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Price et al. 2014 - chronogram 2", # 16
                       "Roquet et al. 2014 - chronogram 1", # 17
                       "Roquet et al. 2014 - chronogram 2", # 18 
-                      "Uyeda et al 2017") # 19
+                      "Uyeda et al. 2017") # 19
 ```
 
 Next, get calibrations for all other chronograms:
@@ -124,11 +126,20 @@ validated_trees <- lapply(seq(frin_other_calibs), function(i)
 
 names(validated_trees) <- names(frin_other_calibs)
 
-usethis::use_data(validated_trees)
+usethis::use_data(validated_trees, overwrite = TRUE)
 
 ```
 
-Plots
+## Plots
+
+### get color scheme for studies
+
+```{r}
+# load(file = "../data/frin_color_studies.rda")
+color_studies <- frin_color_studies
+```
+
+### plot chronograms, overlapped
 
 ```{r}
 index = 1
@@ -188,5 +199,220 @@ for (i in 1:8) {
              validated_trees = validated_trees,
              cex_tiplabels = nice_cex[i],
              mai4 = 2.37)
+}
+```
+
+
+### x-y graphs
+
+Get all age values:
+
+```{r}
+res_all <- vector(mode = "list")
+ages_all <- vector(mode = "list")
+
+for (index in seq(validated_trees)) {
+  res <- list(cross_val = validated_trees[[index]],
+              original = phylo_all[[index]])
+  
+  res_all <- c(res_all, list(res))
+
+  if (!inherits(res$cross_val, "phylo")) {
+    ages <- NA
+  } else {
+    ages <- lapply(res, ape::branching.times)
+  }
+  
+  ages_all <- c(ages_all, list(ages))
+  
+}
+
+names(ages_all) <- names(res_all) <- names(phylo_all)
+```  
+
+Get max age:
+
+```{r}
+max_age <- max(abs(unlist(ages_all)), na.rm = TRUE)
+max_age <- ceiling(max_age)
+max_age
+```
+
+Get all age differences:
+
+```{r}
+age_diffs <- function(ages) {
+  if (!inherits(ages, "list")) {
+    return(NA)
+  }
+  ages$cross_val - ages$original
+}
+  
+  
+age_diffs_all <- lapply(ages_all, age_diffs)
+
+max_diff <- max(abs(unlist(age_diffs_all)), na.rm = TRUE)
+max_diff <- ceiling(max_diff)
+max_diff
+```
+
+Produce an x-y plot for each chronogram:
+
+```{r}
+for (index in seq(validated_trees)) {
+  if (length(validated_trees[[index]]) == 1) {
+    next
+  }
+  res <- list(cross_val = validated_trees[[index]],
+              original = phylo_all[[index]])
+  
+  ages <- lapply(res, ape::branching.times)
+  
+  nodeN <- seq(length(ages$original))
+  
+###################################################################
+# Plot original node ages vs cross-validation chronogram:
+###################################################################
+  filename <- paste0(writing_dir, "xy_plot", index, "_ages.pdf")
+  #################################################################
+  # order ages decreasingly
+  #################################################################
+  X <- ages$original
+  ordered <- order(X, decreasing = TRUE)
+  X <- X[ordered] 
+  Y <- ages$cross_val[ordered]
+  #################################################################
+  # plot and save as pdf
+  #################################################################
+  pdf(file = filename,
+      height = 5,
+      width = 5)
+  
+  par_mai <- par()$mai
+  par_mai[2] <- 1
+  par(mai = par_mai)
+
+  plot(x = seq(from = -max_age, to = 0), 
+       y = seq(from = -max_age, to = 0),
+       xlab = "Original node ages \n Time (Ma)",
+       ylab = "Cross validated node ages \n Time (Ma)",
+       type = "l",
+       main = names(validated_trees)[index])
+  
+  points(-X, 
+       -Y, 
+       pch = 21,
+       type = "p",
+       col = "gray",
+       bg = color_studies[index],
+       cex = 1.5)
+  
+  dev.off()
+##############################################################################
+# Plot difference between original and cross-validated ages
+##############################################################################
+  
+  filename <- paste0(writing_dir, "xy_plot", index, "_differences.pdf")
+  
+  diffs <- ages$original - ages$cross_val
+  colors <- ifelse(diffs < 0, "salmon", "#4B0082") # #salmon and indigo
+  
+  pdf(file = filename,
+      height = 5,
+      width = 5)
+  
+  par_mai <- par()$mai
+  par_mai[2] <- 1
+  par(mai = par_mai)
+
+    plot(nodeN, 
+       ylim = c(-max_diff, max_diff),
+       xlab = "Node number",
+       ylab = "Age difference \n (original - cross validated age)",
+       type = "n",
+       main = names(validated_trees)[index])
+    
+  points(nodeN,
+         diffs, 
+         pch = 21,
+         col = "gray",
+         bg = colors,
+         type = "p",
+         cex = 1.5)
+  
+  abline(h = 0)
+  
+  dev.off()
+}
+```
+
+A single graph for x-y plots.
+
+Plot original node ages vs cross-validation chronogram:
+
+```{r}
+
+```
+
+Plot difference between original and cross-validated ages
+
+```{r}
+##############################################################################
+##############################################################################
+# get total number of nodes congruified to chosen topology, so ages are comparable
+##############################################################################
+##############################################################################
+
+node_numbers <- sapply(validated_trees[!is.na(validated_trees)], function(vt) {
+  vt$calibrations$source_mrca_node_number
+})
+
+node_numbers <- unique(unlist(node_numbers)[!sapply(unlist(node_numbers), is.na)])
+
+max(node_numbers)
+
+validated_trees[[1]]$calibrations$mrca_node_number
+
+##############################################################################
+##############################################################################
+# get node numbers from congruified and matched node ages
+##############################################################################
+##############################################################################
+
+
+node_names_all <- validated_trees[[1]]$calibrations$source_mrca_node_name
+
+node_names_source <- validated_trees[[1]]$calibrations$mrca_node_name
+
+
+nodeN <- seq(length(ages$original))
+
+filename <- paste0(writing_dir, "xy_plot_0.pdf")
+
+pdf(file = filename,
+    height = 5,
+    width = 5)
+plot(nodeN, 
+     ylim = c(-max(abs(diffs)), max(abs(diffs))),
+     xlab = "Node number",
+     ylab = "Age difference \n (original - cross validated age)",
+     type = "n")
+  
+for (i in seq(validated_trees)) {
+
+  index <- i
+  
+  if (length(validated_trees[[index]]) == 1) {
+    next
+  }
+
+  points(nodeN,
+         diffs, 
+         pch = 19,
+         col = colors,
+         type = "p")
+  abline(h = 0)
+  dev.off()
+
 }
 ```

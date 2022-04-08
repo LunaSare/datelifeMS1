@@ -276,6 +276,8 @@ color_studies <- c("blue",
                    xx[c(165, 166)], 
                    xx[190])
 names(color_studies) <- studies
+frin_color_studies <- color_studies
+usethis::use_data(frin_color_studies)
 
 ```
 

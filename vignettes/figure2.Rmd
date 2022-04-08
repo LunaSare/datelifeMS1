@@ -16,7 +16,7 @@ writing_dir <- "../figures/figure2/"
 ```
 ## Getting source chronograms
 
-```{r setup}
+```{r}
 # library(datelifeMS1)
 devtools::load_all("../../datelifeplot")
 devtools::load_all()
@@ -237,10 +237,11 @@ Choose a color scheme for the studies:
 ```{r}
 # Get references in matched calibrations:
 studies <- as.character(unique(calib_summ$in_phy$reference))
-studies
 
 # order references alphabetically:
 studies <- studies[order(studies)]
+studies
+
 ```
 
 Visualize plotting colors:
@@ -269,7 +270,7 @@ color_studies <- xx[c(12,
                       20,
                       8,9)]
 names(color_studies) <- studies
-
+usethis::use_data(color_studies)
 ```
 
 Now, we can plot:
