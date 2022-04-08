@@ -277,11 +277,13 @@ The final step is to summarize the available information using two alternative t
 # Cross-validation test
 
 <!--Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates-->
-As a form of cross validation, we took the tree topologies from each study and used time of lineage divergence data from all other source chronograms as fixed calibrations with the program BLADJ (Figs. \ref{fig:cv1} to \ref{fig:cv10}).
+To perform a cross validation analysis of the DateLife workflow, we took tree topologies from source chronograms and used age data from all other source chronograms as fixed calibrations with the program BLADJ (Fig. \ref{fig:cvXY}).
 <!--I'm confused about why you are talking about branch lengths here... did you use branch lengths? Yes, on the PATHd8 cross validation, but you are right, it is confusing, so I removed that first sentence-->
 
-The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvbladj}).
-Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cv2}).
+*I still need to double check results to confirm or change any of the following descriptions:*
+
+The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvXY}).
+Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvXY}).
 <!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this -->
 We also demonstrate the usage of PATHd8 [@Britton2007] as a dating method alternative to BLADJ. PATHd8 requires a tree with initial branch lengths which we obtained using `datelife`'s branch length reconstruction algorithm, that searches for DNA sequence data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold] to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
 <!-- two studies when expanding calibrations to make them agree (studies 3 and 5), and from  -->

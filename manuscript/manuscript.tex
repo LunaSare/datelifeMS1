@@ -140,7 +140,7 @@
   {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{DateLife: revealing the dated Tree of Life}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4379}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4391}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -352,10 +352,12 @@ The final step is to summarize the available information using two alternative t
 \hypertarget{cross-validation-test}{%
 \section{Cross-validation test}\label{cross-validation-test}}
 
-As a form of cross validation, we took the tree topologies from each study and used time of lineage divergence data from all other source chronograms as fixed calibrations with the program BLADJ (Figs. \ref{fig:cv1} to \ref{fig:cv10}).
+To perform a cross validation analysis of the DateLife workflow, we took tree topologies from source chronograms and used age data from all other source chronograms as fixed calibrations with the program BLADJ (Fig. \ref{fig:cvXY}).
 
-The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvbladj}).
-Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cv2}).
+\emph{I still need to double check results to confirm or change any of the following descriptions:}
+
+The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvXY}).
+Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvXY}).
 We also demonstrate the usage of PATHd8 (Britton et al., 2007) as a dating method alternative to BLADJ. PATHd8 requires a tree with initial branch lengths which we obtained using \texttt{datelife}'s branch length reconstruction algorithm, that searches for DNA sequence data from the Barcode of Life Data System {[}BOLD; Ratnasingham and Hebert (2007){]} to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
 three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}).
 From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD data for some species is absent from the database.
@@ -714,61 +716,13 @@ Webb, Campbell O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for appl
 
 
 \begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_1.png}
-\caption{Cross validation of first source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv1}
+\includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots.pdf}
+\caption{Results from cross validation analysis.}
+\label{fig:cvXY}
 \end{figure}
 % \begin{center}
 % \textsc{Figure \ref{fig:cvbold}}
 % \end{center}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_2.png}
-\caption{Cross validation of second source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv2}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_3.png}
-\caption{Cross validation of third source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv3}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_4.png}
-\caption{Cross validation of fourth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv4}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_6.png}
-\caption{Cross validation of sixth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv6}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_7.png}
-\caption{Cross validation of seventh source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv7}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_8.png}
-\caption{Cross validation of eight source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv8}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_9.png}
-\caption{Cross validation of ninth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv9}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_10.png}
-\caption{Cross validation of tenth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv10}
-\end{figure}
 
 % \end{linenumbers}
 
