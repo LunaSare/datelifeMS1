@@ -6,6 +6,7 @@ congruify_other_calibrations <- function(phylo_all, index) {
     study <- names(phylo_all) %in% names(phylo_all)[index]
     res <- datelife::congruify_calibrations(phy = phylo_all[study][[1]],
                                      chronograms = phylo_all[!study])
+    res <- list(res)
     names(res) <- names(phylo_all)[index]
     res
 }

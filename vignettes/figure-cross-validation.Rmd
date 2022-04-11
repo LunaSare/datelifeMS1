@@ -56,17 +56,38 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Uyeda et al. 2017") # 19
 ```
 
+Check that functions work validating the first study only:
+
+```{r}
+names(phylo_all)
+not_before <- c(12,13,14,17,18,19)
+names(phylo_all)[-not_before]
+cv1 <- congruify_other_calibrations(phylo_all = phylo_all[-not_before], index = 1)
+```
+
+```{r}
+class(cv1$`Barker et al. 2013`)
+names(cv1)
+length(cv1)
+cv1[[1]]$matched_calibrations
+```
+
+```{r}
+cd1 <- cross_date(cv1, index =1)
+cd1
+ape::branching.times(cd1)
+```
+```{r}
+ape::branching.times(cv1$`Barker et al. 2013`$matched_phy)
+```
+
+```{r}
+ape::ltt.plot(cd1, col = "red")
+ape::ltt.lines(cv1$`Barker et al. 2013`$matched_phy)
+```
+
 Next, get calibrations for all other chronograms, using `congruify_other_calibrations()`.
 Function based on https://github.com/LunaSare/datelife_examples/blob/master/R/functions_data.R#L3
-
-Check that functions work validating the first study only
-```{r}
-cv1 <- congruify_other_calibrations(phylo_all = phylo_all, index = 1)
-```
-
-```{r}
-ls(cv1)
-```
 
 ```{r}
 frin_other_calibs <- congruify_other_calibrations_all(phylo_all)
@@ -79,7 +100,7 @@ frin_other_calibs[[1]]
 Date the topology based on other calibrations:
 
 ```{r}
-# function cross_date developed fror this ms
+# function cross_date developed for this ms
 validated_trees <- lapply(seq(frin_other_calibs), function(i) 
   cross_date(frin_other_calibs, index = i))
 
