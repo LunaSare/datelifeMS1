@@ -140,7 +140,7 @@
   {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{DateLife: revealing the dated Tree of Life}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4391}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4298}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -211,7 +211,7 @@ DateLife features a versioned, open and fully public chronogram database (McTavi
 \hypertarget{description}{%
 \section{Description}\label{description}}
 
-The DateLife algorithm is fully implemented using the R language. The latest stable version of the R package \texttt{datelife} is available from the CRAN repository (v0.6.2; Sanchez-Reyes et al. (2022)), and relies on functionalities from various biological R packages:
+The DateLife algorithm is fully implemented using the R language. The latest stable version of the R package \texttt{datelife} -- v0.6.2, is available from the CRAN repository (Sanchez-Reyes et al., 2022), and relies on functionalities from various biological R packages:
 ape (Paradis, Claude, \& Strimmer, 2004),
 bold (Chamberlain et al., 2019),
 geiger (Harmon, Weir, Brock, Glor, \& Challenger, 2008),
@@ -269,9 +269,9 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
   Last but not least, age data from source chronograms are summarized and used to generate a single summary chronogram:
 \end{enumerate}
 
-\emph{\textbf{Choosing a topology.--}} DateLife requires a tree topology to summarize age data upon. We recommend that users provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree (Open Tree Of Life et al., 2019). Alternatively, DateLife can reconstruct a tree with branch lengths proportional to substitution rates from a starting tree topology using genetic data from the Barcode of Life Data System {[}BOLD; Ratnasingham and Hebert (2007){]}, or combine topologies from source chronogras using a supertree approach.
+\emph{\textbf{Choosing a topology.--}} DateLife requires a tree topology to summarize age data upon. We recommend that users provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree (Open Tree Of Life et al., 2019). Alternatively, DateLife can reconstruct a tree with branch lengths proportional to substitution rates from a starting tree topology using genetic data from the Barcode of Life Data System, BOLD (Ratnasingham \& Hebert, 2007), or combine topologies from source chronogras using a supertree approach.
 
-\emph{\textbf{Reconstructing branch lengths.--}} DateLife starts by mining the BOLD database to obtain genetic markers for the input taxa, and aligning them with MUSCLE (Edgar, 2004; or MAFFT Katoh, Asimenos, \& Toh, 2009). Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed (Schliep, 2011).
+\emph{\textbf{Reconstructing branch lengths.--}} DateLife starts by mining the BOLD database to obtain genetic markers for the input taxa, and aligning them with MUSCLE (Edgar, 2004; or MAFFT, Katoh, Asimenos, \& Toh, 2009). Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed (Schliep, 2011).
 
 \emph{\textbf{Combining source chronograms.--}} To combine topologies from source chronograms into a single summary topology, the DateLife algorithm starts by identifying the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. (2009). In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the ``criterion = trees'' flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reonstruction will fail.
@@ -281,7 +281,7 @@ A table of congruified node ages that can be used as secondary calibrations is s
 
 \emph{\textbf{Summarizing congruified ages.--}} Congruified pairwise node ages are used to calculate summary statistics (mean, median, minimum and maximum ages) per taxon pair.
 into a single summary matrix using different methods.
-Summarizing options implemented include Super Distance Matrix method (SDM, Criscuolo, Berry, Douzery, \& Gascuel, 2006) and .
+Summarizing options implemented include Super Distance Matrix method (SDM, Criscuolo, Berry, Douzery, \& Gascuel, 2006) and summary statistics.
 
 Ages per taxon pair can be used as calibrations to date the chosen tree topology.
 
@@ -312,8 +312,8 @@ with the devtools package (R Core Team, 2018), and on a public server --via
 GitHub, using the continuous integration tool Travis CI (\url{https://travis-ci.org}). At
 present, unit tests cover more than 40\% of \texttt{datelife}'s code (\url{https://codecov.io/gh/phylotastic/datelife}).
 
-\hypertarget{case-study}{%
-\section{Case study}\label{case-study}}
+\hypertarget{case-studies}{%
+\section{Case studies}\label{case-studies}}
 
 We illustrate the DateLife algorithm using a group within the Passeriform birds encompassing the family of true finches, Fringillidae and allies as case study. The first example analyses 6 bird species and shows all steps of the algorithm. The second example is a real life application
 
@@ -347,29 +347,23 @@ The first step is to run a \texttt{datelife} query using the ``get species from 
 Once with a curated set of species taxon names, the next step is to run a \texttt{datelife} search that will find all chronograms that contain at least two species names. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
 There are 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Barker et al., 2013, 2015; Burns et al., 2014; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hedges et al., 2015; Hooper \& Price, 2017; Jetz et al., 2012; Price et al., 2014).
 The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the ``Description'' section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:fringillidages}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
-????????????????? Say some things about the results!
 
 \hypertarget{cross-validation-test}{%
 \section{Cross-validation test}\label{cross-validation-test}}
 
-To perform a cross validation analysis of the DateLife workflow, we took tree topologies from source chronograms and used age data from all other source chronograms as fixed calibrations with the program BLADJ (Fig. \ref{fig:cvXY}).
+To perform a cross validation analysis of the DateLife workflow, we used resulting data from the previous section (Casestudy: Real Life Application). We took individual tree topologies from each of the 19 source chronograms found (Supplementary data XX). Then we congruifued age data of source chronograms from studies, and used this ages to date the tree topology with the program BLADJ.
 
-\emph{I still need to double check results to confirm or change any of the following descriptions:}
-
-The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvXY}).
-Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvXY}).
-We also demonstrate the usage of PATHd8 (Britton et al., 2007) as a dating method alternative to BLADJ. PATHd8 requires a tree with initial branch lengths which we obtained using \texttt{datelife}'s branch length reconstruction algorithm, that searches for DNA sequence data from the Barcode of Life Data System {[}BOLD; Ratnasingham and Hebert (2007){]} to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
-three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}).
-From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD data for some species is absent from the database.
-Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
-More examples and code used to generate these trees were developed on an open repository that is available for consultation and reuse at \url{https://github.com/LunaSare/datelife_examples}.
+We found that node ages from original study, and ages estimated using all other age data available are generally correlated (Supplementary Fig. \ref{fig:cvXY}).
+In 5 studies, more inclusive nodes have older original ages, and less inclusive nodes have younger original ages than their cross-validated age estimates.
+Accordingly, root ages are generally older in the original study than estimated using cross-validated ages. Root ages were similar in original and cross validated ages in three vases (Supplementary Fig. \ref{fig:cvXYdiffs}).
+Notably, chronograms have different species sampling, hence roots are not comparable across studies. Yet, chronograms with a higher sampling number can potentially inform the age of the root of chronograms with less sampling.
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
 The main goal of \texttt{datelife} is to make state-of-the-art information on time of lineage divergence easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the organisms they want to work with, for any of its functionality.
 
-At the time of writing of this manuscript (Apr 07, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
+At the time of writing of this manuscript (Apr 14, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
 Users can also upload new chronograms to OpenTree themselves, and trigger an update of their local \texttt{datelife} database to incorporate the new chronograms, to have them immediately available for analysis.
 
 Incorporation of more chronograms into \texttt{datelife}'s database is crucial to improve its services. One option to increase chronogram number in the database is the Dryad data repository. Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a curator.
@@ -668,7 +662,7 @@ Webb, Campbell O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for appl
 
 
 \begin{figure}[!h]
-\includegraphics{../figures/figure1/figure1-vertical-final.pdf}
+\includegraphics{../figures/figure1/figure1-new.pdf}
 \caption{Stylized DateLife workflow. This shows the general worflows and analyses that can be performed with \texttt{datelife}, via the R package or through the website  at \url{http://www.datelife.org/}. Details on the functions involved on each workflow are shown in \texttt{datelife}'s R package vignette.
 }
 \label{fig:workflow}
@@ -715,15 +709,70 @@ Webb, Campbell O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for appl
 % \end{center}
 
 
+% \end{linenumbers}
+
+% in this file I leave the figure captions outside\ caption{} because I want them
+% to be formatted in the same way as the general text (double spaced and linenumbered)
+\captionsetup[figure]{labelfont={sc},labelformat={default},labelsep=period,name={Figure}}
+
 \begin{figure}[!h]
 \includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots.pdf}
 \caption{Results from cross validation analysis.}
 \label{fig:cvXY}
 \end{figure}
-% \begin{center}
-% \textsc{Figure \ref{fig:cvbold}}
-% \end{center}
 
-% \end{linenumbers}
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots-diffs.pdf}
+\caption{Results from cross validation analysis.}
+\label{fig:cvXYdiffs}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_2.png}
+\caption{Cross validation of second source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv2}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_3.png}
+\caption{Cross validation of third source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv3}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_4.png}
+\caption{Cross validation of fourth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv4}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_6.png}
+\caption{Cross validation of sixth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv6}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_7.png}
+\caption{Cross validation of seventh source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv7}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_8.png}
+\caption{Cross validation of eight source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv8}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_9.png}
+\caption{Cross validation of ninth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv9}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics{../figures/figure-cross-validation/cross_validation_10.png}
+\caption{Cross validation of tenth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
+\label{fig:cv10}
+\end{figure}
 
 \end{document}

@@ -73,7 +73,7 @@ output            :
   papaja::apa6_pdf:
     includes      :
       in_header: "preamble.tex"
-      after_body  : "figures-alt.tex"
+      after_body  : ["figures-alt.tex", "figures-supplementary.tex"]
 
 nocite: |
   @barker2013going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche
@@ -109,7 +109,7 @@ DateLife features a versioned, open and fully public chronogram database [@mctav
 
 # Description
 
-The DateLife algorithm is fully implemented using the R language. The latest stable version of the R package `datelife` is available from the CRAN repository (v`r packageVersion("datelife")`; @datelifeR), and relies on functionalities from various biological R packages:
+The DateLife algorithm is fully implemented using the R language. The latest stable version of the R package `datelife` -- v`r packageVersion("datelife")`, is available from the CRAN repository [@datelifeR], and relies on functionalities from various biological R packages:
 ape [@paradis2004],
 bold [@Chamberlain2018],
 geiger [@Harmon2008],
@@ -164,9 +164,9 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 5. The source chronogram(s) with the most input taxon names.
 6. Last but not least, age data from source chronograms are summarized and used to generate a single summary chronogram:
 
-_**Choosing a topology.--**_ DateLife requires a tree topology to summarize age data upon. We recommend that users provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth]. Alternatively, DateLife can reconstruct a tree with branch lengths proportional to substitution rates from a starting tree topology using genetic data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold], or combine topologies from source chronogras using a supertree approach.
+_**Choosing a topology.--**_ DateLife requires a tree topology to summarize age data upon. We recommend that users provide one as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth]. Alternatively, DateLife can reconstruct a tree with branch lengths proportional to substitution rates from a starting tree topology using genetic data from the Barcode of Life Data System, BOLD [@ratnasingham2007bold], or combine topologies from source chronogras using a supertree approach.
 
-_**Reconstructing branch lengths.--**_ DateLife starts by mining the BOLD database to obtain genetic markers for the input taxa, and aligning them with MUSCLE [@edgar2004muscle; or MAFFT @katoh2009multiple]. Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
+_**Reconstructing branch lengths.--**_ DateLife starts by mining the BOLD database to obtain genetic markers for the input taxa, and aligning them with MUSCLE [@edgar2004muscle; or MAFFT, @katoh2009multiple]. Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
 
 _**Combining source chronograms.--**_ To combine topologies from source chronograms into a single summary topology, the DateLife algorithm starts by identifying the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reonstruction will fail.
@@ -177,7 +177,7 @@ A table of congruified node ages that can be used as secondary calibrations is s
 _**Summarizing congruified ages.--**_ Congruified pairwise node ages are used to calculate summary statistics (mean, median, minimum and maximum ages) per taxon pair. <!-- we should calculate summary statistics per node -->
 <!--??? How is 'calibrations' defined here? the calibrations from congruification, or the pairwise distances??? is calibrations from congruification-->
 into a single summary matrix using different methods.
-Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and .
+Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] and summary statistics.
 
 Ages per taxon pair can be used as calibrations to date the chosen tree topology.
 <!--
@@ -237,7 +237,7 @@ GitHub, using the continuous integration tool Travis CI (<https://travis-ci.org>
 present, unit tests cover more than 40% of `datelife`'s code (<https://codecov.io/gh/phylotastic/datelife>). <!-- unit test make code robust, verifiable, debuggable, -->
 
 
-# Case study
+# Case studies
 
 We illustrate the DateLife algorithm using a group within the Passeriform birds encompassing the family of true finches, Fringillidae and allies as case study. The first example analyses 6 bird species and shows all steps of the algorithm. The second example is a real life application
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
@@ -270,29 +270,26 @@ The first step is to run a `datelife` query using the "get species from taxon" f
 Once with a curated set of species taxon names, the next step is to run a `datelife` search that will find all chronograms that contain at least two species names. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
  There are `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
 The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:fringillidages}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
-????????????????? Say some things about the results!
-<!-- (Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
+<!-- ????????????????? Say some things about the results!
+ANSWER:
+(Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
 <!-- and hierarchical clustering method which appears to push ages back -->
 
 # Cross-validation test
 
 <!--Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates-->
-To perform a cross validation analysis of the DateLife workflow, we took tree topologies from source chronograms and used age data from all other source chronograms as fixed calibrations with the program BLADJ (Fig. \ref{fig:cvXY}).
-<!--I'm confused about why you are talking about branch lengths here... did you use branch lengths? Yes, on the PATHd8 cross validation, but you are right, it is confusing, so I removed that first sentence-->
+To perform a cross validation analysis of the DateLife workflow, we used resulting data from the previous section (Casestudy: Real Life Application). We took individual tree topologies from each of the 19 source chronograms found (Supplementary data XX). Then we congruifued age data of source chronograms from studies, and used this ages to date the tree topology with the program BLADJ.
 
-*I still need to double check results to confirm or change any of the following descriptions:*
+We found that node ages from original study, and ages estimated using all other age data available are generally correlated (Supplementary Fig. \ref{fig:cvXY}).
+In 5 studies, more inclusive nodes have older original ages, and less inclusive nodes have younger original ages than their cross-validated age estimates. 
+Accordingly, root ages are generally older in the original study than estimated using cross-validated ages. Root ages were similar in original and cross validated ages in three vases (Supplementary Fig. \ref{fig:cvXYdiffs}).
+<!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this...   ANSWERED: -->
+Notably, chronograms have different species sampling, hence roots are not comparable across studies. Yet, chronograms with a higher sampling number can potentially inform the age of the root of chronograms with less sampling. 
 
-The ages of internal nodes were recovered with a high precision in almost all cases (except for studies 3, and 5; Fig. \ref{fig:cvXY}).
-Maximum tree ages were only recovered in one case (study 2; Fig. \ref{fig:cvXY}).
-<!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this -->
-We also demonstrate the usage of PATHd8 [@Britton2007] as a dating method alternative to BLADJ. PATHd8 requires a tree with initial branch lengths which we obtained using `datelife`'s branch length reconstruction algorithm, that searches for DNA sequence data from the Barcode of Life Data System [BOLD; @ratnasingham2007bold] to generate branch lengths. We were able to successfully generate a tree with BOLD branch lengths for all of the Fringillidae source chronograms. However, dating with PATHd8 using congruified calibrations, was only successful in
-<!-- two studies when expanding calibrations to make them agree (studies 3 and 5), and from  -->
-three cases (studies 3, 5, and 9, shown in Fig. \ref{fig:cvbold}).
-<!-- What made it unsuccessful in the other cases? -->
-From these, two trees have a different sampling than the original source chronogram, mainly because DNA BOLD  data for some species is absent from the database.
-<!-- ??? Node ages or maximum ages?? -->
-Maximum ages are quite different from source chronograms, but this might be explained also by the differences in sampling between source chronograms and BOLD trees.
-More examples and code used to generate these trees were developed on an open repository that is available for consultation and reuse at <https://github.com/LunaSare/datelife_examples>.
+<!-- 
+%```{r, child = "cross-validation-pathd8.Rmd"}
+%```
+-->
 
 # Discussion
 
