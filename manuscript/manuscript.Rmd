@@ -373,7 +373,7 @@ Code used to generate all versions of this manuscript, the biological examples, 
 
 # Funding
 
-Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project and DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), and the Phylotastic project Grant ABI-1458572, and the OpenTree grant ABI-1759846.
+Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603  to Datelife project; DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), ABI-1458572 to the Phylotastic project, and ABI-1759846 to the Open Tree of Life project.
 
 # Acknowledgements
 
