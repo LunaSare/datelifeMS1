@@ -129,7 +129,7 @@ DateLife starts by processing an input consisting of at least two taxon names, w
 
 DateLife accepts scientific names that can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or a binomial specific. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, DateLife retrieves all species names within the inclusive taxonomic group (according to a taxonomy) and adds them to the input string. If the flag is inactive, DateLife excludes the taxon names above the species level from the input.
 
-DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard [@boyle2013]. DateLife implements TNRS using OpenTree's unified taxonomy as standard [@opentreeAPIs; @rees2017automated], storing OpenTree's Taxonomy identification numbers for further processing.
+DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard [@Boyle2013]. DateLife implements TNRS using OpenTree's unified taxonomy as standard [@opentreeAPIs; @rees2017automated], storing OpenTree's Taxonomy identification numbers for further processing.
 <!-- We are using OpenTree's TNRS, Boyle described TNRS first, right?  -->
 
 The processed input taxon names are saved as an R object of a newly defined class \texttt{datelifeQuery} that is used in the following steps. This object contains the standardized names, the corresponding taxonomic id numbers, and the topology of the input tree if any was provided.
@@ -158,7 +158,7 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 3. Study citations where original chronograms were published.
 4. A report of input taxon names matches across source chronograms.
 5. The source chronogram(s) with the most input taxon names.
-6. A single summary chronogram resulting from summarizing age data generated using the options described below.
+6. Various single summary chronograms resulting from summarizing age data, generated using the methodology described below.
 
 
 _**Choosing a topology.--**_ 
@@ -171,41 +171,34 @@ If source chronograms do not form a grove, the supertree reconstruction will fai
 _**Dating the topology.--**_ 
 Input topologies from OpenTree or the supertree approach described above do not include branch length estimates of any kind. 
 To estimate branch lengths proportional to substitution rates on these topologies, DateLife can mine the Barcode of Life Data System, BOLD [@ratnasingham2007bold] to obtain genetic markers for the input taxa.
-These markers are aligned with MUSCLE [@edgar2004muscle; or MAFFT, @katoh2009multiple]. 
+These markers are aligned with MUSCLE by default [@edgar2004muscle], or MAFFT [@katoh2009multiple]. 
 This alignment can be used to estimate branch lengths on input topologies that lack branch lengths.
-Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
-
+Currently, branch length reconstruction in DateLife is performed using parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
 While relative branch length information provides additional data for nodes without secondary date calibrations, topologies without branch lengths can also be dated.
 
 Once a topology is chosen, DateLife applies the congruification method [@Eastman2013] to find nodes belonging to the same clade across source chronograms, and extract the corresponding node ages from the patristic distance matrices stored as `datelifeResult`. By definition, the matrices store total distance (time from tip to tip), hence, node ages correspond to half the values stored in the patristic distance matrices.
 A table of congruified node ages that can be used as secondary calibrations is stored as a `congruifiedCalibrations` object.
 
-<!-- we should calculate summary statistics per node -->
-<!--??? How is 'calibrations' defined here? the calibrations from congruification, or the pairwise distances??? is calibrations from congruification-->
-For each congruent node, the pairwise distance that traverse that node are summarized into a single summary matrix using classic statistics (mean, median, minimum and maximum ages). These single summary ages per taxon pair are then used as secondary calibrations to date the tree topology.  
-<!--
-Under the SDM criterion ??? what happens??
-Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] 
--->
-Summarized calibrations can be applied as secondary calibrations with different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
+For each congruent node, the pairwise distance that traverse that node are summarized into a single summary matrix using classic summary statistics (i.e., mean, median, minimum and maximum ages), and the Supermatrix Distance Method [SDM; @Criscuolo2006], which deforms patristic distance matrices by minimizing variance and then averaging them.
+These single summary taxon pair age matrices (Summarized calibrations) can be applied as secondary calibrations to date a tree topology, using different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
 
 By default, DateLife implements the Branch Length Adjuster (BLADJ) algorithm to obtain a fully dated topology. BLADJ fixes node ages that have calibration data, and distributes time between nodes with no data evenly between nodes with calibration data.
 This minimizes age variance in the resulting chronogram [@Webb2008].
 BLADJ does not incorporate branch lengths even when they are present.
-When there is conflict in ages between nodes with calibration data, the algorithm ignores ages that are older than ages of parent nodes and/or younger than ages from descendant nodes. 
-\NOTE:do you know how it decides which one to drop if two calibrations conflict? The parent or the child? 
+When there is conflict in ages between nodes with calibration data, the algorithm ignores ages that are older than ages of parent nodes and younger than ages from descendant nodes. 
+> NOTE: do you know how it decides which one to drop if two calibrations conflict? The parent or the child? It would drop both. It basically drops any calibration for any given node that are older than any calibration of the parent node, and younger than any calibration of children nodes.
 
 If there is no information on the age of the root in the chronogram database, users can provide an estimate from the literature. If none is provided, DateLife assigns an arbitrary age to the root as 10% older than the oldest age available within the group.
-
 
 Alternative options supported in DateLife (MrBayes, PATHD8, TreePL) incorporate branch length information from the input topology in combination with the secondary calibrations.
 PATHd8 is a non-clock, rate-smoothing method [@Britton2007] to date trees.
 treePL, is a semi-parametric, rate-smoothing, penalized likelihood dating method
 [@Smith2012].
-The MrBayes  [@Huelsenbeck2001; @Ronquist2003] apprach in datelife uses the secondary calibrartions as priors on node ages. \NOTE: is this true??
+The MrBayes  [@Huelsenbeck2001; @Ronquist2003] approach in datelife uses the secondary calibrations as priors on node ages. 
+> NOTE: is this true?? Yes
 
 _**Visualizing results.--**_
-Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions.
+Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions available from the R package `datelifeplot` [@datelifeplot].
 
 
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
