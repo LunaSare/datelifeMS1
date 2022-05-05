@@ -49,10 +49,10 @@ abstract: |
   Although achieving a high-quality reconstruction of a phylogenetic tree with branch lengths proportional to absolute time (chronogram), is a difficult and time-consuming task, the increased availability of fossil and molecular data, and time-efficient analytical techniques has resulted in many recent publications of large chronograms for a large number and wide diversity of organisms.
   When these estimates are shared in public, open databases this wealth of expertly-curated and peer-reviewed data on time of evolutionary origin is exposed in a programatic and reusable way.
   Intensive and localized efforts have improved data sharing practices, as well as incentivizited open science in biology.
-  Here we present DateLife, a service implemented as an R package and an Rshiny website application available at www.datelife.org/query/, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
+  Here we present DateLife, a service implemented as an R package and an Rshiny website application available at www.datelife.org, that provides functionalities for efficient and easy finding, summary, reuse, and reanalysis of expert, peer-reviewed, public data on time of evolutionary origin.
   The main DateLife workflow constructs a chronogram for any given combination of taxon names, by searching a local chronogram database constructed and curated from the Open Tree of Life Phylesystem phylogenetic database, which incorporates phylogenetic data from TreeBASE database as well.
   We implement and test methods for summarizing time data from multiple source chronograms using supertree and congruification algorithms, and using age data extracted from source chronograms as secondary calibration points to add branch lengths proportional to absolute time to a tree topology.
-  DateLife will be useful to increase awereness on the existing variation in expert time of divergence data, and can foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, providing a framework for a more informed interpretation of evolutionary results.
+  DateLife will be useful to increase awereness of the existing variation in expert time of divergence data, and can foster exploration of the effect of alternative divergence time hypotheses on the results of analyses, providing a framework for a more informed interpretation of evolutionary results.
 
   <!--  R has become mainstream in the biological-data analyst toolkit. Hence, to improve accessibility of time of evolutionary origin data we developed an R package that facilitates interaction, reanalysis and reuse of it, as well as incorporation of these data into the evolutionary analysis workflow. -->
 
@@ -103,7 +103,7 @@ Building a chronogram is not an easy task.
 It requires obtaining and curating data to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree;
 it also generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
-Here we present the DateLife project and its core software application, available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org/query/, which captures data from published chronograms, and make these data readily accessible to users for reuse and reanalysis.
+Here we present the DateLife project and its core software application, available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org, which captures data from published chronograms, and make these data readily accessible to users for reuse and reanalysis.
 The software features key elements for scientific reproducibility, such as a versioned, open and fully public chronogram database [@mctavish2015phylesystem], age data stored in a computer readable format [@vos2012nexml], automated and programmatic ways of accessing the data [@Stoltzfus2013] and methods to summarize and compare age data.
 
 
@@ -158,19 +158,28 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 3. Study citations where original chronograms were published.
 4. A report of input taxon names matches across source chronograms.
 5. The source chronogram(s) with the most input taxon names.
-6. Last but not least, single summary chronograms resulting from summarizing age data from available source chronograms, as follows:
+6. A single summary chronogram resulting from summarizing age data generated using the options described below.
 
-_**Choosing a topology.--**_ DateLife requires a tree topology to summarize age data upon. We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth]. Alternatively, DateLife can reconstruct a tree with branch lengths proportional to substitution rates from a starting tree topology using genetic data from the Barcode of Life Data System, BOLD [@ratnasingham2007bold], or combine topologies from source chronograms using a supertree approach.
 
-_**Reconstructing branch lengths.--**_ DateLife starts by mining the BOLD database to obtain genetic markers for the input taxa, and aligning them with MUSCLE [@edgar2004muscle; or MAFFT, @katoh2009multiple]. Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
-
-_**Combining source chronograms.--**_ To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife algorithm starts by identifying the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
+_**Choosing a topology.--**_ 
+DateLife requires a tree topology to summarize age data upon.
+We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth]. 
+Alternatively, DateLife can combine topologies from source chronograms using a supertree approach.
+To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife algorithm starts by identifying the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reconstruction will fail.
 
-_**Congruifying nodes.--**_ Once with a chosen topology, DateLife applies the congruification method [@Eastman2013] to find nodes belonging to the same clade across source chronograms, and extract the corresponding node ages from the patristic distance matrices stored as `datelifeResult`. By definition, the matrices store total distance (time from tip to tip), hence, node ages correspond to half the values stored in the patristic distance matrices.
+_**Dating the topology.--**_ 
+Input topologies from OpenTree or the supertree approach described above do not include branch length estimates of any kind. 
+To estimate branch lengths proportional to substitution rates on these topologies, DateLife can mine the Barcode of Life Data System, BOLD [@ratnasingham2007bold] to obtain genetic markers for the input taxa.
+These markers are aligned with MUSCLE [@edgar2004muscle; or MAFFT, @katoh2009multiple]. 
+This alignment can be used to estimate branch lengths on input topologies that lack branch lengths.
+Currently, branch length reconstruction is performed with parsimony and the likelihood of the phylogenetic tree given a sequence alignment is computed [@schliep2011phangorn].
+
+While relative branch length information provides additional data for nodes without secondary date calibrations, topologies without branch lengths can also be dated.
+
+Once a topology is chosen, DateLife applies the congruification method [@Eastman2013] to find nodes belonging to the same clade across source chronograms, and extract the corresponding node ages from the patristic distance matrices stored as `datelifeResult`. By definition, the matrices store total distance (time from tip to tip), hence, node ages correspond to half the values stored in the patristic distance matrices.
 A table of congruified node ages that can be used as secondary calibrations is stored as a `congruifiedCalibrations` object.
 
-_**Summarizing congruified ages.--**_ 
 <!-- we should calculate summary statistics per node -->
 <!--??? How is 'calibrations' defined here? the calibrations from congruification, or the pairwise distances??? is calibrations from congruification-->
 For each congruent node, the pairwise distance that traverse that node are summarized into a single summary matrix using classic statistics (mean, median, minimum and maximum ages). These single summary ages per taxon pair are then used as secondary calibrations to date the tree topology.  
@@ -178,26 +187,22 @@ For each congruent node, the pairwise distance that traverse that node are summa
 Under the SDM criterion ??? what happens??
 Summarizing options implemented include Super Distance Matrix method [SDM, @Criscuolo2006] 
 -->
+Summarized calibrations can be applied as secondary calibrations with different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
 
-
-_**Dating the tree topology.--**_ 
-By default, DateLife implements the Branch Length Adjuster (BLADJ) algorithm to obtain a fully dated topology. BLADJ fixes node ages that have calibration data, and distributes time between nodes with no data evenly between nodes with calibration data. This minimizes age variance in the resulting chronogram [@Webb2008].
-When there is conflict in ages between nodes with calibration data, the algorithm ignores ages that are older than ages of parent nodes and/or younger than ages from descendant nodes.
+By default, DateLife implements the Branch Length Adjuster (BLADJ) algorithm to obtain a fully dated topology. BLADJ fixes node ages that have calibration data, and distributes time between nodes with no data evenly between nodes with calibration data.
+This minimizes age variance in the resulting chronogram [@Webb2008].
+BLADJ does not incorporate branch lengths even when they are present.
+When there is conflict in ages between nodes with calibration data, the algorithm ignores ages that are older than ages of parent nodes and/or younger than ages from descendant nodes. 
+\NOTE:do you know how it decides which one to drop if two calibrations conflict? The parent or the child? 
 
 If there is no information on the age of the root in the chronogram database, users can provide an estimate from the literature. If none is provided, DateLife assigns an arbitrary age to the root as 10% older than the oldest age available within the group.
 
-Summarized calibrations can be applied as secondary calibrations with different dating methods currently supported within DateLife: MrBayes [@Huelsenbeck2001; @Ronquist2003], PATHd8 [@Britton2007], BLADJ [@Webb2008; @webb2005phylomatic], and treePL [@Smith2012].
-<!--Huh? can you run MrBayes in DateLife? You should explain how the BOLD dating with PathD8 works here, and what is needed for the other ones!-->
 
-<!--PATHd8 is a non-clock, rate-smoothing method [@Britton2007] to date trees.
+Alternative options supported in DateLife (MrBayes, PATHD8, TreePL) incorporate branch length information from the input topology in combination with the secondary calibrations.
+PATHd8 is a non-clock, rate-smoothing method [@Britton2007] to date trees.
 treePL, is a semi-parametric, rate-smoothing, penalized likelihood dating method
 [@Smith2012].
-MrBayes program [@Huelsenbeck2001; @Ronquist2003] can be used when adding taxa at
-random, following a reference taxonomy or a topological constraint. It draws ages
-from a pure birth model, as implemented by Jetz and collaborators [-@Jetz2012].
-
-If there is no information available for some input taxon name, users can also create age and phylogenetic data for the missing branches with MrBayes.
--->
+The MrBayes  [@Huelsenbeck2001; @Ronquist2003] apprach in datelife uses the secondary calibrartions as priors on node ages. \NOTE: is this true??
 
 _**Visualizing results.--**_
 Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions.
@@ -358,7 +363,7 @@ Both summary and newly generated trees are useful to evaluate evolutionary hypot
 # Availability
 
 `datelife` is free and open source and it can be used through its current website
-<http://www.datelife.org/query/>, through its R package, and through Phylotastic's project web portal <http://phylo.cs.nmsu.edu:3000/>.
+<http://www.datelife.org>, through the `datelife` R package, and through Phylotastic's project web portal <https://phylo.cs.nmsu.edu/>.
 `datelife`'s website is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker.
 `datelife`'s R package stable version `r availability`
 for installation from the CRAN repository (<https://cran.r-project.org/package=datelife>)
