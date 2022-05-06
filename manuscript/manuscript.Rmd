@@ -262,7 +262,7 @@ According to the OpenTree of life synthetic phylogeny, Fringillidae is not a mon
 
 The next step is to run a `datelife` search on this curated set of species taxon names that will find all chronograms that contain at least two species. The algorithm proceeds to prune the trees to keep matching species names on tips only, and transform the pruned trees to pairwise distance matrices.
 There are `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
-The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:fringillidages}). Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
+The final step is to summarize the available information using two alternative types of summary chronograms, median and SDM. As explained in the "Description" section, data from source chronograms is first summarised into a single distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated tree with the program BLADJ (Fig. \ref{fig:fringillidages}). Median sxummary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
 <!-- ????????????????? Say some things about the results!
 ANSWER:
 (Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
@@ -271,13 +271,16 @@ ANSWER:
 # Cross-validation test
 
 <!--Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates-->
-To perform a cross validation analysis of the DateLife workflow, we used resulting data from the previous section (Casestudy: Real Life Application). We took individual tree topologies from each of the 19 source chronograms found (Supplementary data XX). Then we congruifued age data of source chronograms from studies, and used this ages to date the tree topology with the program BLADJ.
+We performed a cross validation analysis of the DateLife workflow using the Fringillidae chronograms. 
+We used the individual tree topologies from each of the ??? TODO CHECK NUMBER 19 source chronograms from ?? studies as inputs, treating their node ages as unknown.
+We estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
 
-We found that node ages from original study, and ages estimated using all other age data available are generally correlated (Supplementary Fig. \ref{fig:cvXY}).
+We found that node ages from original study, and ages estimated using all other age data available are correlated  \textcolor{red}{R^2 value?} (Supplementary Fig. \ref{fig:cvXY}).
+
 In 5 studies, more inclusive nodes have older original ages, and less inclusive nodes have younger original ages than their cross-validated age estimates. 
-Accordingly, root ages are generally older in the original study than estimated using cross-validated ages. Root ages were similar in original and cross validated ages in three vases (Supplementary Fig. \ref{fig:cvXYdiffs}).
-<!-- We need to think about the root! is it comparable across source chronograms?? not all of them have the same sampling... so probably not the same root and thus not comparable. Address this...   ANSWERED: -->
-Notably, chronograms have different species sampling, hence roots are not comparable across studies. Yet, chronograms with a higher sampling number can potentially inform the age of the root of chronograms with less sampling. 
+\textcolor{red}{more inclusive nodes have to be older! :P I think there is something differnet you are trying to say here - maybe "Datelife tended to underestimate ages for more inclusive nodes relative to the orginal estimate, and overestimate ages for nodes closer to the tips"}
+Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. \ref{fig:cvXYdiffs}).
+
 
 <!-- 
 %```{r, child = "cross-validation-pathd8.Rmd"}
