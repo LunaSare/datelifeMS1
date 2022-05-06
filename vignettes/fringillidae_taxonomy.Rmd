@@ -1,0 +1,191 @@
+---
+title: "Fringillidae Open Tree Taxonomy"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Fringillidae Open Tree Taxonomy}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelife)
+```
+
+
+
+`datelife` function `get_ott_children()` to get children at a certain taxonomic rank returns 289 species within the family Fringillidae:
+
+```{r}
+spp1 <- get_ott_children(ott_id = 839319)
+
+length(spp1$Fringillidae$ott_id) # returns 289 species
+
+# spp2 <- get_ott_children(ott_id = 839319, invalid = "")
+# length(spp2$Fringillidae$ott_id)
+
+```
+
+But the taxonomic subtree returns 632 children within family Fringillidae.
+Not all of those are species, though.
+```{r}
+taxon_names <- rotl::taxonomy_subtree(ott_id = 839319, 
+                               output_format = "taxa", 
+                               label_format = "name")
+ls(taxon_names)
+length(taxon_names$tip_label) #632
+head(taxon_names$tip_label)
+tail(taxon_names$tip_label, 20)
+
+# Some are genus names that might not belong to Fringillidae, anyways:
+tnrs_match(input = "Trichas")
+rotl::is_in_tree(ott_ids = 5341190) # FALSE
+grep("Trichas", taxon_names$tip_label) # index 626
+
+# google search for "trichas finch" returned the binomial specific geothlypis trichas:
+tnrs_match(input = "Geothlypis trichas")
+rotl::is_in_tree(ott_ids = 998127) # TRUE
+
+grep("Geothlypis_trichas", taxon_names$tip_label) # it is not in taxonomic subtree
+grep("Geothlypis", taxon_names$tip_label) # neither this one
+
+taxon_info <- rotl::taxonomy_taxon_info(ott_ids = 998127, include_lineage = TRUE) # Geothlypis trichas belongs to family Parulidae, not Fringillidae
+
+paste0(sapply(taxon_info$`998127`$lineage, "[", "rank"),
+       " = ",
+       sapply(taxon_info$`998127`$lineage, "[", "name"))
+```
+
+What ranks exist among the children of Fringillidae?
+```{r}
+# Get ott ids of all taxonomic children
+ott_ids <- rotl::taxonomy_subtree(ott_id = 839319, 
+                               output_format = "taxa", 
+                               label_format = "id")
+
+length(ott_ids$tip_label) # 632 ott ids
+head(ott_ids$tip_label)
+ott_ids_numeric <- as.numeric(gsub("ott", "", ott_ids$tip_label))
+
+in_synth_tree <- rotl::is_in_tree(ott_ids = ott_ids_numeric)
+sum(in_synth_tree) # 590 children are in synthetic tree
+
+# Get taxonomic info for all children:
+taxon_info <- rotl::taxonomy_taxon_info(ott_ids = ott_ids_numeric)
+
+taxon_info$`913583`$rank
+
+# Get unique ranks:
+unique(unlist(sapply(taxon_info, "[", "rank")))
+```
+
+Which ones are species?
+```{r}
+are_species <- unlist(sapply(taxon_info, "[", "rank")) == "species"
+sum(are_species) # 462 species
+```
+
+Which species are in synthetic tree?
+```{r}
+sum(are_species & in_synth_tree) # 452 are species and in synthetic tree
+
+flag_number <- sapply(sapply(taxon_info, "[", "flags"), length)
+no_flags <- flag_number == 0
+sum(no_flags) # 389 have no flags
+
+sum(are_species & in_synth_tree & no_flags) # 389 are species and in synthetic tree and have no flags
+
+species_names <- unlist(sapply(taxon_info[no_flags], "[", "name"))
+length(species_names) # 389
+
+```
+
+Checking that species from subspecies are included in the vector of species_names, revelaeed that they are excluded from the final species list:
+
+```{r}
+taxon_names$tip_label[55:75]
+
+grep("Bucanetes_githagineus", taxon_names$tip_label) # only subspecies for this binomial are present in the taxonomic subtree
+
+# so, when removing everything but species, that species is no longer included in the list of species names:
+grep("Bucanetes_githagineus", species_names) # only subspecies for this binomial are present in the taxonomic subtree
+
+# Hence, species from subspecies are excluded from the list of children 
+```
+
+Let's recover species from subspecies.
+Which ones are subspecies?
+```{r}
+are_subspecies <- unlist(sapply(taxon_info, "[", "rank")) == "subspecies"
+sum(are_subspecies) # 138 subspecies
+
+subspecies <- unname(unlist(sapply(taxon_info[are_subspecies], "[", "name")))
+
+# Get unique species names only:
+split <- strsplit(subspecies, split = " ") # split character string by blank spaces
+binomial <- lapply(split, "[", -3) # remove the subspecies epithet
+species_from_subspecies <- unique(sapply(binomial, paste0, collapse = " ")) 
+length(species_from_subspecies) # 67 species extracted from subspecies
+
+# are any species from subspecies in the species_names vector?
+is.na(match(species_from_subspecies, species_names)) # nope, all species from subspecies are new!
+
+# Get ott_ids of species from subspecies
+spp_from_sub_ott_ids <- rotl::tnrs_match_names(species_from_subspecies)$ott_id
+
+# Get their taxon info
+spp_from_sub_taxon_info <- rotl::taxonomy_taxon_info(spp_from_sub_ott_ids)
+
+is_in_synth_sub <- rotl::is_in_tree(spp_from_sub_ott_ids) 
+sum(is_in_synth_sub) # 66 species from sub are in synth tree
+```
+
+Put together all data from species and species from subspecies
+
+```{r}
+ott_ids_all <- c(ott_ids_numeric, spp_from_sub_ott_ids)
+length(ott_ids_all) # 699
+taxon_info_all <- c(taxon_info, spp_from_sub_taxon_info)
+length(taxon_info_all) # 699
+
+# check that order of ott_ids_all is the same as taxon_info_all
+all(ott_ids_all == unname(unlist(sapply(taxon_info_all, "[", "ott_id"))))
+
+is_in_synth_all <- rotl::is_in_tree(ott_ids = ott_ids_all)
+sum(is_in_synth_all) # 656 are in synth
+
+are_species_all <- unlist(sapply(taxon_info_all, "[", "rank")) == "species"
+sum(are_species_all) #  529 are species
+
+spp_in_synth <- is_in_synth_all & are_species_all
+sum(spp_in_synth) # 518 are species and are in synth tree
+
+species_names_all <- unlist(sapply(taxon_info_all[spp_in_synth], "[", "name"))
+head(species_names_all)
+species_rank_all <- unlist(sapply(taxon_info_all[spp_in_synth], "[", "rank"))
+all(species_rank_all == "species") # they are all species
+species_ott_ids_all <- unlist(sapply(taxon_info_all[spp_in_synth], "[", "ott_id"))
+spp_all_taxon_info <- rotl::taxonomy_taxon_info(ott_ids = species_ott_ids_all, include_lineage = TRUE)
+
+# spp_all_taxon_info$`328908`$lineage
+
+spp_all_lineage <- sapply(spp_all_taxon_info, "[", "lineage")
+
+# spp_all_lineage$`328908.lineage`[[1]]
+
+family <- sapply(seq(spp_all_lineage), function(i) {
+  rank_names <- unlist(sapply(spp_all_lineage[[i]], "[", "rank"))
+  length(spp_all_lineage[[i]]) == length(rank_names)
+  names(spp_all_lineage[[i]]) <- rank_names
+  spp_all_lineage[[i]]$family$name
+  })
+
+all(family == "Fringillidae")
+```
+
