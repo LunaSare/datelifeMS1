@@ -1,0 +1,35 @@
+---
+title: "anatidae"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{anatidae}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+writing_dir <- "../figures/figure-fringillidae/"
+```
+
+## Get a `datelifeQuery` object
+
+```{r}
+ana_dquery <- datelife::make_datelife_query(input = "anatidae",
+                                             use_tnrs = TRUE,
+                                             get_spp_from_taxon = TRUE)
+```
+We will be working with `r length(ana_dquery$cleaned_names)` species of the famnily Anatidae.
+
+
+
+

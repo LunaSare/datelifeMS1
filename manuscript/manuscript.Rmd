@@ -275,7 +275,7 @@ We performed a cross validation analysis of the DateLife workflow using the Frin
 We used the individual tree topologies from each of the ??? TODO CHECK NUMBER 19 source chronograms from ?? studies as inputs, treating their node ages as unknown.
 We estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
 
-We found that node ages from original study, and ages estimated using all other age data available are correlated  \textcolor{red}{R^2 value?} (Supplementary Fig. \ref{fig:cvXY}).
+We found that node ages from original study, and ages estimated using all other age data available are correlated  \textcolor{red}{R-square value?} (Supplementary Fig. \ref{fig:cvXY}).
 
 In 5 studies, more inclusive nodes have older original ages, and less inclusive nodes have younger original ages than their cross-validated age estimates. 
 \textcolor{red}{more inclusive nodes have to be older! :P I think there is something differnet you are trying to say here - maybe "Datelife tended to underestimate ages for more inclusive nodes relative to the orginal estimate, and overestimate ages for nodes closer to the tips"}
