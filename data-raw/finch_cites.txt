@@ -1,0 +1,138 @@
+https://tree.opentreeoflife.org/curator/study/view/pg_2829?tab=trees&tree=tree6579
+Burns, Kevin J., Allison J. Shultz, Pascal O. Title, Nicholas A. Mason, F. Keith Barker, John Klicka, Scott M. Lanyon, Irby J. Lovette. 2014. Phylogenetics and diversification of tanagers (Passeriformes: Thraupidae), the largest radiation of Neotropical songbirds. Molecular Phylogenetics and Evolution 75: 41-77.
+http://dx.doi.org/10.1016/j.ympev.2014.02.006
+
+https://tree.opentreeoflife.org/curator/study/view/ot_521?tab=trees&tree=tree1
+Burleigh, J. Gordon, Rebecca T. Kimball, Edward L. Braun. 2015. Building the avian tree of life using a large-scale, sparse supermatrix. Molecular Phylogenetics and Evolution 84: 53-63
+http://dx.doi.org/10.1016/j.ympev.2014.12.003
+
+https://tree.opentreeoflife.org/curator/study/view/ot_809?tab=trees&tree=tree2
+Jetz, W., G. H. Thomas, J. B. Joy, K. Hartmann, A. O. Mooers. 2012. The global diversity of birds in space and time. Nature 491 (7424): 444-448
+http://dx.doi.org/10.1038/nature11631
+
+https://tree.opentreeoflife.org/curator/study/view/ot_113?tab=trees&tree=tree1
+Lerner, Heather R.L., Matthias Meyer, Helen F. James, Michael Hofreiter, Robert C. Fleischer. 2011. Multilocus Resolution of phylogeny and timescale in the extant adaptive radiation of Hawaiian honeycreepers. Current Biology 21 (21): 1838-1844.
+http://dx.doi.org/10.1016/j.cub.2011.09.039
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2591?tab=trees&tree=tree6024
+Lovette, Irby J., Jorge L. Pérez-Emán, John P. Sullivan, Richard C. Banks, Isabella Fiorentino, Sergio Córdoba-Córdoba, María Echeverry-Galvis, F. Keith Barker, Kevin J. Burns, John Klicka, Scott M. Lanyon, Eldredge Bermingham. 2010. A comprehensive multilocus phylogeny for the wood-warblers and a revised classification of the Parulidae (Aves). Molecular Phylogenetics and Evolution 57 (2): 753-770.
+http://dx.doi.org/10.1016/j.ympev.2010.07.018
+
+https://tree.opentreeoflife.org/curator/study/view/ot_102?tab=trees&tree=tree1
+Pulgarín-R, Paulo C., Brian Tilston Smith, Robert W. Bryson, Garth M. Spellman, John Klicka. 2013. Multilocus phylogeny and biogeography of the New World Pheucticus grosbeaks (Aves: Cardinalidae). Molecular Phylogenetics and Evolution 69 (3): 1222-1227.
+http://dx.doi.org/10.1016/j.ympev.2013.05.022
+
+https://tree.opentreeoflife.org/curator/study/view/ot_101?tab=trees&tree=tree1
+Chaves, Jaime A., José R. Hidalgo, John Klicka. 2013. Biogeography and evolutionary history of the Neotropical genus Saltator (Aves: Thraupini). Journal of Biogeography 40 (11): 2180-2190.
+http://dx.doi.org/10.1111/jbi.12150
+
+https://tree.opentreeoflife.org/curator/study/view/ot_891?tab=trees&tree=tree1
+Sangeet Lamichhaney, Jonas Berglund, Markus Sällman Almén, Khurram Maqbool, Manfred Grabherr, Alvaro Martinez-Barrio, Marta Promerová, Carl-Johan Rubin, Chao Wang, Neda Zamani, B. Rosemary Grant, Peter R. Grant, Matthew T. Webster, Leif Andersson, 2015, 'Evolution of Darwin’s finches and their beaks revealed by genome sequencing', Nature, vol. 518, no. 7539, pp. 371-375
+http://dx.doi.org/10.1038/nature14181
+
+https://tree.opentreeoflife.org/curator/study/view/ot_827?tab=trees&tree=tree1
+Parchman, Thomas L., Craig W. Benkman, Eduardo T. Mezquida. 2007. Coevolution between Hispaniolan crossbills and pine: does more time allow for greater phenotypic escalation at lower latitude? Evolution 61 (9): 2142-2153
+http://dx.doi.org/10.1111/j.1558-5646.2007.00172.x
+
+https://tree.opentreeoflife.org/curator/study/view/ot_290?tab=trees&tree=tree1
+Selvatti, Alexandre Pedro, Luiz Pedreira Gonzaga, Claudia Augusta de Moraes Russo. 2015. A Paleogene origin for crown passerines and the diversification of the Oscines in the New World. Molecular Phylogenetics and Evolution 88: 1-15.
+http://dx.doi.org/10.1016/j.ympev.2015.03.018
+
+https://tree.opentreeoflife.org/curator/study/view/ot_783?tab=trees&tree=tree1
+Moyle, Robert G., Carl H. Oliveros, Michael J. Andersen, Peter A. Hosner, Brett W. Benz, Joseph D. Manthey, Scott L. Travers, Rafe M. Brown, Brant C. Faircloth. 2016. Tectonic collision and uplift of Wallacea triggered the global songbird radiation. Nature Communications 7: 12709
+http://dx.doi.org/10.1038/ncomms12709
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2015?tab=trees&tree=tree4152
+Odeen, A., Hastad O., & Alstrom P. 2011. Evolution of ultraviolet vision in the largest avian radiation - the passerines. BMC Evolutionary Biology 11 (313): 1-8.
+http://dx.doi.org/10.1186/1471-2148-11-313
+
+https://tree.opentreeoflife.org/curator/study/view/ot_531?tab=trees&tree=tree1
+Claramunt, Santiago, Joel Cracraft. 2015. A new time tree reveals Earth historys imprint on the evolution of modern birds. Science Advances 1 (11): e1501005-e1501005
+http://dx.doi.org/10.1126/sciadv.1501005
+
+https://tree.opentreeoflife.org/curator/study/view/ot_782?tab=trees&tree=Tr48736
+Beresford, P., F.K. Barker, P.G. Ryan, T.M. Crowe. 2005. African endemics span the tree of songbirds (Passeri): molecular systematics of several evolutionary 'enigmas'. Proceedings of the Royal Society B: Biological Sciences 272 (1565): 849-858
+http://dx.doi.org/10.1098/rspb.2004.2997
+
+https://tree.opentreeoflife.org/curator/study/view/ot_2018?tab=trees&tree=tree8
+Kimball, R. T., Oliveros, C. H., Wang, N., White, N. D., Barker, F. K., Field, D. J., … Braun, E. L. (2019). A Phylogenomic Supertree of Birds. Diversity, 11(7), 109. doi:10.3390/d11070109
+
+http://dx.doi.org/10.3390/d11070109
+
+https://tree.opentreeoflife.org/curator/study/view/ot_770?tab=trees&tree=tree1
+Barker, F. Keith, Kevin J. Burns, John Klicka, Scott M. Lanyon, Irby J. Lovette. 2015. New insights into New World biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. The Auk 132 (2): 333-348.
+http://dx.doi.org/10.1642/auk-14-110.1
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2924?tab=trees&tree=tree6755
+Klicka, John, F. Keith Barker, Kevin J. Burns, Scott M. Lanyon, Irby J. Lovette, Jaime A. Chaves, Robert W. Bryson. 2014. A comprehensive multilocus assessment of sparrow (Aves: Passerellidae) relationships. Molecular Phylogenetics and Evolution 77: 177–182.
+http://dx.doi.org/10.1016/j.ympev.2014.04.025
+
+https://tree.opentreeoflife.org/curator/study/view/ot_2018?tab=trees&tree=tree9
+Kimball, R. T., Oliveros, C. H., Wang, N., White, N. D., Barker, F. K., Field, D. J., … Braun, E. L. (2019). A Phylogenomic Supertree of Birds. Diversity, 11(7), 109. doi:10.3390/d11070109
+
+http://dx.doi.org/10.3390/d11070109
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2575?tab=trees&tree=tree5974
+Barker, F. K., K. J. Burns, J. Klicka, S. M. Lanyon, I. J. Lovette. 2013. Going to extremes: contrasting rates of diversification in a recent radiation of New World passerine birds. Systematic Biology 62 (2): 298-320.
+http://dx.doi.org/10.1093/sysbio/sys094
+
+https://tree.opentreeoflife.org/curator/study/view/ot_841?tab=trees&tree=tree1
+Simone Treplin, Romy Siegert, Christoph Bleidorn, Hazell Shokellu Thompson, Roger Fotso, Ralph Tiedemann, 2008, 'Molecular phylogeny of songbirds (Aves: Passeriformes) and the relative utility of common nuclear marker loci', Cladistics, vol. 24, no. 3, pp. 328-349
+http://dx.doi.org/10.1111/j.1096-0031.2007.00178.x
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2913?tab=trees&tree=tree6742
+Price, Trevor D., Daniel M. Hooper, Caitlyn D. Buchanan, Ulf S. Johansson, D. Thomas Tietze, Per Alström, Urban Olsson, Mousumi Ghosh-Harihar, Farah Ishtiaq, Sandeep K. Gupta, Jochen Martens, Bettina Harr, Pratap Singh, Dhananjai Mohan. 2014. Niche filling slows the diversification of Himalayan songbirds. Nature 509: 222-225.
+http://dx.doi.org/10.1038/nature13272
+
+https://tree.opentreeoflife.org/curator/study/view/pg_420?tab=trees&tree=tree522
+Hackett, S. J., R. T. Kimball, S. Reddy, R. C. K. Bowie, E. L. Braun, M. J. Braun, J. L. Chojnowski, W. A. Cox, K.-L. Han, J. Harshman, C. J. Huddleston, B. D. Marks, K. J. Miglia, W. S. Moore, F. H. Sheldon, D. W. Steadman, C. C. Witt, T. Yuri. 2008. A Phylogenomic Study of Birds Reveals Their Evolutionary History. Science 320 (5884): 1763-1768.
+http://dx.doi.org/10.1126/science.1157704
+
+https://tree.opentreeoflife.org/curator/study/view/ot_412?tab=trees&tree=Tr77157
+Barker, F.K. 2014. Mitogenomic data resolve basal relationships among passeriform and passeridan birds. Molecular Phylogenetics and Evolution 79: 313-324.
+http://dx.doi.org/10.1016/j.ympev.2014.06.011
+
+https://tree.opentreeoflife.org/curator/study/view/ot_532?tab=trees&tree=tree1
+Gibb, Gillian C., Ryan England, Gerrit Hartig, P.A. (Trish) McLenachan, Briar L. Taylor Smith, Bennet J. McComish, Alan Cooper, David Penny. 2015. New Zealand passerines help clarify the diversification of major songbird lineages during the Oligocene. Genome Biology and Evolution 7 (11): 2983-2995.
+http://dx.doi.org/10.1093/gbe/evv196
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2404?tab=trees&tree=tree5068
+Barker, F. Keith, Alice Cibois, Peter Schikler, Julie Feinstein, Joel Cracraft. 2004. Phylogeny and diversification of the largest avian radiation. Proceedings of the National Academy of Sciences of the United States of America 101 (30): 11040-11045.
+http://dx.doi.org/10.1073/pnas.0401892101
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2404?tab=trees&tree=tree6388
+Barker, F. Keith, Alice Cibois, Peter Schikler, Julie Feinstein, Joel Cracraft. 2004. Phylogeny and diversification of the largest avian radiation. Proceedings of the National Academy of Sciences of the United States of America 101 (30): 11040-11045.
+http://dx.doi.org/10.1073/pnas.0401892101
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2692?tab=trees&tree=tree6245
+Zuccon, Dario, Robert Prŷs-Jones, Pamela C. Rasmussen, and Per G.P. Ericson. 2012. The phylogenetic relationships and generic limits of finches (Fringillidae). Molecular Phylogenetics and Evolution 62 (2): 581-596.
+http://dx.doi.org/10.1016/j.ympev.2011.10.002
+
+https://tree.opentreeoflife.org/curator/study/view/ot_2013?tab=trees&tree=tree8
+Oliveros, C. H., Field, D. J., Ksepka, D. T., Barker, F. K., Aleixo, A., Andersen, M. J., … Faircloth, B. C. (2019). Earth history and the passerine superradiation. Proceedings of the National Academy of Sciences, 116(16), 7916–7925. doi:10.1073/pnas.1813206116
+
+http://dx.doi.org/10.1073/pnas.1813206116
+
+https://tree.opentreeoflife.org/curator/study/view/ot_854?tab=trees&tree=tree1
+Ulf S. Johansson, Jon Fjeldså, Rauri C.K. Bowie, 2008, 'Phylogenetic relationships within Passerida (Aves: Passeriformes): A review and a new molecular phylogeny based on three nuclear intron markers', Molecular Phylogenetics and Evolution, vol. 48, no. 3, pp. 858-876
+http://dx.doi.org/10.1016/j.ympev.2008.05.029
+
+https://tree.opentreeoflife.org/curator/study/view/ot_111?tab=trees&tree=tree1
+Alstrom, P., D. M. Hooper, Y. Liu, U. Olsson, D. Mohan, M. Gelang, H. Le Manh, J. Zhao, F. Lei, T. D. Price. 2014. Discovery of a relict lineage and monotypic family of passerine birds. Biology Letters 10 (3): 20131067-20131067.
+http://dx.doi.org/10.1098/rsbl.2013.1067
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2707?tab=trees&tree=tree6281
+Powell, Alexis F.L.A., F. Keith Barker, Scott M. Lanyon, Kevin J. Burns, John Klicka, Irby J. Lovette. 2014. A comprehensive species-level molecular phylogeny of the New World blackbirds (Icteridae). Molecular Phylogenetics and Evolution 71: 94-112.
+http://dx.doi.org/10.1016/j.ympev.2013.11.009
+
+https://tree.opentreeoflife.org/curator/study/view/ot_169?tab=trees&tree=tree1
+Robert W. Bryson, Jaime Chaves, Brian Tilston Smith, Matthew J. Miller, Kevin Winker, Jorge L. Pérez-Emán, John Klicka, 2014, 'Diversification across the New World within the ‘blue’ cardinalids (Aves: Cardinalidae)', Journal of Biogeography, vol. 41, no. 3, pp. 587-599
+http://dx.doi.org/10.1111/jbi.12218
+
+https://tree.opentreeoflife.org/curator/study/view/ot_172?tab=trees&tree=tree2
+Päckert, Martin, Jochen Martens, Yue-Hua Sun, Lucia Liu Severinghaus, Alexander A. Nazarenko, Ji Ting, Till Töpfer, Dieter Thomas Tietze. 2011. Horizontal and elevational phylogeographic patterns of Himalayan and Southeast Asian forest passerines (Aves: Passeriformes). Journal of Biogeography 39 (3): 556-573.
+http://dx.doi.org/10.1111/j.1365-2699.2011.02606.x
+
+https://tree.opentreeoflife.org/curator/study/view/pg_2874?tab=trees&tree=tree6667
+Tietze, Dieter Thomas, Martin Päckert, Jochen Martens, Henriette Lehmann, Yue-Hua Sun. 2013. Complete phylogeny and historical biogeography of true rosefinches (Aves: Carpodacus) . Zoological Journal of the Linnean Society 169 (1): 215-234.
+http://dx.doi.org/10.1111/zoj.12057

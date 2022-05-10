@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 devtools::load_all("../../datelifeplot")
 devtools::load_all("../../datelife")
-writing_dir <- "../figures/figure-fringillidae/"
+writing_dir <- "../figures/figure-anatidae/"
 ```
 
 ## Get a `datelifeQuery` object
@@ -27,8 +27,66 @@ writing_dir <- "../figures/figure-fringillidae/"
 ana_dquery <- datelife::make_datelife_query(input = "anatidae",
                                              use_tnrs = TRUE,
                                              get_spp_from_taxon = TRUE)
+usethis::use_data(ana_dquery, overwrite = TRUE)
+
 ```
-We will be working with `r length(ana_dquery$cleaned_names)` species of the famnily Anatidae.
+
+We will be working with `r length(ana_dquery$cleaned_names)` species of the family Anatidae.
+
+## Get a `datelifeResult` object
+
+```{r, eval=FALSE}
+ana_dres = datelife::get_datelife_result(input = ana_dquery, cache = opentree_chronograms)
+
+usethis::use_data(ana_dres, overwrite = TRUE)
+```
+
+```{r, include = FALSE}
+load(file = "../data/ana_dres.rda")
+```
+
+## Get a `datelifeSummary` object
+```{r}
+ana_dsumm <- datelife:::summary.datelifeResult(datelife_query = ana_dquery, object = ana_dres)
+
+usethis::use_data(ana_dsumm, overwrite = TRUE)
+# load(file = "../data/frin_dsumm.rda")
+ana_dsumm$citations[order(ana_dsumm$citations)]
+```
+
+We will rename source chronograms to have a shorter study name:
+
+```{r}
+names(phylo_all) <- c("Barker et al. 2013",  # 1
+                      "Barker et al. 2015 - chronogram 1",  # 2
+                      "Barker et al. 2015 - chronogram 2",  # 3
+                      "Burns et al. 2015",  # 4
+                      "Claramunt et al. 2015",  # 5
+                      "Gibb et al. 2015", # 6
+                      "Hedges et al. 2015 - chronogram 1",  # 7
+                      "Hedges et al. 2015 - chronogram 2",  # 8
+                      "Hooper et al. 2017",  # 9
+                      "Jetz et al. 2012 - chronogram 1",  # 10
+                      "Jetz et al. 2012 - chronogram 2",  # 11
+                      "Kimball et al. 2019 - chronogram 1", # 12
+                      "Kimball et al. 2019 - chronogram 2", # 13
+                      "Oliveros et al. 2019", # 14
+                      "Price et al. 2014 - chronogram 1", # 15
+                      "Price et al. 2014 - chronogram 2", # 16
+                      "Roquet et al. 2014 - chronogram 1", # 17
+                      "Roquet et al. 2014 - chronogram 2", # 18 
+                      "Uyeda et al 2017") # 19
+```
+
+### Plotting source chronograms
+
+getting oldest age among all trees in a `multiPhylo` object:
+
+```{r}
+max(unlist(lapply(phylo_all, ape::branching.times)))
+
+plot_max_time <- 45
+```
 
 
 
