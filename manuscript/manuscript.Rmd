@@ -369,10 +369,10 @@ Certainly, further studies are required to fully understand the effect of using 
 
 The input chronograms may have been estimated using primary fossil data or using estimates of molecular substitution rates.
 These differences in approach which can deepen the already substantial variation in time estimates between lineages, as observed from the comparison of source chronograms in the Fringillidae example.
-For eaxmple, the chronograms from  @burns2014phylogenetics tend to have much older date estimates for the same nodes than other inferences (Figure 5). 
-This study did not use any primary calibrations, and inferred dates using an substitution rate estimates across birds \textcolor{red}{(cite Weir, J.T., Schluter, D., 2008. Calibrating the avian molecular clock. Mol. Ecol. 17,
-231–2328).}
-\textcolor{red}{MORE ON the FINCH examples and the cross validation here}
+For example, the chronograms from @burns2014phylogenetics tend to have much older date estimates for the same nodes than other inferences (Figure 5). 
+This study did not use any primary calibrations, and inferred dates using an substitution rate estimates across birds [@weir2008calibrating] 
+<!--\textcolor{red}{MORE ON the FINCH examples and the cross validation here}
+-->
 
 Conflict among alternative date estimates is common in the literature
 (see, for example, the ongoing debate about crown group age of angiosperms [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time]. 
@@ -382,8 +382,9 @@ Stitching together multiple chronograms creates a larger tree that uses informat
 Summarizing chronograms might also imply summarizing fundamentally distinct evolutionary hypotheses.
 For example, two different researchers working on the same clade both carefully select and argument their choices of fossil calibrations.
 Still, if one researcher decides a fossil will calibrate the ingroup of a clade, while another researcher uses the same one to calibrate outside the clade, the resulting age estimates will often differ substantially, as the placement of calibrations as stem or crown group is proved to deeply affect estimated times of lineage divergence [@sauquet2013practical]. Trying to summarize the resulting chronograms into a single one using simple summary statistics can erase many types of relevant information from the source chronograms. Accordingly, the prevailing view is that we should favor time of lineage divergence estimates obtained from a single analysis, using fossil data as primary sources of calibrations, and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data used in the analysis reflect a coherent evolutionary history [@antonelli2017supersmart]. <!-- Will this be implemented in future `datelife` versions? Probably not-->
-However, the exercise of summarizing different chronograms has the potential to help getting a single global evolutionary history for a lineage by putting together evidence from different hypothesis. Choosing the elements of the chronograms that we are going to keep and the ones that we are going to discard is key, since we are potentially loosing important parts of the evolutionary history of a lineage that might only be reflected in source chronograms and not on the summary chronogram [@sauquet2021age]. <!-- Example -->
+However, the exercise of summarizing different chronograms has the potential to help getting a single global evolutionary history for a lineage by putting together evidence from different hypothesis. Choosing the elements of the chronograms that we are going to keep and the ones that we are going to discard is key, since we are potentially loosing important parts of the evolutionary history of a lineage that might only be reflected in source chronograms and not on the summary chronogram [@sauquet2021age]. <!-- Example 
 \textcolor{red}{??? it's not clear to me what this last part means! What might you be losing?}
+-->
 
 <!-- still requires more research. -->
 <!-- Often, there is a large discrepancy in time of lineage divergence estimates across studies from expert knowledge, that is well known and documented for different groups of organisms [e.g., angiosperms; @magallon2015metacalibrated].  -->
@@ -397,7 +398,7 @@ Hence, we integrated into datelife's workflow different ways of estimating node 
 "Making up" branch lengths is an common practice in scientific publications: @Jetz2012, created a time-calibrated tree of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a time-calibrated tree of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a tree of 353,185 seed plants where only 23% had molecular data.
 Obviously, there are risks in this practice!
 Taken to the extreme, one could make a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration with the polytomy resolution and branch estimation methods.
-There has yet to be a thorough analysis of what can go wrong when one extends inferences beyond the data in this way, so we urge caution; we also urge readers to follow the example of many of the large tree papers cited above and make carefully consider the statistical assumptions being made, and assess the consistency of the results with prior work.
+There has yet to be a thorough analysis of what can go wrong when one extends inferences beyond the data in this way, so we urge caution; we also urge readers to follow the example of many of the large tree papers cited above, by carefully considering the statistical assumptions being made, and assessing the consistency of the results with prior work.
 
 
 <!-- There is evidence that different chronograms will result in very different macroevolutionary histories inferred from them [@title2016macrophylogenies]. However, it is unknown how using very different age data could affect hypothesis testing in other areas of research and more effort is needed in that directions -->
