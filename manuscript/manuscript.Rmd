@@ -321,8 +321,8 @@ ANSWER:
 
 <!--Data from source chronograms can be used to date tree topologies with no branch lengths, as well as trees with branch lengths as relative substitution rates-->
 We performed a cross validation analysis of the DateLife workflow using the Fringillidae chronograms. 
-We used the individual tree topologies from each of the ??? TODO CHECK NUMBER 19 source chronograms from ?? studies as inputs, treating their node ages as unknown.
-We estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
+We used the individual tree topologies from each of the 19 source chronograms from 13 studies as inputs, treating their node ages as unknown.
+We then estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
 
 We found that node ages from original study, and ages estimated using all other age data available are correlated (Supplementary Fig. \ref{fig:cvXY}).
 

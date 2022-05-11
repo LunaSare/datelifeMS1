@@ -1,0 +1,173 @@
+---
+title: "figure-fringillidae-mean"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{figure-fringillidae-mean}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+writing_dir <- "../figures/figure-fringillidae/"
+```
+
+
+```{r}
+load("../data/fringillidae_v0.6.2.rda")
+```
+
+## Get all ages from source chronograms
+
+Get all ages from source chronograms (calibrations) for the topology in `dsumm$phylo_median`.
+First, get all calibrations from all source chronograms:
+
+```{r}
+phylo_median <- fringillidae_v0.6.2$dsumm$phylo_median
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all,
+  each = FALSE)
+nrow(all_calibrations) # 1206
+```
+
+Now, get mrca of all_calibrations. 
+We can do this with `match_all_calibrations` or `mrca_calibrations`.
+```{r}
+matched <- datelife::match_all_calibrations(
+  phy = phylo_median, 
+  calibrations = all_calibrations)
+ls(matched)
+nrow(matched$matched_calibrations) # 1206
+```
+
+```{r}
+calib_summ <- datelife:::summary.matchedCalibrations(
+  matched$matched_calibrations)
+nrow(calib_summ$in_phy) # 1206
+```
+
+
+### Congruify ages and get matching mrca on target tree
+
+Original workflow is going from a summary matrix/ patristic distance matrix to a phylo object. Does not congruify.
+- Converts source chronograms to patristic distance matrices
+- Combines them into a single summary matrix
+- Creates a table of taxon pair summary ages
+- Matches taxon pair summary ages to nodes on target tree and stores them as data frame
+- Calculates summary statistics of taxon pair summary ages
+- Uses these summarized ages as secondary calibrations on target tree topology with BLADJ.
+
+Alternative workflow:
+- congruifies source chronograms to target tree topology
+- matches taxon pair ages that can be used as calibrations to nodes on target tree and stores as a data frame of ages
+- Calculates summary statistics of congruified_and_mrca'd ages
+- Uses age summary statistics per node as secondary calibrations on target tree topology with BLADJ (and others).
+
+summary_matrix_to_phylo to get_summary_chronograms
+
+
+### Plot matched calibrations from source chronograms.
+
+Choose a color scheme for the studies:
+
+```{r}
+# Get references in matched calibrations:
+studies <- as.character(unique(calib_summ$in_phy$reference))
+
+
+# order references alphabetically:
+studies <- studies[order(studies)]
+studies
+```
+
+Visualize plotting colors:
+
+```{r}
+#create a vector of colors with study names:
+number_of_colors <- length(studies) * 10
+
+
+xx <- viridis::turbo(n = number_of_colors)
+
+
+plot(-1:number_of_colors + 1, -1:number_of_colors + 1, type = "n")
+text(1:number_of_colors, 1:number_of_colors, xx, col = xx)
+
+# xx <- viridis::turbo(n = 20)
+# plot(-2:length(xx)+1, -2:length(xx)+1, type = "n")
+# text(1:(length(xx)), 1:length(xx), paste(1:length(xx),"=",xx), col = xx)
+
+```
+
+Choose plotting colors:
+
+```{r}
+#create a vector of colors with study names:
+# color_studies <- xx[c(12,
+#                       3,4,
+#                       15,
+#                       18,17,
+#                       20,
+#                       8,9)]
+# 
+
+length(xx) / length(unique(names(phylo_all)))
+color_studies <- c("blue", 
+                   xx[c(25, 26)],
+                   xx[1],
+                   "deeppink", 
+                   "orchid",
+                   xx[c(65, 66)],
+                   "pink",
+                   xx[c(95, 96)], 
+                   xx[c(121, 122)],
+                   "skyblue",
+                   xx[c(141, 142)], 
+                   xx[c(165, 166)], 
+                   xx[190])
+names(color_studies) <- studies
+frin_color_studies <- color_studies
+usethis::use_data(frin_color_studies, overwrite = TRUE)
+```
+
+# Get summary chronograms from the median matrix
+
+```{r}
+all_summary_chronograms <- datelife::summary_matrix_to_phylo_all(median_matrix,
+                                      fringillidae_v0.6.2$dquery,
+                                      target_tree = fringillidae_v0.6.2$dsumm$phylo_sdm,
+                                      total_distance = TRUE)
+```
+
+# Congruify calibrations to topology first
+
+```{r}
+phylo_median <- fringillidae_v0.6.2$dsumm$phylo_median
+phylo_all <- fringillidae_v0.6.2$dsumm$phylo_all
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all,
+  each = FALSE)
+
+congruified_calibs <- datelife::congruify_calibrations(phy = phylo_median,
+                                 chronograms = phylo_all,
+                                 calibrations = all_calibrations)
+
+ls(congruified_calibs)
+
+ls(congruified_calibs$matched_calibrations)
+head(congruified_calibs$matched_calibrations)
+```
+
+# Then match?
+
+
+
+

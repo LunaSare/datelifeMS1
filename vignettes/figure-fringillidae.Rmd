@@ -22,53 +22,65 @@ writing_dir <- "../figures/figure-fringillidae/"
 
 ## Get a `datelifeQuery` object
 
-```{r}
-frin_dquery <- datelife::make_datelife_query(input = "fringillidae",
+```{r, eval = TRUE}
+dquery <- datelife::make_datelife_query(input = "fringillidae",
                                              use_tnrs = TRUE,
-                                             get_spp_from_taxon = TRUE)
+                                             get_spp_from_taxon = TRUE,
+                                             taxonomic_source = "ncbi")
+# dquery <- fringillidae_v0.6.2$dquery
 ```
 
 ## Get a `datelifeResult` object
 
-```{r, eval=FALSE}
-frin_dres = datelife::get_datelife_result(input = frin_dquery, cache = opentree_chronograms)
-```
+```{r, eval = TRUE}
+dres = datelife::get_datelife_result(input = dquery, cache = opentree_chronograms)
 
-```{r, include = FALSE}
-load(file = "../data/frin_dres.rda")
+# dres <- fringillidae_v0.6.2$dres
 ```
 
 ## Get a `datelifeSummary` object
 ```{r}
-frin_dsumm <- datelife:::summary.datelifeResult(datelife_query = frin_dquery, object = frin_dres)
+# you can add a tree topology to summarize if you do not want the Open Tree synthetic tree topology as default
+# dquery$phy <- fringillidae_v0.6.2$dsumm$phylo_median
 
-# usethis::use_data(frin_dsumm, overwrite = TRUE)
-load(file = "../data/frin_dsumm.rda")
-
+dsumm <- datelife:::summary.datelifeResult(datelife_query = dquery, object = dres)
 ```
+
 ## Save data objects 
 
 ```{r}
 opentree_chronograms$version
+```
 
-frin_data_filename <- paste0("frin_data_v", opentree_chronograms$version)
+```{r}
+data_filename <- paste0("fringillidae_v", opentree_chronograms$version)
+```
 
-usethis::use_data(frin_dquery, 
-                  frin_dres, 
-                  frin_dsumm, 
+```{r}
+assign(data_filename, value = list(dquery = dquery,
+                                   dres = dres,
+                                   dsumm = dsumm))
+```
+
+```{r}
+ls(fringillidae_v0.6.2)
+```
+
+```{r}
+usethis::use_data(fringillidae_v0.6.2, 
                   overwrite = TRUE)
 ```
 
 ## Load data objects 
 
 ```{r}
-load(file = "../data/frin_data_.rda")
+load(file = "../data/fringillidae_v0.6.2.rda")
 ```
 
 Make an object with all source chronograms, and reorder chronogram list alphabetically:
 
 ```{r}
-phylo_all <- frin_dsumm$phylo_all
+phylo_all <- fringillidae_v0.6.2$dsumm$phylo_all
 alphabetic_order <- order(names(phylo_all))
 phylo_all <- phylo_all[alphabetic_order]
 names(phylo_all)
@@ -79,7 +91,7 @@ We will rename source chronograms to have a shorter study name:
 names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Barker et al. 2015 - chronogram 1",  # 2
                       "Barker et al. 2015 - chronogram 2",  # 3
-                      "Burns et al. 2015",  # 4
+                      "Burns et al. 2014",  # 4
                       "Claramunt et al. 2015",  # 5
                       "Gibb et al. 2015", # 6
                       "Hedges et al. 2015 - chronogram 1",  # 7
@@ -99,7 +111,7 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
 
 ### Plotting source chronograms
 
-getting oldest age among all trees in a `multiPhylo` object:
+Getting oldest age among all trees in a `multiPhylo` object:
 
 ```{r}
 max(unlist(lapply(phylo_all, ape::branching.times)))
@@ -138,19 +150,32 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 
 ## Get calibrations
 
-Get calibrations for the topology in `frin_dsumm$phylo_median`
+Get calibrations for the topology in `dsumm$phylo_median`
 
+First, get all calibrations per chronogram against themselves:
 ```{r}
-phylo_median <- frin_dsumm$phylo_median
+phylo_median <- fringillidae_v0.6.2$dsumm$phylo_median
 all_calibrations <- datelife::extract_calibrations_phylo(
   input = phylo_all,
   each = FALSE)
+nrow(all_calibrations) # 1206
+```
+
+Then match node pairs to topology.
+This will use all node ages as calibrations regardless if the node is monophyletic in the target tree (topology to add dates to) and source tree (chronogram from original study).
+
+```{r}
 matched <- datelife::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
+ls(matched)
+nrow(matched$matched_calibrations) # 1206
+```
+
+```{r}
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
-nrow(calib_summ$in_phy)
+nrow(calib_summ$in_phy) # 1206
 ```
 
 ### Table of matched calibrations
@@ -172,6 +197,8 @@ for (i in seq(nrow(pretty_calibs))) {
   taxon_pairs_ref <- c(taxon_pairs_ref, tax_pair_ref)
 }
 ## Eliminate duplicated rows:
+any(duplicated(taxon_pairs_ref))
+
 if (any(duplicated(taxon_pairs_ref))) {
   pretty_calibs <- pretty_calibs[!duplicated(taxon_pairs_ref),]
 }
@@ -184,7 +211,7 @@ rownames(pretty_calibs) <- NULL
 pretty_calibs <- pretty_calibs[, c("mrca_node_number", "taxonA", "taxonB", "MaxAge", "reference")]
 # Modify column names to be informative
 colnames(pretty_calibs) <- c("Node Name", "taxon A", "taxon B", "Node Age", "Study chronogram")
-# Change node numbers my node names
+# Change node numbers by node names
 pretty_calibs$`Node Name` <- paste0("n", pretty_calibs$`Node Name`-6)
 
 # substitute underscore by space:
@@ -199,7 +226,7 @@ for (i in seq(nrow(pretty_calibs))) {
 }
 
 
-pretty_calibs
+nrow(pretty_calibs)
 ```
 
 Print table as pdf.
@@ -261,7 +288,7 @@ Choose plotting colors:
 #                       8,9)]
 # 
 
-length(xx) / length(unique(names(frin_dsumm$phylo_all)))
+length(xx) / length(unique(names(phylo_all)))
 color_studies <- c("blue", 
                    xx[c(25, 26)],
                    xx[1],
@@ -277,8 +304,7 @@ color_studies <- c("blue",
                    xx[190])
 names(color_studies) <- studies
 frin_color_studies <- color_studies
-usethis::use_data(frin_color_studies)
-
+usethis::use_data(frin_color_studies, overwrite = TRUE)
 ```
 
 
@@ -321,7 +347,7 @@ dev.off()
 ## Get pairwise median age points
 
 ```{r}
-best_grove <- datelife::get_best_grove(frin_dres)
+best_grove <- datelife::get_best_grove(fringillidae_v0.6.2$dres)
 
 # Take a list of chronograms as tables and summarize age data per taxon pair into a single matrix:
 median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
@@ -338,10 +364,12 @@ median_matrix_table <- median_matrix_table[!is.na(median_matrix_table$taxonA),]
 # match taxon pairs to nodes on a tree topology
 
 matched_median_ages <- datelife::match_all_calibrations(phy = phylo_median, calibrations = median_matrix_table)
-
+ls(matched_median_ages)
+nrow(matched_median_ages$matched_calibrations) # 58230
 mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
 
-nrow(mm_summ$in_phy)
+nrow(mm_summ$in_phy) #229
+head(rownames(mm_summ$in_phy))
 ```
 
 
@@ -351,15 +379,14 @@ Set colors and data:
 
 ```{r}
 color_median <- "purple"
-mm_summ$in_phy$reference <- rep("Pairwsie median of node ages", length(mm_summ$in_phy$reference))
+mm_summ$in_phy$reference <- rep("Pairwise median of node ages", length(mm_summ$in_phy$reference))
 names(color_median) <- mm_summ$in_phy$reference[1]
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
 point_type <- list(a1 = "/", a2 = "•")
 
-leg_color<- c(color_studies, color_median)
-# leg_pch <- c(rep("|", length(color_studies)), "•")
+leg_color <- c(color_studies, color_median)
 leg_pch <- rep(19, length(leg_color))
 leg_text <- names(leg_color)
 ```
@@ -388,7 +415,7 @@ datelifeplot::plot_node_ages2(phylo_median,
                bars_color = "#DCDCDC50",
                legend_cex = 0.8,
                legend_x = -5,
-               legend_y = 280,
+               legend_y = 200,
                legend_text = leg_text,
                legend_pch = leg_pch,
                legend_color = leg_color,
@@ -445,6 +472,11 @@ leg_box <- c(TRUE, TRUE)
 
 Plot Median summary Chronogram again:
 ```{r}
+phylo_median <- datelife_result_median(fringillidae_v0.6.2$dres,
+                                       target_tree = fringillidae_v0.6.2$dsumm$phylo_sdm)
+
+```
+```{r}
 svg(filename = paste0(writing_dir, "median_and_calibration_ages_simple.svg"),
     height = 11.75*2,
     width = 8.25*2)
@@ -483,4 +515,53 @@ ee <- datelifeplot::plot_node_ages2(phylo_median,
                )
 dev.off()
 ```      
+# Get all types of summary chronograms from the median matrix
+
+```{r}
+all_summary_chronograms <- datelife::summary_matrix_to_phylo_all(median_matrix,
+                                      fringillidae_v0.6.2$dquery,
+                                      target_tree = fringillidae_v0.6.2$dsumm$phylo_sdm,
+                                      total_distance = TRUE)
+```
+
+
+Now plot:
+
+```{r}
+
+for (i in names(all_summary_chronograms)) {
+ svg(filename = paste0(writing_dir, toupper(i), "_ages.svg"),
+    height = 30,
+    width =  15)
+datelifeplot::plot_node_ages(all_summary_chronograms[[i]],
+               title = paste(toupper(i), "Summary Chronogram"),
+               plot_type = "phyloch",
+               time_depth = plot_max_time,
+               calibration_summary = calib_summ,
+               pch = 19,
+               color_pch = color_studies,
+               cex_pch = 1,
+               lwd_bars = 10,
+               cex_legend = 0.7,
+               x_legend = 0 ,
+               y_legend = 270,
+               mai1 = 1, 
+               mai2 = 0,
+               mai3 = 0.5,
+               mai4 = 3.73,
+               omi1 = 2,
+               omi2 = 1,
+               omi3 = 0.5,
+               omi4 = 0,
+               edge.width = 2,
+               cex_tiplabels = 0.5,
+               cex_axislabel = 1,
+               cex_axis = 1,
+               cex_title = 2,
+               pos_title = -1,
+               pos_axis = 2
+               )
+  dev.off() 
+}
+```
 

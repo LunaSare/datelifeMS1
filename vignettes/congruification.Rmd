@@ -1,0 +1,311 @@
+---
+title: "Congruification"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Congruification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+load("../data/fringillidae_v0.6.2.rda")
+```
+
+Function congruify calibrations:
+
+## Extract all calibrations from chronograms as a data.frame if none are provided
+
+This congruifies chronograms agianst themselves
+
+```{r}
+chronograms <- fringillidae_v0.6.2$dsumm$phylo_all
+extracted_calibrations <- extract_calibrations_phylo(input = chronograms,
+                                                     each = TRUE)
+ls(extracted_calibrations)
+colnames(extracted_calibrations[[1]])
+```
+
+## Match target tree (`phy`) nodelabels to calibrations data.frame
+
+So we have all taxon pairs and the corresponding node labels from `phy`
+
+```{r}
+phy <- fringillidae_v0.6.2$dsumm$phylo_median
+if (is.null(phy$edge.length)) {
+    message("... Adding temporary branch lengths to 'phy' for congruification.")
+    phy <- ape::compute.brlen(phy)
+}
+class(phy) <- "phylo"
+phy
+```
+Self congruification for target tree (`phy`):
+
+```{r}
+phy_calibrations <- suppressWarnings(
+                        geiger::congruify.phylo(reference = phy,
+                                                target = phy,
+                                                scale = NA,
+                                                ncores = 1)$calibrations)
+colnames(phy_calibrations)
+```
+
+```{r}
+head(phy_calibrations)
+```
+
+```{r}
+phy_matched <- mrca_calibrations(phy = phy,
+                                 calibrations = phy_calibrations)
+class(phy_matched)
+length(phy_matched)
+ls(phy_matched)
+colnames(phy_matched$matched_calibrations)
+nrow(phy_matched$matched_calibrations)
+head(phy_matched$matched_calibrations)
+phy_matched$matched_phy
+```
+
+## Congruify source chronograms to `phy_matched$matched_phy` and themselves
+Function to
+Congruify a source chronogram with the target and itself
+return the calibrations data.frame only
+  
+```{r}
+run_congruification_self <- function(phy,
+                                      chronograms,
+                                       index) {
+    self <- chronograms[[index]]
+    phy$tip.label <- sub(" ", "_", phy$tip.label)
+    self$tip.label <- sub(" ", "_", self$tip.label)
+    class(self) <- "phylo"
+    cc_phy <- suppressWarnings(geiger::congruify.phylo(reference = phy,
+                               target = self,
+                               scale = NA,
+                               ncores = 1))
+    cc_self <- suppressWarnings(geiger::congruify.phylo(reference = self,
+                               target = self,
+                               scale = NA,
+                               ncores = 1))
+    list(phy = cc_phy, self = cc_self)
+}
+```
+
+## Congruify them all:
+```{r}
+congruified_self <- lapply(seq(chronograms),
+                            function(i) {
+                              run_congruification_self(phy = phy_matched$matched_phy,
+                                                  chronograms,
+                                                  index = i)
+                            })
+  names(congruified_self) <- names(chronograms)
+xx <- data.frame(congruent_calibrations = sapply(congruified_self, function(x) nrow(x$phy$calibrations)), 
+           source_Nnode = sapply(congruified_self, function(x) nrow(x$self$calibrations)))
+
+study_names <- c("Barker et al. 2013",  # 1
+                      "Barker et al. 2015 - chronogram 1",  # 2
+                      "Barker et al. 2015 - chronogram 2",  # 3
+                      "Burns et al. 2014",  # 4
+                      "Claramunt et al. 2015",  # 5
+                      "Gibb et al. 2015", # 6
+                      "Hedges et al. 2015 - chronogram 1",  # 7
+                      "Hedges et al. 2015 - chronogram 2",  # 8
+                      "Hooper et al. 2017",  # 9
+                      "Jetz et al. 2012 - chronogram 1",  # 10
+                      "Jetz et al. 2012 - chronogram 2",  # 11
+                      "Kimball et al. 2019 - chronogram 1", # 12
+                      "Kimball et al. 2019 - chronogram 2", # 13
+                      "Oliveros et al. 2019", # 14
+                      "Price et al. 2014 - chronogram 1", # 15
+                      "Price et al. 2014 - chronogram 2", # 16
+                      "Roquet et al. 2014 - chronogram 1", # 17
+                      "Roquet et al. 2014 - chronogram 2", # 18 
+                      "Uyeda et al 2017") # 19
+row.names(xx) <- study_names
+xx
+```
+Check that the order of tagret and self does not matter:
+
+```{r}
+# same as `run_congruification_self` but using chronograms as reference
+run_congruification_self2 <- function(phy,
+                                      chronograms,
+                                       index) {
+    self <- chronograms[[index]]
+    phy$tip.label <- sub(" ", "_", phy$tip.label)
+    self$tip.label <- sub(" ", "_", self$tip.label)
+    class(self) <- "phylo"
+    cc_phy <- suppressWarnings(geiger::congruify.phylo(reference = self,
+                               target = phy,
+                               scale = NA,
+                               ncores = 1))
+    cc_self <- suppressWarnings(geiger::congruify.phylo(reference = self,
+                               target = self,
+                               scale = NA,
+                               ncores = 1))
+    list(phy = cc_phy, self = cc_self)
+}
+congruified_self2 <- lapply(seq(chronograms),
+                            function(i) {
+                              run_congruification_self2(phy = phy_matched$matched_phy,
+                                                  chronograms,
+                                                  index = i)
+                            })
+  names(congruified_self) <- names(chronograms)
+yy <- data.frame(congruent_calibrations = sapply(congruified_self, function(x) nrow(x$phy$calibrations)), 
+           source_Nnode = sapply(congruified_self, function(x) nrow(x$self$calibrations)))
+
+study_names <- c("Barker et al. 2013",  # 1
+                      "Barker et al. 2015 - chronogram 1",  # 2
+                      "Barker et al. 2015 - chronogram 2",  # 3
+                      "Burns et al. 2014",  # 4
+                      "Claramunt et al. 2015",  # 5
+                      "Gibb et al. 2015", # 6
+                      "Hedges et al. 2015 - chronogram 1",  # 7
+                      "Hedges et al. 2015 - chronogram 2",  # 8
+                      "Hooper et al. 2017",  # 9
+                      "Jetz et al. 2012 - chronogram 1",  # 10
+                      "Jetz et al. 2012 - chronogram 2",  # 11
+                      "Kimball et al. 2019 - chronogram 1", # 12
+                      "Kimball et al. 2019 - chronogram 2", # 13
+                      "Oliveros et al. 2019", # 14
+                      "Price et al. 2014 - chronogram 1", # 15
+                      "Price et al. 2014 - chronogram 2", # 16
+                      "Roquet et al. 2014 - chronogram 1", # 17
+                      "Roquet et al. 2014 - chronogram 2", # 18 
+                      "Uyeda et al 2017") # 19
+row.names(yy) <- study_names
+yy
+```
+
+
+
+## Cross congruify source chronograms and target tree??
+
+I think we do not need a cross congruification step. 
+
+We need the following info as a data.frame:
+- mrca_node_number on target tree (NA if it is not congruent)
+- taxon pair names
+- age node from source chronogram
+- citation from source chronogram
+
+Add this to `run_congruification_self` function:
+
+```{r}
+index <- 1
+run_congruification_self <- function(phy,
+                                      chronograms,
+                                       index) {
+    self <- chronograms[[index]]
+    phy$tip.label <- sub(" ", "_", phy$tip.label)
+    self$tip.label <- sub(" ", "_", self$tip.label)
+    class(self) <- "phylo"
+    cc_phy <- suppressWarnings(geiger::congruify.phylo(reference = self,
+                               target = phy,
+                               scale = NA,
+                               ncores = 1))
+    
+    mrcas <- mrca_calibrations(phy = cc_phy$target, 
+                      calibrations = cc_phy$calibrations)
+    calibs_matched <- mrcas$matched_calibrations
+    calibs_matched$study <- rep(names(chronograms)[index], nrow(calibs_matched))
+    return(calibs_matched)
+}
+
+```
+Renamed to `congruify_and_mrca`.
+Used to get a table of congruified calibrations
+
+```{r}
+# Cross congruify source chronograms and target tree
+fix_congruification <- function(congruified_self,
+                                  index = 1,
+                                  extracted_calibrations) {
+    source_chronogram <- congruified_self[[index]]$self$reference
+    target_tree <- congruified_self[[index]]$phy$reference
+    xx <- target_tree$node.label
+     # if number of congruified nodes in target tree is the same as node number from source chronogram
+    if (length(xx[ xx!= ""]) == source_chronogram$Nnode) {
+        # take extracted calibrations data frame as is
+        calibs <- extracted_calibrations[[index]]
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # TODO: check that the following works:
+        # col_names <- colnames(calibs_matched$matched_calibrations)
+        # ii <- col_names %in% c("mrca_node_number", "mrca_node_name")
+        # col_names[ii] <- c("source_mrca_node_number", "source_mrca_node_name")
+        # colnames(calibs_matched$matched_calibrations) <- col_names
+      } else {
+        # case for index = 11, 10, 8, 7
+        # take congruified calibrations data frame
+        # TODO: needs checking, as the number of congruent nodes in target tree is higher than nodes available in output$calibrations, meaning, that some valid node data is being dropped from final results for some reason
+        # first, get most complete calibrations data.frame
+        # it is usually the one extracted from target tree
+        calibs <- congruified_self[[index]]$phy$calibrations
+        calibs_matched <- mrca_calibrations(phy = source_chronogram,
+                                            calibrations = calibs)
+        # use actual ages from source chronogram
+        mrca_node_name <- calibs_matched$matched_calibrations$mrca_node_name
+        source_bt <- ape::branching.times(calibs_matched$matched_phy)
+        source_ages <- source_bt[mrca_node_name]
+        calibs$MaxAge <- calibs$MinAge <- unname(source_ages)
+        # add congruent column
+        calibs$congruent <- rep(TRUE, nrow(calibs))
+        # add source node numbers and names
+        calibs$source_mrca_node_name <- mrca_node_name
+        calibs$source_mrca_node_number <- as.numeric(sub("n", "", mrca_node_name))
+        # add nodes that were not congruent
+        nn <- is.na(match(names(source_bt), mrca_node_name))
+        nn_ages <- ape::branching.times(calibs_matched$matched_phy)[nn]
+        nn_node_name <- names(nn_ages)
+        nn_node_number <- as.numeric(sub("n", "", nn_node_name))
+
+        non_congruent <- data.frame(MinAge = unname(nn_ages),
+                                    MaxAge = unname(nn_ages),
+                                    congruent = rep(FALSE, length(nn_ages)),
+                                    source_mrca_node_number = nn_node_number,
+                                    source_mrca_node_name = nn_node_name)
+        calibs <- data.table::rbindlist(list(calibs, non_congruent),
+                                        fill = TRUE)
+      }
+    calibs$reference <- rep(names(congruified_self)[index], nrow(calibs))
+    return(calibs)
+  }
+  # TODO: fix error in cross validation data set when running the following:
+  fixed_congruification <- lapply(seq(congruified_self),
+                                  function(i) {
+                                    tryCatch(fix_congruification(congruified_self,
+                                                        index = i,
+                                                        extracted_calibrations),
+                                              error = function(e) NA) } )
+  errored <- is.na(fixed_congruification)
+  if (any(errored)) {
+    message("fixing congruification errored for:\n",
+              paste(which(errored), "--", names(congruified_self)[errored], "\n"))
+  }
+  ##############################################################################
+  ##############################################################################
+  # Merge calibrations data frames into a single one
+  # and match to phy nodes
+  ##############################################################################
+  ##############################################################################
+  calibrations <-   data.table::rbindlist(fixed_congruification[!errored], fill = TRUE)
+  calibrations_results <- mrca_calibrations(phy = phy,
+                                            calibrations = calibrations)
+  return(structure(calibrations_results,
+                   class = "congruifiedCalibrations"))
+  
+```
+
+
