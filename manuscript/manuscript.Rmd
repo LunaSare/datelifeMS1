@@ -319,8 +319,9 @@ Certainly, further studies are required to fully understand the effect of using 
 The input chronograms may have been estimated using primary fossil data or using estimates of molecular substitution rates.
 These differences in approach which can deepen the already substantial variation in time estimates between lineages, as observed from the comparison of source chronograms in the Fringillidae example.
 For eaxmple, the chronograms from  @burns2014phylogenetics tend to have much older date estimates for the same nodes than other inferences (Figure 5). 
-This study did not use any primary calibrations, and inferred dates using an substitution rate estimates across birds (cite Weir, J.T., Schluter, D., 2008. Calibrating the avian molecular clock. Mol. Ecol. 17,
-231–2328).
+This study did not use any primary calibrations, and inferred dates using an substitution rate estimates across birds \textcolor{red}{(cite Weir, J.T., Schluter, D., 2008. Calibrating the avian molecular clock. Mol. Ecol. 17,
+231–2328).}
+\textcolor{red}{MORE ON the FINCH examples and the cross validation here}
 
 Conflict among alternative date estimates is common in the literature
 (see, for example, the ongoing debate about crown group age of angiosperms [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time]. 
@@ -331,7 +332,7 @@ Summarizing chronograms might also imply summarizing fundamentally distinct evol
 For example, two different researchers working on the same clade both carefully select and argument their choices of fossil calibrations.
 Still, if one researcher decides a fossil will calibrate the ingroup of a clade, while another researcher uses the same one to calibrate outside the clade, the resulting age estimates will often differ substantially, as the placement of calibrations as stem or crown group is proved to deeply affect estimated times of lineage divergence [@sauquet2013practical]. Trying to summarize the resulting chronograms into a single one using simple summary statistics can erase many types of relevant information from the source chronograms. Accordingly, the prevailing view is that we should favor time of lineage divergence estimates obtained from a single analysis, using fossil data as primary sources of calibrations, and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data used in the analysis reflect a coherent evolutionary history [@antonelli2017supersmart]. <!-- Will this be implemented in future `datelife` versions? Probably not-->
 However, the exercise of summarizing different chronograms has the potential to help getting a single global evolutionary history for a lineage by putting together evidence from different hypothesis. Choosing the elements of the chronograms that we are going to keep and the ones that we are going to discard is key, since we are potentially loosing important parts of the evolutionary history of a lineage that might only be reflected in source chronograms and not on the summary chronogram [@sauquet2021age]. <!-- Example -->
-??? it's not clear to me what this last part means! What might you be losing?
+\textcolor{red}{??? it's not clear to me what this last part means! What might you be losing?}
 
 <!-- still requires more research. -->
 <!-- Often, there is a large discrepancy in time of lineage divergence estimates across studies from expert knowledge, that is well known and documented for different groups of organisms [e.g., angiosperms; @magallon2015metacalibrated].  -->
