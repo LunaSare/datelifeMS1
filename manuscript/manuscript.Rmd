@@ -112,7 +112,7 @@ The software features key elements for scientific reproducibility, such as a ver
 DateLife's core software application consists of the R package `datelife`. Its latest stable version -- v`r packageVersion("datelife")`, is available from the CRAN repository [@datelifeR], and relies on functionalities from various biological R packages:
 ape [@paradis2004],
 bold [@Chamberlain2018],
-geiger [@Harmon2008],
+geiger [@pennell2014geiger],
 paleotree [@Bapst2012a],
 phyloch [@Heibl2008],
 phylocomr [@Ooms2018],
