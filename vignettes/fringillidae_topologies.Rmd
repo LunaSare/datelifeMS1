@@ -1,0 +1,235 @@
+---
+title: "Fringillidae Topologies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Fringillidae Topologies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
+writing_dir <- "../figures/fringillidae-topologies/"
+load(file = "../data/fringillidae_v0.6.2.rda")
+```
+
+```{r, eval = TRUE}
+rotl::tnrs_match_names("fringillidae")
+```
+```{r, eval = TRUE}
+rotl::tol_node_info(839319)
+```
+
+
+```{r}
+rotl::tol_mrca(ott_ids = fringillidae_v0.6.2$dquery$ott_ids)
+```
+
+
+```{r, eval = TRUE}
+fringillidae_monophyletic <- rotl::tol_subtree(node_id = "mrcaott4083ott370807",
+                                               label_format = "name")
+
+fringillidae_monophyletic
+```
+
+```{r}
+fringillidae_v0.6.2$dquery$phy
+  
+fringillidae_paraphyletic <- rotl::tol_induced_subtree(ott_ids = fringillidae_v0.6.2$dquery$ott_ids,
+                                          label_format = "name")
+
+fringillidae_paraphyletic
+```
+
+
+Get species names belonging to the Fringillidae according to the NCBI taxonomy:
+
+```{r}
+frin_species_names <- fringillidae_v0.6.2$dquery$cleaned_names
+frin_species_names <- gsub(" ", "_", frin_species_names)
+
+frin_species_ids <- fringillidae_v0.6.2$dquery$ott_ids
+```
+
+Some NCBI species are not in OpenTree monophyletic tree:
+
+```{r}
+species_in_mono <- frin_species_names %in% fringillidae_monophyletic$tip.label
+unname(frin_species_names[!species_in_mono])
+
+ids_in_mono <- frin_species_ids %in% gsub("ott", "", fringillidae_monophyletic$tip.label)
+
+sum(ids_in_mono)
+```
+
+Just one NCBI species is not in OpenTree induced (paraphyletic) tree
+
+```{r}
+species_in_para <- frin_species_names %in% fringillidae_paraphyletic$tip.label
+
+unname(frin_species_names[!species_in_para])
+```
+
+Tip colors for plotting the tree:
+
+```{r}
+tip_colors <- rep("black", ape::Ntip(fringillidae_monophyletic))
+in_mono <- fringillidae_monophyletic$tip.label %in% frin_species_names
+sum(in_mono)
+tip_colors[in_mono] <- "red"
+```
+
+Edge colors:
+
+```{r}
+# Get edge ancestor positions
+
+# create a vector of all tip numbers:
+tip_numbers <- seq(ape::Ntip(fringillidae_monophyletic))
+
+# find row position of tip numbers that are in tree: 
+row_position_tips <- fringillidae_monophyletic$edge[,2] %in% tip_numbers[in_mono]
+sum(row_position_tips)
+
+length(row_position_tips) == nrow(fringillidae_monophyletic$edge)
+
+edge_colors <- rep("black", nrow(fringillidae_monophyletic$edge))
+edge_colors[row_position_tips] <- "red"
+
+
+edge_numbers <- fringillidae_monophyletic$edge[row_position_tips,1]
+
+row_position_edge1 <- fringillidae_monophyletic$edge[,2] %in% edge_numbers
+length(row_position_edge1)
+sum(row_position_edge1)
+
+edge_colors[row_position_edge1] <- "red"
+```
+
+Make it a function
+
+```{r}
+phy <- fringillidae_monophyletic
+tip_labels <- frin_species_names
+get_edge_positions <- function(phy, tip_labels) {
+  # get tip_labels positions in vector phy$tip.label
+  phy$tip.label <- gsub(" ", "_", phy$tip.label)
+  tip_labels <- gsub(" ", "_", tip_labels)
+  tip_labels_in_phy <- phy$tip.label %in% tip_labels
+  # sum(tip_labels_in_phy) == length(tip_labels)
+  
+  # create a boolean vector of length == to nrow(phy$edge)
+  edges <- rep(FALSE, nrow(phy$edge))
+  # get row positions
+  descendant_numbers <- seq(ape::Ntip(phy))[tip_labels_in_phy]
+  ancestor_row_position <- phy$edge[,2] %in% descendant_numbers
+  edges[ancestor_row_position] <- TRUE
+  while (sum(ancestor_row_position) > 0) {
+    descendant_numbers <- phy$edge[ancestor_row_position,1]
+    ancestor_row_position <- phy$edge[,2] %in% descendant_numbers
+    edges[ancestor_row_position] <- TRUE
+  }
+  return(edges)
+}
+```
+
+Get edge positions and create edge color vector
+
+```{r}
+ladderized <- ladderize(phy = fringillidae_monophyletic)
+edge_pos <- get_edge_positions(phy = ladderized,
+                               tip_labels = frin_species_names)
+edge_colors_anti <- edge_colors <- rep("black", nrow(ladderized$edge))
+edge_colors[edge_pos] <- "red"
+
+edge_colors_anti[!edge_pos] <- anti_color
+
+# Tried to control edge width with a vector, so tip edges were thinner but inner edges were thicker.
+# It did not work
+edge_width <- rep(1, nrow(ladderized$edge))
+edge_width[seq(ape::Ntip(ladderized))] <- 0.1
+```
+
+
+```{r}
+for (i in c("fan", "radial", "phylogram")) {
+  pdf(file = paste0(writing_dir, 
+                    "fringillidae_monophyletic_",
+                    i, ".pdf"),
+      height = ifelse("phylogram" %in% i, 40, 6))
+  par(mai = c(0,0,0,0))
+  ape::plot.phylo(ladderized, 
+                  type = i,
+                  cex = ifelse("phylogram" %in% i, 0.1, 0.05),
+                  tip.color = tip_colors,
+                  label.offset =ifelse("phylogram" %in% i, 5, 0.001),
+                  edge.color = edge_colors,
+                  edge.width = 1 #ifelse("phylogram" %in% i, 1, 0.3)
+       )
+  dev.off()  
+}
+```
+
+Monophyletic with other colors:
+
+Tip and edge colors for plotting the tree:
+
+```{r}
+tip_colors_anti <- rep("black", ape::Ntip(ladderized))
+in_mono <- ladderized$tip.label %in% frin_species_names
+sum(in_mono)
+
+edge_pos <- get_edge_positions(phy = ladderized,
+                               tip_labels = frin_species_names)
+edge_colors_anti <- rep("black", nrow(ladderized$edge))
+```
+
+```{r}
+color_loop <- c("#2F4F4F40", "#FFE4B550", "#DDA0DD50")
+names(color_loop) <- c("grey", "mocassin", "plum")
+for (i in seq(color_loop)) {
+  anti_color <- color_loop[i]
+  tip_colors_anti[!in_mono] <- anti_color
+  edge_colors_anti[!edge_pos] <- anti_color
+  pdf(file = paste0(writing_dir, 
+                  "fringillidae_monophyletic_fan_anti_",
+                  names(color_loop)[i], 
+                  ".pdf"),
+    height = 6)
+  par(mai = c(0,0,0,0))
+  ape::plot.phylo(ladderized,
+                  type = "fan",
+                  cex = 0.05,
+                  tip.color = tip_colors_anti,
+                  label.offset = 0.001,
+                  edge.color = edge_colors_anti,
+                  edge.width = 1)
+  dev.off()
+
+}
+
+```
+
+Fringillidae induced subtree
+
+```{r}
+pdf(file = paste0(writing_dir, 
+                  "fringillidae_induced_phylogram.pdf"),
+    height = 6,
+    width = 3)
+par(mai = c(0,0,0,0))
+ape::plot.phylo(ape::ladderize(fringillidae_paraphyletic),
+                type = "phylogram",
+                cex = 0.1)
+dev.off()
+```
