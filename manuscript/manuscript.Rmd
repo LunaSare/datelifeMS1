@@ -308,10 +308,11 @@ The `datelife` search revealed `r length(dres)` chronograms containing at least 
 
 _**Summarizing search results.-**_
 The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. As explained in the "Description" section, a tree topology to summarize age data upon is required.
-By default, `datelife` uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group.
-Hence, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group.
+By default, `datelife` uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
+By default, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group, which do not necessarily correspond to a monophyletic group. Users can change this behaviour by providing a monophyletic tree as input for a DateLife search, or as a tree topology for a DateLife summary.
 
-<!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?-->
+<!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?
+Luna: Clarified in text, I hope!-->
 
 Age data from source chronograms is summarised into a single patristic distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 

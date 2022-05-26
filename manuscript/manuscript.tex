@@ -162,7 +162,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4586}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4625}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -392,8 +392,8 @@ The \texttt{datelife} search revealed 13 chronograms containing at least two Fri
 
 \emph{\textbf{Summarizing search results.-}}
 The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. As explained in the ``Description'' section, a tree topology to summarize age data upon is required.
-By default, \texttt{datelife} uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group.
-Hence, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group.
+By default, \texttt{datelife} uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
+By default, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group, which do not necessarily correspond to a monophyletic group. Users can change this behaviour by providing a monophyletic tree as input for a DateLife search, or as a tree topology for a DateLife summary.
 
 Age data from source chronograms is summarised into a single patristic distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 
@@ -844,8 +844,8 @@ Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{M
 
 \begin{figure}[!h]
 \includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
-\caption{Fringillidae topologies available from OpenTree's synthetic phylogeny. A) Topology encompassing bird species within the Fringillidae within the NCBI taxonomy (black) as well as all species that share the same mrca node in the synthetic tree (purple). B) Paraphyletic topology encompassing bird species within the Fringillidae only. It results from pruning purple branches from topology in A.
-Bird species belonging to the family Fringillidae do not form a monophyletic group.
+\caption{Tree topologies obtained from Open Tree of Life's (OpenTree) synthetic phylogenetic tree. A) Topology of 2333 tips and 1305 internal nodes, encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same mrca node in OpenTree's synthetic tree (purple). B) Topology of 289 tips and 253 internal nodes, encompassing bird species within the Fringillidae only, resulting from pruning purple branches from topology A.
+Bird species within the Fringillidae do not form a monophyletic group.
 (Alström et al. \protect\hyperlink{ref-}{2014},
 Barker, Cibois, Schikler, Feinstein, \& Cracraft \protect\hyperlink{ref-barker2004phylogeny}{2004},
 Barker et al. \protect\hyperlink{ref-barker2013going}{2013},
