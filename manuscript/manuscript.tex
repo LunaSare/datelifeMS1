@@ -162,7 +162,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4607}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4586}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -229,8 +229,8 @@ Building a chronogram is not an easy task.
 It requires obtaining and curating data to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree;
 it also generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
-Here we present the DateLife project and its core software application, available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org, which captures data from published chronograms, and make these data readily accessible to users for reuse and reanalysis.
-The software features key elements for scientific reproducibility, such as a versioned, open and fully public source database (McTavish et al., 2015), data stored and available in a computer readable format (Vos et al., 2012), automated and programmatic ways of accessing the data (Stoltzfus et al., 2013) and methods to summarize and compare the data.
+Here we present the DateLife project which has the main goal of capturing data from published chronograms, and making these data readily accessible to users for reuse and reanalysis.
+DateLife's core software application is available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database (McTavish et al., 2015), data stored and available in a computer readable format (Vos et al., 2012), automated and programmatic ways of accessing the data (Stoltzfus et al., 2013) and methods to summarize and compare the data.
 
 \hypertarget{description}{%
 \section{Description}\label{description}}
@@ -392,9 +392,7 @@ The \texttt{datelife} search revealed 13 chronograms containing at least two Fri
 
 \emph{\textbf{Summarizing search results.-}}
 The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. As explained in the ``Description'' section, a tree topology to summarize age data upon is required.
-By default, \texttt{datelife} uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, Fringillidae is not a monophyletic family
-(Alström et al., 2014; Barker, 2014; Barker et al., 2013, 2015; Barker, Cibois, Schikler, Feinstein, \& Cracraft, 2004; Beresford, Barker, Ryan, \& Crowe, 2005; Bryson Jr et al., 2014; Burleigh, Kimball, \& Braun, 2015; Burns et al., 2014; Chaves, Hidalgo, \& Klicka, 2013; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hackett et al., 2008; Jetz et al., 2012; Johansson, Fjeldså, \& Bowie, 2008; Kimball et al., 2019; Klicka et al., 2014; Lamichhaney et al., 2015; Lerner, Meyer, James, Hofreiter, \& Fleischer, 2011; Lovette et al., 2010; Moyle et al., 2016; Ödeen, Håstad, \& Alström, 2011; Oliveros et al., 2019; Päckert et al., 2012; Parchman, Benkman, \& Mezquida, 2007; Powell et al., 2014; Price et al., 2014; Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka, 2013; Selvatti, Gonzaga, \& Moraes Russo, 2015; Tietze, Päckert, Martens, Lehmann, \& Sun, 2013; Treplin et al., 2008; Zuccon, Prŷs-Jones, Rasmussen, \& Ericson, 2012).
-
+By default, \texttt{datelife} uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group.
 Hence, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group.
 
 Age data from source chronograms is summarised into a single patristic distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
@@ -418,7 +416,7 @@ Accordingly, root ages are generally older in the original study than estimated 
 
 \texttt{datelife} makes state-of-the-art information on time of lineage divergence easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users, besides the names of the organisms or clade they want to work with, for any of its functionality.
 
-At the time of writing of this manuscript (May 22, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
+At the time of writing of this manuscript (May 26, 2022), \texttt{datelife}'s database has 253 chronograms, pulled entirely from OpenTree's database, the Phylesystem (McTavish et al., 2015). A unique feature of OpenTree's Phylesystem is that the community can add new state-of-the-art chronograms any time. As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
 Users can also upload new chronograms to OpenTree themselves, and trigger an update of their local \texttt{datelife} database to incorporate the new chronograms, to have them immediately available for analysis.
 
 A total of 99474 unique terminal taxa are represented in \texttt{datelife}'s database.
@@ -552,7 +550,7 @@ Barker, F. K. (2014). Mitogenomic data resolve basal relationships among passeri
 Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2013). Going to extremes: Contrasting rates of diversification in a recent radiation of new world passerine birds. \emph{{Systematic Biology}}, \emph{62}(2), 298--320.
 
 \leavevmode\vadjust pre{\hypertarget{ref-barker2015new}{}}%
-Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2015). New insights into new world biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. \emph{{The Auk: Ornithological Advances}}, \emph{132}(2), 333--348.
+Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2015). New insights into new world biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. \emph{The Auk: Ornithological Advances}, \emph{132}(2), 333--348.
 
 \leavevmode\vadjust pre{\hypertarget{ref-barker2004phylogeny}{}}%
 Barker, F. K., Cibois, A., Schikler, P., Feinstein, J., \& Cracraft, J. (2004). Phylogeny and diversification of the largest avian radiation. \emph{Proceedings of the National Academy of Sciences}, \emph{101}(30), 11040--11045.
@@ -797,9 +795,6 @@ Webb, Campbell O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for appl
 \leavevmode\vadjust pre{\hypertarget{ref-weir2008calibrating}{}}%
 Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{Molecular Ecology}, \emph{17}(10), 2321--2328.
 
-\leavevmode\vadjust pre{\hypertarget{ref-zuccon2012phylogenetic}{}}%
-Zuccon, D., Prŷs-Jones, R., Rasmussen, P. C., \& Ericson, P. G. (2012). The phylogenetic relationships and generic limits of finches (fringillidae). \emph{Molecular Phylogenetics and Evolution}, \emph{62}(2), 581--596.
-
 \end{CSLReferences}
 
 \endgroup
@@ -846,6 +841,48 @@ Zuccon, D., Prŷs-Jones, R., Rasmussen, P. C., \& Ericson, P. G. (2012). The phy
 % \begin{center}
 % \textsc{Figure \ref{fig:figure2-2}}
 % \end{center}
+
+\begin{figure}[!h]
+\includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
+\caption{Fringillidae topologies available from OpenTree's synthetic phylogeny. A) Topology encompassing bird species within the Fringillidae within the NCBI taxonomy (black) as well as all species that share the same mrca node in the synthetic tree (purple). B) Paraphyletic topology encompassing bird species within the Fringillidae only. It results from pruning purple branches from topology in A.
+Bird species belonging to the family Fringillidae do not form a monophyletic group.
+(Alström et al. \protect\hyperlink{ref-}{2014},
+Barker, Cibois, Schikler, Feinstein, \& Cracraft \protect\hyperlink{ref-barker2004phylogeny}{2004},
+Barker et al. \protect\hyperlink{ref-barker2013going}{2013},
+Barker \protect\hyperlink{ref-barker2014mitogenomic}{2014},
+Barker et al. \protect\hyperlink{ref-barker2015new}{2015},
+Beresford, Barker, Ryan, \& Crowe \protect\hyperlink{ref-beresford2005african}{2005},
+Bryson Jr et al. \protect\hyperlink{ref-bryson2014diversification}{2014},
+Burleigh, Kimball, \& Braun \protect\hyperlink{ref-burleigh2015building}{2015},
+Burns et al. \protect\hyperlink{ref-burns2014phylogenetics}{2014},
+Chaves, Hidalgo, \& Klicka \protect\hyperlink{ref-chaves2013biogeography}{2013},
+Claramunt \& Cracraft \protect\hyperlink{ref-claramunt2015new}{2015},
+Gibb et al. \protect\hyperlink{ref-gibb2015new}{2015},
+Hackett et al. \protect\hyperlink{ref-hackett2008phylogenomic}{2008},
+Jetz et al. \protect\hyperlink{ref-Jetz2012}{2012},
+Johansson, Fjeldså, \& Bowi \protect\hyperlink{ref-johansson2008phylogenetic}{200},
+Kimball et al. \protect\hyperlink{ref-kimball2019phylogenomic}{2019},
+Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014},
+Lamichhaney et al. \protect\hyperlink{ref-lamichhaney2015evolution}{2015},
+Lerner, Meyer, James, Hofreiter, \& Fleischer \protect\hyperlink{ref-lerner2011multilocus}{2011},
+Lovette et al. \protect\hyperlink{ref-lovette2010comprehensive}{2010},
+Moyle et al. \protect\hyperlink{ref-moyle2016tectonic}{2016},
+Ödeen, Håstad, \& Alström \protect\hyperlink{ref-odeen2011evolution}{2011},
+Oliveros et al. \protect\hyperlink{ref-oliveros2019earth}{2019},
+Päckert et al. \protect\hyperlink{ref-packert2012horizontal}{2012},
+Parchman, Benkman, \& Mezquida \protect\hyperlink{ref-parchman2007coevolution}{2007},
+Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
+Price et al. \protect\hyperlink{ref-price2014niche}{2014},
+Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka \protect\hyperlink{ref-pulgarin2013multilocus}{2013},
+Selvatti, Gonzaga, \& Moraes Russo \protect\hyperlink{ref-selvatti2015paleogene}{2015},
+Tietze, Päckert, Martens, Lehmann, \& Sun \protect\hyperlink{ref-tietze2013complete}{2013},
+Treplin et al. \protect\hyperlink{ref-treplin2008molecular}{2008},
+Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012})
+}
+\label{fig:fringillidae-topologies}
+\end{figure}
+
+
 
 
 \begin{figure}[!h]

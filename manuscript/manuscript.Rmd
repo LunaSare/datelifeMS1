@@ -76,7 +76,39 @@ output            :
       after_body  : ["figures-alt.tex", "figures-supplementary.tex"]
 
 nocite: |
-  @barker2013going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche
+  @barker2013going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche,
+  @alstrom2014discovery,
+  @barker2004phylogeny,
+  @barker2013going,
+  @barker2014mitogenomic,
+  @barker2015new,
+  @beresford2005african,
+  @bryson2014diversification,
+  @burleigh2015building,
+  @burns2014phylogenetics,
+  @chaves2013biogeography,
+  @claramunt2015new,
+  @gibb2015new,
+  @hackett2008phylogenomic,
+  @Jetz2012,
+  @johansson2008phylogenetic,
+  @kimball2019phylogenomic,
+  @klicka2014comprehensive, 
+  @lamichhaney2015evolution,
+  @lerner2011multilocus,
+  @lovette2010comprehensive,
+  @moyle2016tectonic,
+  @odeen2011evolution,
+  @oliveros2019earth,
+  @packert2012horizontal,
+  @parchman2007coevolution,
+  @powell2014comprehensive,
+  @price2014niche,
+  @pulgarin2013multilocus,
+  @selvatti2015paleogene,
+  @tietze2013complete,
+  @treplin2008molecular,
+  @zuccon2012phylogeneti,
 ---
 
 ```{r setup, include = FALSE}
@@ -103,8 +135,8 @@ Building a chronogram is not an easy task.
 It requires obtaining and curating data to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree;
 it also generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
-Here we present the DateLife project and its core software application, available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org, which captures data from published chronograms, and make these data readily accessible to users for reuse and reanalysis.
-The software features key elements for scientific reproducibility, such as a versioned, open and fully public source database [@mctavish2015phylesystem], data stored and available in a computer readable format [@vos2012nexml], automated and programmatic ways of accessing the data [@Stoltzfus2013] and methods to summarize and compare the data.
+Here we present the DateLife project which has the main goal of capturing data from published chronograms, and making these data readily accessible to users for reuse and reanalysis.
+DateLife's core software application is available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database [@mctavish2015phylesystem], data stored and available in a computer readable format [@vos2012nexml], automated and programmatic ways of accessing the data [@Stoltzfus2013] and methods to summarize and compare the data.
 
 
 # Description
@@ -276,40 +308,7 @@ The `datelife` search revealed `r length(dres)` chronograms containing at least 
 
 _**Summarizing search results.-**_
 The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. As explained in the "Description" section, a tree topology to summarize age data upon is required.
-By default, `datelife` uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, Fringillidae is not a monophyletic family
-[@burns2014phylogenetics;
-@burleigh2015building;
-@Jetz2012;
-@lerner2011multilocus;
-@lovette2010comprehensive;
-@pulgarin2013multilocus;
-@chaves2013biogeography;
-@lamichhaney2015evolution;
-@parchman2007coevolution;
-@selvatti2015paleogene;
-@moyle2016tectonic;
-@odeen2011evolution;
-@claramunt2015new;
-@beresford2005african;
-@kimball2019phylogenomic;
-@barker2015new;
-@klicka2014comprehensive;
-@barker2013going;
-@treplin2008molecular;
-@price2014niche;
-@hackett2008phylogenomic;
-@barker2014mitogenomic;
-@gibb2015new;
-@barker2004phylogeny;
-@zuccon2012phylogenetic;
-@oliveros2019earth;
-@johansson2008phylogenetic;
-@alstrom2014discovery;
-@powell2014comprehensive;
-@bryson2014diversification;
-@packert2012horizontal;
-@tietze2013complete].
-
+By default, `datelife` uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group.
 Hence, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group.
 
 <!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?-->
