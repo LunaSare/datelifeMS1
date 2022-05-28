@@ -155,9 +155,12 @@ Figure \ref{fig:workflow} provides a graphical summary of the three main steps o
 
 ##  Creating a search query
 
-DateLife starts by processing an input consisting of at least two taxon names, which can be provided as a comma separated character string or as tip labels on a tree. If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. The input tree is not required to have branch lengths, and its topology is used in the summary steps described in the next section.
+DateLife starts by processing an input consisting of at least two taxon names, which can be provided as a comma separated character string or as tip labels on a tree. 
+If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. 
+The input tree is not required to have branch lengths, and its topology is used in the summary steps described in the next section.
 
-DateLife accepts scientific names that can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or a binomial species name. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group, the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, DateLife retrieves all species names within the inclusive taxonomic group (according to a taxonomy of choice) and adds them to the input string. If the flag is inactive, DateLife excludes the taxon names above the species level from the query.
+DateLife accepts scientific names that can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or a binomial species name. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group, the algorithm has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, DateLife retrieves all species names within the inclusive taxonomic group (following a taxonomy of choice; current options are Open Tree of Life, NCBI, GBIF, or IRMNG taxonomies) and adds them to the input string. 
+If the flag is inactive, DateLife excludes any taxon names above the species level from the search query.
 
 DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard [@Boyle2013]. DateLife implements TNRS using OpenTree's unified taxonomy as standard [@opentreeAPIs; @rees2017automated], storing OpenTree's Taxonomy identification numbers for further processing.
 <!-- We are using OpenTree's TNRS [BCO: yes], Boyle described TNRS first, right?  [BCO: earliest I can find, but feels like there should be much older work]-->
@@ -201,7 +204,7 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 
 _**Choosing a topology.--**_
 DateLife requires a tree topology to summarize age data upon.
-We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically subsets one from the OpenTree synthetic tree [@opentreeoflife2019synth].
+We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically obtains one from the OpenTree synthetic tree [@opentreeoflife2019synth]. These are known as "induced" OpenTree subtrees, which do not necessarily correspond to a monophyletic group.
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach.
 To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife algorithm starts by identifying the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reconstruction will fail.
@@ -270,10 +273,10 @@ Unit testing helps identify potential issues as code is updated or, more critica
 We illustrate the DateLife algorithm using a family within the Passeriform birds encompassing the true finches, Fringillidae, as case study. The first example analyses 6 bird species and shows all steps of the algorithm. The second example is an application analysing 289 species in the family Fringillidae that are included in the NCBI taxonomy.
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
 
-## Small example
+## A small example
 
 _**Creating a search query.-**_
-We chose 6 bird species in the family Fringillidae, known as the true finches. The sample includes
+We chose 6 bird species within the Passeriformes. The sample includes
 two species of cardinals:
 the black-thighed grosbeak -- *Pheucticus tibialis* and
 the crimson-collared grosbeak -- *Rhodothraupis celaeno*;
@@ -284,46 +287,44 @@ the yellow-throated bunting --  *Emberiza elegans*;
 and one species of tanager, the vegetarian finch -- *Platyspiza crassirostris*.
 
 Processing input names found that *Emberiza elegans* is synonym for *Schoeniclus elegans* in the default reference taxonomy [Open Tree of Life Taxonomy v3.3, June 1, 2021]. For a detailed discussion on the state of the synonym refer to Avibase [@lepage2004avibase; @lepage2014avibase; @avibase-emberiza].
-Discovering this synonym allowed assigning five age data points for the parent node of *Emberiza elegans*, shown as *Schoeniclus elegans* in figure \ref{fig:figure2-1}, which would not have had any data otherwise.
+Discovering this synonym allowed assigning five age data points for the parent node of *Emberiza elegans*, shown as *Schoeniclus elegans* in figure \ref{fig:figure2}A, which would not have had any data otherwise.
 <!--\textcolor{red}{EJM: I don't understand what this sentence means}
 LLSR: it is related to the synonym found by tnrs processing, if we had used the synonym insted of the one accepted in the database, we would not have discovered that information
 LLSR: I moved it here, it makes more sense here, I think!.
 -->
 
 _**Searching the database.-**_
-DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies. Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, matching chronograms have 28 unique age data points. All nodes have age data.
+DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, matching chronograms have 28 unique age data points. All nodes have age data.
 
 _**Summarizing search results.-**_
-DateLife used OpenTree's synthetic tree topology for these taxa and mapped age data to nodes in the tree.
+DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and mapped age data to nodes in this chosen topology.
 As expected, more inclusive nodes (e.g., node "n1") have more age data than less inclusive nodes (e.g., node "n5").
-The name resolution step allowed discovering five data points for node "n4" that would not have had any data otherwise due to name mismatch.
+The name processing step allowed including five data points for node "n4" (parent of _Schoeniclus elegans_; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
 Age summary statistics per node were calculated and used as calibrations to date the tree topology using the BLADJ algorithm.
-Age data for node "n2" was excluded as final calibration because it is older than age data of the more inclusive node "n1".
+Age data for node "n2" was excluded as final calibration because it is older than age data of the more inclusive node "n1" (Fig. \ref{fig:figure2}C4).
 
-## Fringillidae
+## The family Fringillidae
 
 _**Creating a query.-**_
-To estimate ages for species in the family Fringillidae, we ran a `datelife` query using the "get species from taxon" flag,
-which gets all recognized species names within a named group from a taxonomy of choice (options are Open Tree of Life, NCBI, GBIF, or IRMNG).
-Following the NCBI taxonomy, the Fringillidae has `r length(dquery$cleaned_names)` species.
+To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the "get species from taxon" flag,
+which gets all recognized species names within a named group from a taxonomy of choice.
+Following the NCBI taxonomy, our DateLife query has `r length(dquery$cleaned_names)` Fringillidae species.
 <!--BCO: Feel like we need a number here, though it's good that the clade hasn't gone extinct ;-) -->
-
-_**Searching the database.-**_
-The next step is to use this curated set of species taxon names to identify all chronograms that contain at least two Fringillidae species. Once identified, the algorithm proceeds to prune matching chronograms to keep Fringillidae species names on tips only, and transform these pruned chronograms to pairwise distance matrices.
-The `datelife` search revealed `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
-
-_**Summarizing search results.-**_
-The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. As explained in the "Description" section, a tree topology to summarize age data upon is required.
-By default, `datelife` uses the Open Tree of Life synthetic phylogeny as summarizing topology. According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
-By default, DateLife's taxon-constrained approach returns a topology and ages for the species in a named group, which do not necessarily correspond to a monophyletic group. Users can change this behaviour by providing a monophyletic tree as input for a DateLife search, or as a tree topology for a DateLife summary.
-
+This taxon-constrained approach implies that the final results of a full DateLife analysis will be done using a tree topology and ages for the species in a named group, which do not necessarily correspond to a monophyletic group. Users can change this behaviour by providing a monophyletic tree as input for a DateLife search, or as a tree topology for a DateLife summary.
 <!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?
 Luna: Clarified in text, I hope!-->
 
+_**Searching the database.-**_
+Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species. 
+The DateLife search identified `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
+Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices.
+
+_**Summarizing search results.-**_
+The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. 
+As explained in the "Description" section, a tree topology to summarize age data upon is required.
+By default, DateLife uses the portion of OpenTree synthetic phylogeny that contains the species provided as search query as summarizing topology. 
+According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
 Age data from source chronograms is summarised into a single patristic distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
-
-
-
 Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
 <!-- ????????????????? Say some things about the results!
 ANSWER:
