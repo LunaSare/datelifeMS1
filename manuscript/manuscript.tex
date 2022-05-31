@@ -162,7 +162,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4834}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4844}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -378,10 +378,10 @@ Discovering this synonym allowed assigning five age data points for the parent n
 DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names (Barker, Burns, Klicka, Lanyon, \& Lovette, 2015; Hedges, Marin, Suleski, Paymer, \& Kumar, 2015; Jetz, Thomas, Joy, Hartmann, \& Mooers, 2012), one study matched four input names (Hooper \& Price, 2017) and two studies matched two input names (Barker, Burns, Klicka, Lanyon, \& Lovette, 2013; Burns et al., 2014). No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
 
 \emph{\textbf{Summarizing search results.-}}
-DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and mapped age data to nodes in this chosen topology.
-As expected, more inclusive nodes (e.g., node ``n1'') have more variance in age data than less inclusive nodes (e.g., node ``n5'').
+DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
 The name processing step allowed including five data points for node ``n4'' (parent of \emph{Schoeniclus elegans}; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
-Age summary statistics per node were calculated and used as calibrations to date the tree topology using the BLADJ algorithm.
+Age summary statistics per node were calculated (Table \ref{tbl:table2}) and used as calibrations to date the tree topology using the BLADJ algorithm.
+As expected, more inclusive nodes (e.g., node ``n1'') have more variance in age data than less inclusive nodes (e.g., node ``n5'').
 Age data for node ``n2'' was excluded as final calibration because it is older than age data of the more inclusive node ``n1'' (Fig. \ref{fig:figure2}C4).
 
 \hypertarget{the-family-fringillidae}{%
@@ -839,9 +839,19 @@ Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{M
 %%%%%%%%%%%%%%%%%%%%%%%%    TABLE 1     %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}
-  \caption{Ages of congruified nodes belonging to step C3 from Figure3}
+  \caption{Ages of congruified nodes belonging to step C2 from Figure3}
   \label{tbl:table1}
   \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example.pdf}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%    TABLE 2     %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}
+  \caption{Summary of congruified nodes ages, corresponding to step C3 from Figure3}
+  \label{tbl:table2}
+  \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example-summary.png}
 \end{table}
 
 % in this file I leave the figure captions outside\ caption{} because I want them
