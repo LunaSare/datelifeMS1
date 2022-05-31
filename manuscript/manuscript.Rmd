@@ -70,7 +70,9 @@ output            :
   papaja::apa6_pdf:
     includes      :
       in_header: "preamble.tex"
-      after_body  : ["figures-alt.tex", "figures-supplementary.tex"]
+      after_body  : ["tables.tex",
+                     "figures-alt.tex", 
+                     "figures-supplementary.tex"]
 
 nocite: |
   @barker2013going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche,

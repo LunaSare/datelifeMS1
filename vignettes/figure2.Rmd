@@ -19,6 +19,7 @@ writing_dir <- "../figures/figure2/"
 ```{r}
 # library(datelifeMS1)
 devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
 devtools::load_all()
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
@@ -27,15 +28,20 @@ spp_write <- spp_write[order(spp_write)]
 write(spp_write, file = "../figures/fringillidae_species_sample.txt")
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
+```
+
+```{r}
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
+```
+
+
+```{r}
 phylo_median <- spp_summ$phylo_median
 phylo_all <- spp_summ$phylo_all
 # Reorder chronogram list alphabetically:
-names(phylo_all)
 alphabetic_order <- order(names(phylo_all))
-names(phylo_all)[alphabetic_order]
 phylo_all <- phylo_all[alphabetic_order]
-spp_summ$citations
+names(phylo_all)
 ```
 
 We will rename source chronograms to have a shorter study name:
@@ -133,7 +139,7 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 ```
 
 
-I combined source chronogram plots with ppt (files in figures/figure2/source_phylo_all*.pptx), because combining with `magick` was not
+I combined source chronogram plots with ppt (files in `figures/figure2/source_phylo_all*.pptx`), because combining with `magick` was not
 doing what I needed. This is the code I tried:
 
 ```
@@ -216,7 +222,7 @@ for (i in seq(nrow(pretty_calibs))) {
 pretty_calibs
 ```
 
-Print table as pdf.
+Print table as pdf and png
 Trick to print in multiple pages from https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page
 
 ```{r}
@@ -225,9 +231,22 @@ number_of_rows <- nrow(pretty_calibs)
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
 
 # Export PDF
-pdf(paste0(writing_dir, "/calibs_table.pdf"), width = 10)
+png(paste0("../tables/table-fringillidae-small-example.png"), width = 10)
+# pdf(paste0("../tables/table-fringillidae-small-example.png"), width = 10)
 gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
+```
+
+Save table as .tex, but it is not formatted pretty
+
+```{r}
+df <- knitr::kable(pretty_calibs, 
+                   format = 'latex',
+                   row.names = TRUE,
+                   align = "c",
+                   caption = "Ages of congruified nodes.",
+                   label = "table1")
+writeLines(df, '../manuscript/table-fringillidae-small-example.tex')
 ```
 
 ### Plot matched calibrations from source chronograms.
