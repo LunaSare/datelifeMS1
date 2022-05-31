@@ -321,10 +321,10 @@ summary_table <- only_calibs %>%
 # Summary by group using dplyr
   group_by(node) %>% 
   summarize(min = min(x),
-            Q1 = quantile(x, 0.25),
+            q1 = quantile(x, 0.25),
             median = median(x),
             mean = mean(x),
-            Q3 = quantile(x, 0.75),
+            q3 = quantile(x, 0.75),
             max = max(x))
 ```
 
@@ -340,42 +340,60 @@ colnames(summary_table) <- c("Node Name",
                              "Q3",
                              "Max Age")
 ```
-
+Creating it with a loop:
 Add variance and sd:
 
 ```{r}
-sd_ages <- c()
-var_ages <- c()
-for (node in unique(summary_table$`Node Name`)) {
+min_ages <- q1 <- median_ages <- mean_ages <- q3 <- max_ages <- sd_ages <- var_ages <- c()
+for (node in unique(only_calibs$node)) {
   rowsies <- only_calibs$node %in% node
+  min_ages <- c(min_ages, min(only_calibs$age[rowsies]))
+  q1 <- c(q1, quantile(only_calibs$age[rowsies], 0.25))
+  median_ages <- c(median_ages, median(only_calibs$age[rowsies]))
+  mean_ages <- c(mean_ages, mean(only_calibs$age[rowsies]))
+  q3 <- c(q3, quantile(only_calibs$age[rowsies], 0.75))
+  max_ages <- c(max_ages, max(only_calibs$age[rowsies]))
   sd_ages <- c(sd_ages, sd(only_calibs$age[rowsies]))
   var_ages <- c(var_ages, var(only_calibs$age[rowsies]))
 }
-summary_table$sd <- sd_ages
-summary_table$Variance <- var_ages
+summary_table <- data.frame(unique(only_calibs$node),
+                            min_ages,
+                            q1,
+                            median_ages,
+                            mean_ages,
+                            q3,
+                            max_ages,
+                            var_ages,
+                            sd_ages)
+colnames(summary_table) <- c("Node Name",
+                             "Min Age",
+                             "Q1",
+                             "Median Age",
+                             "Mean Age",
+                             "Q3",
+                             "Max Age",
+                             "Variance",
+                             "SD")
 ```
 
-Tried the following but is too complicated and does not work well, so tried something else.
-```
-# Create an array of summary statistics per node
-summary_array <- tapply(only_calibs$`Node Age`, only_calibs$`Node Name`, summary)
-class(summary_array)
-class(summary_array[1])
 
-# Convert to list
-summary_list <- lapply(summary_array, "[")
-class(summary_list)
-dim(summary_list)
-length(summary_list)
-class(summary_list[[1]])
+Print the summary table as pdf:
 
-as.data.frame.table(summary_list[[1]])
-# Elements of list are class table, not data.frame
-# Merge with rbind.data.table
-xx <- data.table:::rbind.data.table(summary_list)
-class(xx)
-ls(xx)
-class(xx$n1)
+```{r}
+# Export PDF
+png(paste0("../tables/table-fringillidae-small-example-summary.png"), 
+    width = 9.2, 
+    height = 2, 
+    units = "in",
+    res = 300)
+# pdf(paste0("../tables/table-fringillidae-small-example.pdf"), 
+#      width = 10, 
+#      height = 8)
+gridExtra::grid.table(summary_table, 
+                      theme = tt1,
+                      rows = NULL) # I do not want row numbers
+dev.off()
+
 ```
 
 2. Update tables of figure of all Fringillidae, add to Supplementary data
