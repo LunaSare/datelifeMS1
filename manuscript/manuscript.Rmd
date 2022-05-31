@@ -296,11 +296,11 @@ LLSR: I moved it here, it makes more sense here, I think!.
 -->
 
 _**Searching the database.-**_
-DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, matching chronograms have 28 unique age data points. All nodes have age data.
+DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
 
 _**Summarizing search results.-**_
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and mapped age data to nodes in this chosen topology.
-As expected, more inclusive nodes (e.g., node "n1") have more age data than less inclusive nodes (e.g., node "n5").
+As expected, more inclusive nodes (e.g., node "n1") have more variance in age data than less inclusive nodes (e.g., node "n5").
 The name processing step allowed including five data points for node "n4" (parent of _Schoeniclus elegans_; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
 Age summary statistics per node were calculated and used as calibrations to date the tree topology using the BLADJ algorithm.
 Age data for node "n2" was excluded as final calibration because it is older than age data of the more inclusive node "n1" (Fig. \ref{fig:figure2}C4).

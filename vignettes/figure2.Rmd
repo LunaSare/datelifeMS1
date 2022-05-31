@@ -158,53 +158,87 @@ dev.off()
 
 ## Get calibrations
 
-Get calibrations:
+### Uncongruified
+All calibrations, even those that are not congruent:
 
 ```{r}
 all_calibrations <- datelife::extract_calibrations_phylo(
   input = phylo_all,
   each = FALSE)
+class(all_calibrations)
+ls(all_calibrations)
+nrow(all_calibrations)
+```
+
+Find mrca of taxon pairs in `all_calibrations` on a given tree topology (`phylo_median` in this case):
+
+```{r}
 matched <- datelife::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
-ls(matched)
+
 class(matched)
+ls(matched)
+nrow(matched$matched_calibrations)
+```
+
+Summarize matched calibrations
+
+```{r}
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
-
+class(calib_summ)
+ls(calib_summ)
+nrow(calib_summ$in_phy)
 ```
 ### Table of matched calibrations
 
 Make it pretty.
 
+#### Keep columns of interest:
+
 ```{r}
 colnames(calib_summ$in_phy)
-# keep columns of interest:
 pretty_calibs <- calib_summ$in_phy[,c("taxonA", "taxonB", "MaxAge", "mrca_node_number", "reference")]
-pretty_calibs
-# Eliminate duplicated taxon pairs:
+nrow(pretty_calibs)
+```
+#### Eliminate duplicated taxon pairs:
+
+```{r}
 ## Find the duplicated pairs within studies:
+## Note: take into account age too, they might com from different studies.
 taxon_pairs_ref <- c()
 for (i in seq(nrow(pretty_calibs))) {
-  tax_pair_ref <- as.character(pretty_calibs[i, c("taxonA", "taxonB", "reference")])
+  tax_pair_ref <- as.character(pretty_calibs[i, c("taxonA", "taxonB", "reference","MaxAge")])
   tax_pair_ref <- tax_pair_ref[order(tax_pair_ref)]
   tax_pair_ref <- paste(tax_pair_ref, collapse = "")
   taxon_pairs_ref <- c(taxon_pairs_ref, tax_pair_ref)
 }
-## Eliminate duplicated rows:
+pretty_calibs[8:9,]
+sum(duplicated(taxon_pairs_ref))
+```
+
+```{r}
+## Eliminate duplicated rows if any:
 if (any(duplicated(taxon_pairs_ref))) {
   pretty_calibs <- pretty_calibs[!duplicated(taxon_pairs_ref),]
 }
+```
 
+```{r}
 # Reorder ROWS by node number, reference, age and taxon names
 pretty_calibs <- pretty_calibs[order(pretty_calibs$mrca_node_number, pretty_calibs$MaxAge, pretty_calibs$reference, pretty_calibs$taxonA, pretty_calibs$taxonB),]
+
 # Eliminate rownames
 rownames(pretty_calibs) <- NULL
+
 # Reorder COLUMNS
 pretty_calibs <- pretty_calibs[, c("mrca_node_number", "taxonA", "taxonB", "MaxAge", "reference")]
+
 # Modify column names to be informative
 colnames(pretty_calibs) <- c("Node Name", "taxon A", "taxon B", "Node Age", "Study chronogram")
-# Change node numbers my node names
+
+# Change node numbers by node names
 pretty_calibs$`Node Name` <- paste0("n", pretty_calibs$`Node Name`-6)
 
 # substitute underscore by space:
@@ -218,8 +252,7 @@ for (i in seq(nrow(pretty_calibs))) {
   pretty_calibs[i, c("taxon A", "taxon B")] <- reordered
 }
 
-
-pretty_calibs
+nrow(pretty_calibs)
 ```
 
 Print table as pdf and png
@@ -231,8 +264,14 @@ number_of_rows <- nrow(pretty_calibs)
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
 
 # Export PDF
-png(paste0("../tables/table-fringillidae-small-example.png"), width = 10)
-# pdf(paste0("../tables/table-fringillidae-small-example.png"), width = 10)
+png(paste0("../tables/table-fringillidae-small-example.png"), 
+    width = 10, 
+    height = 8, 
+    units = "in",
+    res = 300)
+# pdf(paste0("../tables/table-fringillidae-small-example.pdf"), 
+#      width = 10, 
+#      height = 8)
 gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
@@ -248,6 +287,27 @@ df <- knitr::kable(pretty_calibs,
                    label = "table1")
 writeLines(df, '../manuscript/table-fringillidae-small-example.tex')
 ```
+
+### Congruified
+
+Congruify source chronograms with a chosen tree topology:
+
+```{r}
+sc1 <- datelife::congruify_and_mrca.phylo(phy = phylo_median,
+                             source_chronogram = phylo_all[[1]],
+                             study = names(phylo_all)[1])
+class(sc1) <- "data.frame"
+sc1
+
+congruified_calibs <- congruify_and_mrca.multiPhylo(phy = phylo_median,
+                              source_chronograms = phylo_all)
+nrow(congruified_calibs)
+```
+
+TODO starting on Tuesday morning!!
+Table of summary statistics of congruified ages:
+
+
 
 ### Plot matched calibrations from source chronograms.
 
