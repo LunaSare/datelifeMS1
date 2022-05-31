@@ -304,8 +304,87 @@ congruified_calibs <- congruify_and_mrca.multiPhylo(phy = phylo_median,
 nrow(congruified_calibs)
 ```
 
-TODO starting on Tuesday morning!!
-Table of summary statistics of congruified ages:
+Table of summary statistics of congruified ages. This will be Table number 2 in paper, methods from https://statisticsglobe.com/summary-statistics-by-group-in-r
+
+```{r}
+colnames(pretty_calibs)
+only_calibs <- pretty_calibs[,c("Node Name", "Node Age")]
+colnames(only_calibs) <- c("node", "age")
+# only_calibs$`Node Name` <- factor(only_calibs$`Node Name`)
+class(only_calibs$`node`)
+summary(only_calibs)
+```
+
+```{r}
+library(dplyr)
+summary_table <- only_calibs %>%                               
+# Summary by group using dplyr
+  group_by(node) %>% 
+  summarize(min = min(x),
+            Q1 = quantile(x, 0.25),
+            median = median(x),
+            mean = mean(x),
+            Q3 = quantile(x, 0.75),
+            max = max(x))
+```
+
+```{r}
+class(summary_table)
+summary_table <- as.data.frame(summary_table)
+class(summary_table)
+colnames(summary_table) <- c("Node Name",
+                             "Min Age",
+                             "Q1",
+                             "Median Age",
+                             "Mean Age",
+                             "Q3",
+                             "Max Age")
+```
+
+Add variance and sd:
+
+```{r}
+sd_ages <- c()
+var_ages <- c()
+for (node in unique(summary_table$`Node Name`)) {
+  rowsies <- only_calibs$node %in% node
+  sd_ages <- c(sd_ages, sd(only_calibs$age[rowsies]))
+  var_ages <- c(var_ages, var(only_calibs$age[rowsies]))
+}
+summary_table$sd <- sd_ages
+summary_table$Variance <- var_ages
+```
+
+Tried the following but is too complicated and does not work well, so tried something else.
+```
+# Create an array of summary statistics per node
+summary_array <- tapply(only_calibs$`Node Age`, only_calibs$`Node Name`, summary)
+class(summary_array)
+class(summary_array[1])
+
+# Convert to list
+summary_list <- lapply(summary_array, "[")
+class(summary_list)
+dim(summary_list)
+length(summary_list)
+class(summary_list[[1]])
+
+as.data.frame.table(summary_list[[1]])
+# Elements of list are class table, not data.frame
+# Merge with rbind.data.table
+xx <- data.table:::rbind.data.table(summary_list)
+class(xx)
+ls(xx)
+class(xx$n1)
+```
+
+2. Update tables of figure of all Fringillidae, add to Supplementary data
+3. update figure 5, especially points of source ages, identify which ones were used and which ones were excluded.
+4. Choose one figure to showcase results of cross validation analyses
+5. Add other cross validation figures to supplements
+6. Check that cross validation is run without chronograms from the same study, especially for study from Price etal. 2014, chronogram 2
+7. Address remaining comments
+8. Submit!!!
 
 
 
