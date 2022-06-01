@@ -396,16 +396,6 @@ dev.off()
 
 ```
 
-2. Update tables of figure of all Fringillidae, add to Supplementary data
-3. update figure 5, especially points of source ages, identify which ones were used and which ones were excluded.
-4. Choose one figure to showcase results of cross validation analyses
-5. Add other cross validation figures to supplements
-6. Check that cross validation is run without chronograms from the same study, especially for study from Price etal. 2014, chronogram 2
-7. Address remaining comments
-8. Submit!!!
-
-
-
 ### Plot matched calibrations from source chronograms.
 
 Choose a color scheme for the studies:

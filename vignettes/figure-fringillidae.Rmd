@@ -150,6 +150,8 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 
 ## Get calibrations
 
+### Uncongruified
+
 Get calibrations for the topology in `dsumm$phylo_median`
 
 First, get all calibrations per chronogram against themselves:
@@ -178,55 +180,22 @@ calib_summ <- datelife:::summary.matchedCalibrations(
 nrow(calib_summ$in_phy) # 1206
 ```
 
-### Table of matched calibrations
+#### Table of matched calibrations
 
 Make it pretty.
 
 ```{r}
-colnames(calib_summ$in_phy)
-# keep columns of interest:
-pretty_calibs <- calib_summ$in_phy[,c("taxonA", "taxonB", "MaxAge", "mrca_node_number", "reference")]
-pretty_calibs
-# Eliminate duplicated taxon pairs:
-## Find the duplicated pairs within studies:
-taxon_pairs_ref <- c()
-for (i in seq(nrow(pretty_calibs))) {
-  tax_pair_ref <- as.character(pretty_calibs[i, c("taxonA", "taxonB", "reference")])
-  tax_pair_ref <- tax_pair_ref[order(tax_pair_ref)]
-  tax_pair_ref <- paste(tax_pair_ref, collapse = "")
-  taxon_pairs_ref <- c(taxon_pairs_ref, tax_pair_ref)
-}
-## Eliminate duplicated rows:
-any(duplicated(taxon_pairs_ref))
+source("../R/make_pretty_tables.R")
+my_calibrations <- calib_summ$in_phy
+number_of_tips <- min(my_calibrations$mrca_node_number)-1
+my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
+head(my_calibrations$mrca_node_name)
 
-if (any(duplicated(taxon_pairs_ref))) {
-  pretty_calibs <- pretty_calibs[!duplicated(taxon_pairs_ref),]
-}
+pretty_calibs <- make_pretty_table(some_table = my_calibrations)
 
-# Reorder ROWS by node number, reference, age and taxon names
-pretty_calibs <- pretty_calibs[order(pretty_calibs$mrca_node_number, pretty_calibs$MaxAge, pretty_calibs$reference, pretty_calibs$taxonA, pretty_calibs$taxonB),]
-# Eliminate rownames
-rownames(pretty_calibs) <- NULL
-# Reorder COLUMNS
-pretty_calibs <- pretty_calibs[, c("mrca_node_number", "taxonA", "taxonB", "MaxAge", "reference")]
-# Modify column names to be informative
-colnames(pretty_calibs) <- c("Node Name", "taxon A", "taxon B", "Node Age", "Study chronogram")
-# Change node numbers by node names
-pretty_calibs$`Node Name` <- paste0("n", pretty_calibs$`Node Name`-6)
-
-# substitute underscore by space:
-pretty_calibs$`taxon A` <- sub("_", " ", pretty_calibs$`taxon A`)
-pretty_calibs$`taxon B` <- sub("_", " ", pretty_calibs$`taxon B`)
-
-# order taxa alphabetically by column
-for (i in seq(nrow(pretty_calibs))) {
-  original <- as.character(pretty_calibs[i, c("taxon A", "taxon B")])
-  reordered <- original[order(original)]
-  pretty_calibs[i, c("taxon A", "taxon B")] <- reordered
-}
-
-
+my_calibrations[35:36,]
 nrow(pretty_calibs)
+head(pretty_calibs)
 ```
 
 Print table as pdf.
@@ -236,12 +205,63 @@ Trick to print in multiple pages from https://stackoverflow.com/questions/159371
 ## set the theme to have italics in species names:
 number_of_rows <- nrow(pretty_calibs)
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
+```
 
 # Export PDF
-pdf(paste0(writing_dir, "/calibs_table.pdf"), width = 10)
+
+```{r}
+pdf("../tables/table-fringillidae-all.pdf", 
+    width = 12.5,
+    height = 336 )
 gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
+
+### Congruified
+
+Congruify source chronograms with a chosen tree topology:
+
+```{r}
+sc1 <- datelife::congruify_and_mrca.phylo(phy = phylo_median,
+                             source_chronogram = phylo_all[[1]],
+                             study = names(phylo_all)[1])
+class(sc1) <- "data.frame"
+sc1
+
+congruified_calibs <- congruify_and_mrca.multiPhylo(phy = phylo_median,
+                              source_chronograms = phylo_all)
+nrow(congruified_calibs)
+```
+
+```{r}
+# source("../R/make_pretty_tables.R")
+my_calibrations <- congruified_calibs
+number_of_tips <- min(congruified_calibs$mrca_node_number)-1
+my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
+head(my_calibrations)
+nrow(my_calibrations)
+some_table <- as.data.frame.data.frame(my_calibrations)
+class(some_table)
+pretty_calibs <- make_pretty_table(some_table = my_calibrations,
+                                   duplicated_criteria = c("taxonA", "taxonB", "study","MaxAge")
+)
+
+my_calibrations[35:36,]
+nrow(pretty_calibs)
+head(pretty_calibs)
+```
+
+Table of summary statistics of congruified ages. This will be Table supplementary table in paper, methods from https://statisticsglobe.com/summary-statistics-by-group-in-r
+
+```{r}
+colnames(pretty_calibs)
+only_calibs <- pretty_calibs[,c("Node Name", "Node Age")]
+colnames(only_calibs) <- c("node", "age")
+# only_calibs$`Node Name` <- factor(only_calibs$`Node Name`)
+class(only_calibs$`node`)
+summary(only_calibs)
+```
+
 
 ### Plot matched calibrations from source chronograms.
 
