@@ -191,7 +191,8 @@ number_of_tips <- min(my_calibrations$mrca_node_number)-1
 my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
 head(my_calibrations$mrca_node_name)
 
-pretty_calibs <- make_pretty_table(some_table = my_calibrations)
+pretty_calibs <- make_pretty_table(some_table = my_calibrations,
+                                   order_rows = TRUE)
 
 my_calibrations[35:36,]
 nrow(pretty_calibs)
@@ -232,7 +233,13 @@ congruified_calibs <- congruify_and_mrca.multiPhylo(phy = phylo_median,
                               source_chronograms = phylo_all)
 nrow(congruified_calibs)
 ```
+Save congruified calibs as csv
 
+```{r}
+write.csv(congruified_calibs, paste0("../tables/table-fringillidae-all-congruified.csv"))
+```
+
+Make calibrations table pretty for writing as pdf and summairzing:
 ```{r}
 # source("../R/make_pretty_tables.R")
 my_calibrations <- congruified_calibs
@@ -240,29 +247,101 @@ number_of_tips <- min(congruified_calibs$mrca_node_number)-1
 my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
 head(my_calibrations)
 nrow(my_calibrations)
-some_table <- as.data.frame.data.frame(my_calibrations)
-class(some_table)
-pretty_calibs <- make_pretty_table(some_table = my_calibrations,
-                                   duplicated_criteria = c("taxonA", "taxonB", "study","MaxAge")
+class(my_calibrations)
+pretty_calibrations <- make_pretty_table(some_table = my_calibrations,
+                                   duplicated_criteria = c("taxonA", 
+                                                           "taxonB", 
+                                                           "study",
+                                                           "MaxAge"),
+                                       cols2keep_order <- c("mrca_node_name",
+                                                            "taxonA", 
+                                                            "taxonB", 
+                                                            "MaxAge",
+                                                            "study")
 )
+# Reorder ROWS by node number, reference, age and taxon names
+colnames(pretty_calibrations)
+node_numbers <- as.numeric(gsub("n", "", pretty_calibrations$`Node Name`))
+row_order <- order(node_numbers, 
+                   pretty_calibrations$`Node Age`,
+                   pretty_calibrations$`Study reference`,
+                   pretty_calibrations$`taxon A`,
+                   pretty_calibrations$`taxon B`)
+pretty_calibrations <- pretty_calibrations[row_order,]
 
-my_calibrations[35:36,]
-nrow(pretty_calibs)
-head(pretty_calibs)
+head(pretty_calibrations)
+pretty_calibrations$`Node Name` == "n1"
 ```
 
-Table of summary statistics of congruified ages. This will be Table supplementary table in paper, methods from https://statisticsglobe.com/summary-statistics-by-group-in-r
+Writing congruified calibrations as PDF??
+
+
+Table of summary statistics of congruified ages:
 
 ```{r}
-colnames(pretty_calibs)
-only_calibs <- pretty_calibs[,c("Node Name", "Node Age")]
+colnames(pretty_calibrations)
+only_calibs <- pretty_calibrations[,c("Node Name", "Node Age")]
 colnames(only_calibs) <- c("node", "age")
-# only_calibs$`Node Name` <- factor(only_calibs$`Node Name`)
 class(only_calibs$`node`)
 summary(only_calibs)
 ```
 
+Creating summary table with a loop:
 
+```{r}
+min_ages <- q1 <- median_ages <- mean_ages <- q3 <- max_ages <- sd_ages <- var_ages <- c()
+for (node in unique(only_calibs$node)) {
+  rowsies <- only_calibs$node %in% node
+  min_ages <- c(min_ages, min(only_calibs$age[rowsies]))
+  q1 <- c(q1, quantile(only_calibs$age[rowsies], 0.25))
+  median_ages <- c(median_ages, median(only_calibs$age[rowsies]))
+  mean_ages <- c(mean_ages, mean(only_calibs$age[rowsies]))
+  q3 <- c(q3, quantile(only_calibs$age[rowsies], 0.75))
+  max_ages <- c(max_ages, max(only_calibs$age[rowsies]))
+  sd_ages <- c(sd_ages, sd(only_calibs$age[rowsies]))
+  var_ages <- c(var_ages, var(only_calibs$age[rowsies]))
+}
+summary_table <- data.frame(unique(only_calibs$node),
+                            min_ages,
+                            q1,
+                            median_ages,
+                            mean_ages,
+                            q3,
+                            max_ages,
+                            var_ages,
+                            sd_ages)
+colnames(summary_table) <- c("Node Name",
+                             "Min Age",
+                             "Q1",
+                             "Median Age",
+                             "Mean Age",
+                             "Q3",
+                             "Max Age",
+                             "Variance",
+                             "SD")
+```
+
+Save summary table as csv
+```{r}
+write.csv(summary_table, paste0("../tables/table-fringillidae-all-summary.csv"))
+```
+
+```{r}
+# Export PDF and PNG
+png(paste0("../tables/table-fringillidae-all-summary.png"), 
+    width = 10, 
+    height = 55, 
+    units = "in",
+    res = 300)
+# pdf(paste0("../tables/table-fringillidae-small-example.pdf"), 
+#      width = 10, 
+#      height = 8)
+gridExtra::grid.table(summary_table, 
+                      theme = tt1,
+                      rows = NULL) # I do not want row numbers
+dev.off()
+
+```
 ### Plot matched calibrations from source chronograms.
 
 Choose a color scheme for the studies:
