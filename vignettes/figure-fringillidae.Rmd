@@ -240,7 +240,18 @@ attributes(congruified_calibs)
 attributes(attributes(congruified_calibs)$phy)
 class(congruified_calibs)
 my_phy <- attributes(congruified_calibs)$phy
+
+min(my_phy$node.label)
+
 my_phy$calibration_distribution
+# TODO: figure out from where this calibration_distribution comes from
+```
+Use congruified calibrations with bladj:
+```{r}
+inherits(congruified_calibs, "congruifiedCalibrations")
+phylo_median_congruified <- datelife::use_calibrations_bladj(calibrations = congruified_calibs)
+
+attributes(phylo_median_congruified)
 ```
 
 Make calibrations table pretty for writing as csv, pdf and summarizing:
@@ -303,41 +314,14 @@ summary(only_calibs)
 Creating summary table with a loop:
 
 ```{r}
-min_ages <- q1 <- median_ages <- mean_ages <- q3 <- max_ages <- sd_ages <- var_ages <- c()
-for (node in unique(only_calibs$node)) {
-  rowsies <- only_calibs$node %in% node
-  min_ages <- c(min_ages, min(only_calibs$age[rowsies]))
-  q1 <- c(q1, quantile(only_calibs$age[rowsies], 0.25))
-  median_ages <- c(median_ages, median(only_calibs$age[rowsies]))
-  mean_ages <- c(mean_ages, mean(only_calibs$age[rowsies]))
-  q3 <- c(q3, quantile(only_calibs$age[rowsies], 0.75))
-  max_ages <- c(max_ages, max(only_calibs$age[rowsies]))
-  sd_ages <- c(sd_ages, sd(only_calibs$age[rowsies]))
-  var_ages <- c(var_ages, var(only_calibs$age[rowsies]))
-}
-summary_table <- data.frame(unique(only_calibs$node),
-                            min_ages,
-                            q1,
-                            median_ages,
-                            mean_ages,
-                            q3,
-                            max_ages,
-                            var_ages,
-                            sd_ages)
-colnames(summary_table) <- c("Node Name",
-                             "Min Age",
-                             "Q1",
-                             "Median Age",
-                             "Mean Age",
-                             "Q3",
-                             "Max Age",
-                             "Variance",
-                             "SD")
+devtools::load_all("../../datelife")
+
+summary_ages <- summarize_congruifiedCalibrations(congruified_calibs)
 ```
 
 Save summary table as csv
 ```{r}
-write.csv(summary_table, paste0("../tables/table-fringillidae-all-summary.csv"))
+write.csv(summary_ages, paste0("../tables/table-fringillidae-all-summary.csv"))
 ```
 
 ```{r}
@@ -350,7 +334,7 @@ png(paste0("../tables/table-fringillidae-all-summary.png"),
 # pdf(paste0("../tables/table-fringillidae-small-example.pdf"), 
 #      width = 10, 
 #      height = 8)
-gridExtra::grid.table(summary_table, 
+gridExtra::grid.table(summary_ages, 
                       theme = tt1,
                       rows = NULL) # I do not want row numbers
 dev.off()
@@ -364,8 +348,6 @@ Choose a color scheme for the studies:
 ```{r}
 # Get references in matched calibrations:
 studies <- as.character(unique(calib_summ$in_phy$reference))
-
-
 # order references alphabetically:
 studies <- studies[order(studies)]
 studies
@@ -376,14 +358,9 @@ Visualize plotting colors:
 ```{r}
 #create a vector of colors with study names:
 number_of_colors <- length(studies) * 10
-
-
 xx <- viridis::turbo(n = number_of_colors)
-
-
 plot(-1:number_of_colors + 1, -1:number_of_colors + 1, type = "n")
 text(1:number_of_colors, 1:number_of_colors, xx, col = xx)
-
 # xx <- viridis::turbo(n = 20)
 # plot(-2:length(xx)+1, -2:length(xx)+1, type = "n")
 # text(1:(length(xx)), 1:length(xx), paste(1:length(xx),"=",xx), col = xx)
@@ -393,16 +370,7 @@ text(1:number_of_colors, 1:number_of_colors, xx, col = xx)
 Choose plotting colors:
 
 ```{r}
-#create a vector of colors with study names:
-# color_studies <- xx[c(12,
-#                       3,4,
-#                       15,
-#                       18,17,
-#                       20,
-#                       8,9)]
-# 
-
-length(xx) / length(unique(names(phylo_all)))
+length(xx) / length(unique(names(phylo_all))) #10
 color_studies <- c("blue", 
                    xx[c(25, 26)],
                    xx[1],
@@ -421,7 +389,7 @@ frin_color_studies <- color_studies
 usethis::use_data(frin_color_studies, overwrite = TRUE)
 ```
 
-Testing `datelife_use` function:
+<!--Testing `datelife_use` function:
 
 ```{r}
 devtools::load_all("../../datelife")
@@ -438,44 +406,24 @@ ls(calibs)
 head(calibs$matched_calibrations$mrca_node_name)
 
 ```
+-->
 
-
-Now, we can plot:
+Now, we can plot against the dated chronogram, using all calibrations ("figure-fringillidae/node_ages_matched.svg") and using only congruified calibrations ("figure-fringillidae/node_ages_matched-congruified.svg"):
 
 ```{r}
-svg(filename = paste0(writing_dir, "/node_ages_matched.svg"),
+my_chronogram <- phylo_median
+my_filename <- paste0(writing_dir, "/node_ages_matched.svg")
+# my_chronogram <- phylo_median_congruified
+# my_filename <- paste0(writing_dir, "/node_ages_matched-congruified.svg")
+svg(filename = my_filename,
     height = 30,
     width =  15)
-datelifeplot::plot_node_ages(phylo_median,
-               title = "Median Summary Chronogram",
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               calibration_summary = calib_summ,
-               pch = 19,
-               color_pch = color_studies,
-               cex_pch = 1,
-               lwd_bars = 10,
-               cex_legend = 0.7,
-               x_legend = 0 ,
-               y_legend = 270,
-               mai1 = 1, 
-               mai2 = 0,
-               mai3 = 0.5,
-               mai4 = 3.73,
-               omi1 = 2,
-               omi2 = 1,
-               omi3 = 0.5,
-               omi4 = 0,
-               edge.width = 2,
-               cex_tiplabels = 0.5,
-               cex_axislabel = 1,
-               cex_axis = 1,
-               cex_title = 2,
-               pos_title = -1,
-               pos_axis = 2
-               )
+source("../R/plot_node_ages_custom.R")
 dev.off()
 ```
+
+
+
 ## Get pairwise median age points
 
 ```{r}
