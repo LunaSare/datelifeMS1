@@ -224,7 +224,7 @@ run_congruification_self <- function(phy,
 
 ```
 Renamed to `congruify_and_mrca`.
-Used to get a table of congruified calibrations
+It is used to get a table of congruified ages that can be used as calibrations
 
 ```{r}
 # Cross congruify source chronograms and target tree

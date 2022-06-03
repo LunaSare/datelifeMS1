@@ -40,18 +40,6 @@ make_pretty_table <- function(some_table,
                        pretty_calibs$reference,
                        pretty_calibs$taxonA,
                        pretty_calibs$taxonB)
-    pretty_calibs[row_order,]
-  }
-  # Reorder ROWS by node number, reference, age and taxon names
-  if (missing(cols2order_rows)) {
-    cols2order_rows <- c("mrca_node_name",
-                         "MaxAge",
-                         "study",
-                         "taxonA",
-                         "taxonB")
-  }
-  for (column in cols2order_rows) {
-    row_order <- order(pretty_calibs[,column])
     pretty_calibs <- pretty_calibs[row_order,]
   }
 

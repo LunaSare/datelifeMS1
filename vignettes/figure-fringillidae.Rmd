@@ -223,23 +223,27 @@ dev.off()
 Congruify source chronograms with a chosen tree topology:
 
 ```{r}
-sc1 <- datelife::congruify_and_mrca.phylo(phy = phylo_median,
+# devtools::load_all("../../datelife")
+sc1 <- datelife::congruify_and_mrca_phylo(phy = phylo_median,
                              source_chronogram = phylo_all[[1]],
                              study = names(phylo_all)[1])
-class(sc1) <- "data.frame"
+class(sc1) 
+attributes(sc1)
+# <- "data.frame"
+colnames(sc1)
 sc1
 
-congruified_calibs <- congruify_and_mrca.multiPhylo(phy = phylo_median,
+congruified_calibs <- congruify_and_mrca_multiPhylo(phy = phylo_median,
                               source_chronograms = phylo_all)
 nrow(congruified_calibs)
+attributes(congruified_calibs)
+attributes(attributes(congruified_calibs)$phy)
+class(congruified_calibs)
+my_phy <- attributes(congruified_calibs)$phy
+my_phy$calibration_distribution
 ```
-Save congruified calibs as csv
 
-```{r}
-write.csv(congruified_calibs, paste0("../tables/table-fringillidae-all-congruified.csv"))
-```
-
-Make calibrations table pretty for writing as pdf and summairzing:
+Make calibrations table pretty for writing as csv, pdf and summarizing:
 ```{r}
 # source("../R/make_pretty_tables.R")
 my_calibrations <- congruified_calibs
@@ -272,9 +276,19 @@ pretty_calibrations <- pretty_calibrations[row_order,]
 head(pretty_calibrations)
 pretty_calibrations$`Node Name` == "n1"
 ```
+Save congruified calibs as csv
 
+```{r}
+write.csv(pretty_calibrations, paste0("../tables/table-fringillidae-all-congruified.csv"))
+```
+ 
 Writing congruified calibrations as PDF??
 
+```{r}
+## set the theme to have italics in species names:
+number_of_rows <- nrow(pretty_calibrations)
+tt2 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
+```
 
 Table of summary statistics of congruified ages:
 
@@ -342,6 +356,7 @@ gridExtra::grid.table(summary_table,
 dev.off()
 
 ```
+
 ### Plot matched calibrations from source chronograms.
 
 Choose a color scheme for the studies:
@@ -404,6 +419,24 @@ color_studies <- c("blue",
 names(color_studies) <- studies
 frin_color_studies <- color_studies
 usethis::use_data(frin_color_studies, overwrite = TRUE)
+```
+
+Testing `datelife_use` function:
+
+```{r}
+devtools::load_all("../../datelife")
+fringillidae_v0.6.2$dquery$phy <- phylo_median
+congruified_calibs <- datelife::datelife_use_datelifequery(datelife_query = fringillidae_v0.6.2$dquery)
+
+test <- use_all_calibrations(phy = phylo_median,
+                             calibrations = congruified_calibs,
+                             dating_method = "bladj")
+head(test$mrca_node_name)
+calibs <- match_all_calibrations(phy = phylo_median, calibrations = test)
+ls(calibs)
+
+head(calibs$matched_calibrations$mrca_node_name)
+
 ```
 
 
