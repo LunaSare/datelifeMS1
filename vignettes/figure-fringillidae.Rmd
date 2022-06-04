@@ -226,7 +226,7 @@ Congruify source chronograms with a chosen tree topology:
 # devtools::load_all("../../datelife")
 sc1 <- datelife::congruify_and_mrca_phylo(phy = phylo_median,
                              source_chronogram = phylo_all[[1]],
-                             study = names(phylo_all)[1])
+                             reference = names(phylo_all)[1])
 class(sc1) 
 attributes(sc1)
 # <- "data.frame"
@@ -266,13 +266,13 @@ class(my_calibrations)
 pretty_calibrations <- make_pretty_table(some_table = my_calibrations,
                                    duplicated_criteria = c("taxonA", 
                                                            "taxonB", 
-                                                           "study",
+                                                           "reference",
                                                            "MaxAge"),
                                        cols2keep_order <- c("mrca_node_name",
                                                             "taxonA", 
                                                             "taxonB", 
                                                             "MaxAge",
-                                                            "study")
+                                                            "reference")
 )
 # Reorder ROWS by node number, reference, age and taxon names
 colnames(pretty_calibrations)
@@ -292,7 +292,8 @@ Save congruified calibs as csv
 ```{r}
 write.csv(pretty_calibrations, paste0("../tables/table-fringillidae-all-congruified.csv"))
 ```
- 
+
+<!-- 
 Writing congruified calibrations as PDF??
 
 ```{r}
@@ -300,6 +301,7 @@ Writing congruified calibrations as PDF??
 number_of_rows <- nrow(pretty_calibrations)
 tt2 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
 ```
+-->
 
 Table of summary statistics of congruified ages:
 
@@ -311,11 +313,9 @@ class(only_calibs$`node`)
 summary(only_calibs)
 ```
 
-Creating summary table with a loop:
+Creating summary table with a function:
 
 ```{r}
-devtools::load_all("../../datelife")
-
 summary_ages <- summarize_congruifiedCalibrations(congruified_calibs)
 ```
 
@@ -335,7 +335,6 @@ png(paste0("../tables/table-fringillidae-all-summary.png"),
 #      width = 10, 
 #      height = 8)
 gridExtra::grid.table(summary_ages, 
-                      theme = tt1,
                       rows = NULL) # I do not want row numbers
 dev.off()
 
@@ -386,7 +385,7 @@ color_studies <- c("blue",
                    xx[190])
 names(color_studies) <- studies
 frin_color_studies <- color_studies
-usethis::use_data(frin_color_studies, overwrite = TRUE)
+# usethis::use_data(frin_color_studies, overwrite = TRUE)
 ```
 
 <!--Testing `datelife_use` function:
@@ -411,10 +410,10 @@ head(calibs$matched_calibrations$mrca_node_name)
 Now, we can plot against the dated chronogram, using all calibrations ("figure-fringillidae/node_ages_matched.svg") and using only congruified calibrations ("figure-fringillidae/node_ages_matched-congruified.svg"):
 
 ```{r}
-my_chronogram <- phylo_median
-my_filename <- paste0(writing_dir, "/node_ages_matched.svg")
-# my_chronogram <- phylo_median_congruified
-# my_filename <- paste0(writing_dir, "/node_ages_matched-congruified.svg")
+# my_chronogram <- phylo_median
+# my_filename <- paste0(writing_dir, "/node_ages_matched.svg")
+my_chronogram <- phylo_median_congruified
+my_filename <- paste0(writing_dir, "/node_ages_matched-congruified.svg")
 svg(filename = my_filename,
     height = 30,
     width =  15)
@@ -422,6 +421,63 @@ source("../R/plot_node_ages_custom.R")
 dev.off()
 ```
 
+Something close to "figure-fringillidae/node_ages_matched-congruified.svg" will be main figure for example of all fringillidae.
+
+### Plotting source chronogram ages AND median ages from congruification
+
+Set colors and data:
+
+```{r}
+colnames(mm_summ$in_phy)
+colnames(summary_ages)
+summ_calibs <- vector(mode = "list")
+summ_calibs$in_phy <- summary_ages[c(1,2,4,7)]
+head(summ_calibs$in_phy)
+color_median <- "purple"
+colnames(summ_calibs$in_phy) <- c("mrca_node_name",
+                            "MinAge",
+                            "nodeAge",
+                            "MaxAge")
+summ_calibs$in_phy$reference <- rep("Median of node ages",
+                                    nrow(summary_ages))
+summ_calibs$in_phy$taxonA <- rep("taxonA", nrow(summary_ages))
+summ_calibs$in_phy$taxonB <- rep("taxonB", nrow(summary_ages))
+summ_calibs$in_phy$MRCA <- summ_calibs$in_phy$mrca_node_name
+summ_calibs$in_phy$mrca_node_number <- as.numeric(gsub("n", 
+                                                  "",
+                                                  summ_calibs$in_phy$mrca_node_name))
+names(color_median) <- summ_calibs$in_phy$reference[1]
+```
+
+```{r}
+cc_calibs <- vector(mode = "list")
+cc_calibs$in_phy <- congruified_calibs
+cc_calibs$in_phy$nodeAge <- cc_calibs$in_phy$MaxAge
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
+point_type <- list(a1 = "•", a2 = "/")
+
+leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
+leg_color<- list(a1 = color_studies, a2 = color_median)
+leg_pch <- list(a1 = 19, a2 = "/")
+leg_text <- lapply(leg_color, names)
+```
+
+Plot:
+TODO: 
+- show only congruified ages - DONE
+- use asterisks to show median ages that were not used as calibrations.
+- use different symbols for different studies
+
+```{r}
+#  devtools::load_all("../../datelifeplot")
+svg(filename = paste0(writing_dir, "/median_and_calibration_ages-congruified.svg"),
+    height = 30,   
+    width = 15)
+source("../R/plot_node_ages2_custom.R")
+dev.off()
+```        
 
 
 ## Get pairwise median age points
@@ -459,7 +515,7 @@ Set colors and data:
 
 ```{r}
 color_median <- "purple"
-mm_summ$in_phy$reference <- rep("Pairwise median of node ages", length(mm_summ$in_phy$reference))
+mm_summ$in_phy$reference <- rep("Median of node ages", length(mm_summ$in_phy$reference))
 names(color_median) <- mm_summ$in_phy$reference[1]
 
 point_colors <- list(a1 = color_studies, a2 = color_median)
