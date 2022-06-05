@@ -245,13 +245,32 @@ min(my_phy$node.label)
 
 my_phy$calibration_distribution
 # TODO: figure out from where this calibration_distribution comes from
+
+congruified_calibs
 ```
 Use congruified calibrations with bladj:
 ```{r}
+devtools::load_all("../../datelife")
 inherits(congruified_calibs, "congruifiedCalibrations")
 phylo_median_congruified <- datelife::use_calibrations_bladj(calibrations = congruified_calibs)
 
 attributes(phylo_median_congruified)
+attributes(phylo_median_congruified)$used_calibrations
+
+calibration_distribution_congruified <- lapply(unique(congruified_calibs$mrca_node_name),
+                                               function(i) {
+                                                 ages <- congruified_calibs$MinAge[congruified_calibs$mrca_node_name == i]
+                                               })
+names(calibration_distribution_congruified) <- unique(congruified_calibs$mrca_node_name)
+calibration_distribution_congruified
+```
+
+
+TODO: verify that `check_conflicting_calibrations` is working good adn being used where needed
+
+```{r, eval = FALSE}
+datelife:::check_conflicting_calibrations(phy = phylo_median_congruified,
+                                            calibration_distribution = calibration_distribution_congruified)
 ```
 
 Make calibrations table pretty for writing as csv, pdf and summarizing:
@@ -303,20 +322,11 @@ tt2 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain"
 ```
 -->
 
-Table of summary statistics of congruified ages:
-
-```{r}
-colnames(pretty_calibrations)
-only_calibs <- pretty_calibrations[,c("Node Name", "Node Age")]
-colnames(only_calibs) <- c("node", "age")
-class(only_calibs$`node`)
-summary(only_calibs)
-```
-
-Creating summary table with a function:
+Table of summary statistics of congruified ages. Creating summary table with a function:
 
 ```{r}
 summary_ages <- summarize_congruifiedCalibrations(congruified_calibs)
+summary_ages
 ```
 
 Save summary table as csv
@@ -425,7 +435,24 @@ Something close to "figure-fringillidae/node_ages_matched-congruified.svg" will 
 
 ### Plotting source chronogram ages AND median ages from congruification
 
-Set colors and data:
+Set summary calibrations data. First, get median ages that were not used as calibrations by bladj:
+
+```{r}
+used_calibs <- attributes(phylo_median_congruified)$used_calibrations
+
+has_age_data <- phylo_median_congruified$node.label %in% names(used_calibs)
+nodes_without_age <- phylo_median_congruified$node.label[!has_age_data]
+
+data.frame(median = summary_ages$`Median Age`, 
+           times = ape::branching.times(phylo_median_congruified)[has_age_data])
+
+median_equals_branching_time <- round(summary_ages$`Median Age`, digits = 4) == round(ape::branching.times(phylo_median_congruified)[has_age_data], digits = 4)
+node_ages_unused <- summary_ages$`Node Name`[!median_equals_branching_time]
+length(node_ages_unused)
+node_ages_unused
+```
+
+Assemble the summary ages data set:
 
 ```{r}
 colnames(mm_summ$in_phy)
@@ -433,49 +460,68 @@ colnames(summary_ages)
 summ_calibs <- vector(mode = "list")
 summ_calibs$in_phy <- summary_ages[c(1,2,4,7)]
 head(summ_calibs$in_phy)
-color_median <- "purple"
 colnames(summ_calibs$in_phy) <- c("mrca_node_name",
                             "MinAge",
                             "nodeAge",
                             "MaxAge")
-summ_calibs$in_phy$reference <- rep("Median of node ages",
+summ_calibs$in_phy$reference <- rep("Used as calibrations",
                                     nrow(summary_ages))
+
+summ_calibs$in_phy$reference[!median_equals_branching_time] <- "Not used"
+# check that nodes actually correspond to the ones not used by bladj:
+all(summ_calibs$in_phy$mrca_node_name[!median_equals_branching_time] == node_ages_unused) #TRUE
+
 summ_calibs$in_phy$taxonA <- rep("taxonA", nrow(summary_ages))
 summ_calibs$in_phy$taxonB <- rep("taxonB", nrow(summary_ages))
 summ_calibs$in_phy$MRCA <- summ_calibs$in_phy$mrca_node_name
 summ_calibs$in_phy$mrca_node_number <- as.numeric(gsub("n", 
                                                   "",
                                                   summ_calibs$in_phy$mrca_node_name))
-names(color_median) <- summ_calibs$in_phy$reference[1]
 ```
 
-```{r}
-cc_calibs <- vector(mode = "list")
-cc_calibs$in_phy <- congruified_calibs
-cc_calibs$in_phy$nodeAge <- cc_calibs$in_phy$MaxAge
-point_colors <- list(a1 = color_studies, a2 = color_median)
-all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
-point_type <- list(a1 = "•", a2 = "/")
+Assemble vector of summary ages colors:
 
-leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
-leg_box <- c(TRUE, TRUE)
-leg_color<- list(a1 = color_studies, a2 = color_median)
-leg_pch <- list(a1 = 19, a2 = "/")
-leg_text <- lapply(leg_color, names)
+```{r}
+color_median <- rep("purple", 2)
+names(color_median) <- summ_calibs$in_phy$reference[c(1,5)]
 ```
 
 Plot:
 TODO: 
 - show only congruified ages - DONE
-- use asterisks to show median ages that were not used as calibrations.
+- use asterisks to show median ages that were not used as calibrations - DONE
 - use different symbols for different studies
+
+Assemble the all congruified calibrations data set:
+
+```{r}
+cc_calibs <- vector(mode = "list")
+cc_calibs$in_phy <- congruified_calibs
+cc_calibs$in_phy$nodeAge <- cc_calibs$in_phy$MaxAge
+```
+
+Assemble arguments for plotting:
+```{r}
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
+points_median <- stats::setNames(c("/", "*"), names(color_median))
+point_type <- list(a1 = "•", a2 = points_median)
+
+leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
+leg_color<- list(a1 = color_studies, a2 = color_median)
+leg_pch <- list(a1 = 19, a2 = points_median)
+leg_text <- lapply(leg_color, names)
+```
+
 
 ```{r}
 #  devtools::load_all("../../datelifeplot")
-svg(filename = paste0(writing_dir, "/median_and_calibration_ages-congruified.svg"),
+svg(file = paste0(writing_dir, "/median_and_calibration_ages-congruified.svg"),
     height = 30,   
     width = 15)
 source("../R/plot_node_ages2_custom.R")
+ape::nodelabels(cex = 0.5, adj = 1)
 dev.off()
 ```        
 
