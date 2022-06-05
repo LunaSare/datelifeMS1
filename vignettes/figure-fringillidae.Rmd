@@ -521,7 +521,6 @@ svg(file = paste0(writing_dir, "/median_and_calibration_ages-congruified.svg"),
     height = 30,   
     width = 15)
 source("../R/plot_node_ages2_custom.R")
-ape::nodelabels(cex = 0.5, adj = 1)
 dev.off()
 ```        
 
