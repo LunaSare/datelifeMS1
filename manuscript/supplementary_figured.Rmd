@@ -1,0 +1,42 @@
+---
+title             : "Supplementary Figures \\linebreak DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life"
+shorttitle        : "DateLife Supplementary Figures"
+
+author:
+  - name          : "Luna L. Sánchez Reyes"
+    affiliation   : "1,2"
+    corresponding : yes    # Define only one corresponding author
+    address       : ""
+    email         : "sanchez.reyes.luna@gmail.com"
+  - name          : "Emily Jane McTavish"
+    affiliation   : "1"
+  - name          : "Brian O'Meara"
+    affiliation   : "2"
+
+affiliation:
+  - id            : "1"
+    institution   : "Science and Engineering Building 1, School of Natural Sciences, University of California, Merced"
+  - id            : "2"
+    institution   : "Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville"
+
+floatsintext      : no
+figurelist        : NO
+tablelist         : no
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            :
+  papaja::apa6_pdf:
+    includes      :
+      in_header: "preamble.tex"
+      after_body  : ["figures-supplementary.tex"]
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+r_refs("paper_references.bib")
+```

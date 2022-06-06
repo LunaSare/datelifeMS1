@@ -173,8 +173,7 @@ The processed input taxon names are saved as an R object of a newly defined clas
 ## Searching a chronogram database
 
 At the time of writing of this manuscript 
-,
-<!--(`r format(Sys.time(), "%b %d, %Y")`), -->
+(`r format(Sys.time(), "%b %d, %Y")`),
 DateLife's chronogram database latest version consist of `r length(opentree_chronograms$trees)` chronograms published in `r length(unique(opentree_chronograms$studies))` different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata [@mctavish2015phylesystem], which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the `datelife` R package.
 
 A unique feature of OpenTree's Phylesystem is that the community can add new published, state-of-the-art chronograms any time through their curator application (https://tree.opentreeoflife.org/curator). As chronograms are added to Phylesystem, they are incorporated into an updated `datelife`'s database that is assigned a new version number, followed by a package release on CRAN. `datelife`'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months. <!--BCO: Nicely done-->
