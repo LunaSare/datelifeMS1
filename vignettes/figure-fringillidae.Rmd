@@ -483,6 +483,7 @@ Assemble vector of summary ages colors:
 
 ```{r}
 color_median <- rep("purple", 2)
+# color_median <- rep("#808080", 2) # gray median points
 names(color_median) <- summ_calibs$in_phy$reference[c(1,5)]
 ```
 
@@ -505,21 +506,29 @@ Assemble arguments for plotting:
 point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
 points_median <- stats::setNames(c("/", "*"), names(color_median))
-point_type <- list(a1 = "•", a2 = points_median)
-
-leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
+point_type <- list(a1 =  "•", a2 = points_median)
+cex_median <- stats::setNames(c(2, 3), names(color_median))
+point_cex <- list(a1 =  2  , a2 = cex_median)
+  leg_title <- c("Taxon pair node ages from studies", "Median of node ages")
 leg_box <- c(TRUE, TRUE)
 leg_color<- list(a1 = color_studies, a2 = color_median)
 leg_pch <- list(a1 = 19, a2 = points_median)
 leg_text <- lapply(leg_color, names)
+# leg_pch$a2 <- c(leg_pch$a2, "•")
+# names(leg_pch$a2)[3] <- "No age data"
+# leg_text$a2 <- c(leg_text$a2, "No age data available")
+leg_cex = c(1.2, 1.2)
+leg_pt_cex <- list(a1 = 1.2, a2 = c(1.5, 3))
 ```
 
 
 ```{r}
 #  devtools::load_all("../../datelifeplot")
-svg(file = paste0(writing_dir, "/median_and_calibration_ages-congruified.svg"),
+png(filename = paste0(writing_dir, "/median_and_calibration_ages-congruified.png"),
     height = 30,   
-    width = 15)
+    width = 20,
+    units = "in",
+    res = 300)
 source("../R/plot_node_ages2_custom.R")
 dev.off()
 ```        
