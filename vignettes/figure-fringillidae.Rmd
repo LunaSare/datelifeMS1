@@ -266,7 +266,7 @@ calibration_distribution_congruified
 ```
 
 
-TODO: verify that `check_conflicting_calibrations` is working good adn being used where needed
+TODO: verify that `check_conflicting_calibrations` is working good and being used where needed
 
 ```{r, eval = FALSE}
 datelife:::check_conflicting_calibrations(phy = phylo_median_congruified,
@@ -489,8 +489,6 @@ names(color_median) <- summ_calibs$in_phy$reference[c(1,5)]
 
 Plot:
 TODO: 
-- show only congruified ages - DONE
-- use asterisks to show median ages that were not used as calibrations - DONE
 - use different symbols for different studies
 
 Assemble the all congruified calibrations data set:

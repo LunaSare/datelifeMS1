@@ -162,7 +162,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4845}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4890}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -371,7 +371,7 @@ the pine bunting -- \emph{Emberiza leucocephalos} and
 the yellow-throated bunting -- \emph{Emberiza elegans};
 and one species of tanager, the vegetarian finch -- \emph{Platyspiza crassirostris}.
 
-Processing input names found that \emph{Emberiza elegans} is synonym for \emph{Schoeniclus elegans} in the default reference taxonomy {[}Open Tree of Life Taxonomy v3.3, June 1, 2021{]}. For a detailed discussion on the state of the synonym refer to Avibase (Avibase, 2022; Lepage, 2004; Lepage, Vaidya, \& Guralnick, 2014).
+Processing input names found that \emph{Emberiza elegans} is synonym for \emph{Schoeniclus elegans} in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase (Avibase, 2022; Lepage, 2004; Lepage, Vaidya, \& Guralnick, 2014).
 Discovering this synonym allowed assigning five age data points for the parent node of \emph{Emberiza elegans}, shown as \emph{Schoeniclus elegans} in figure \ref{fig:figure2}A, which would not have had any data otherwise.
 
 \emph{\textbf{Searching the database.-}}
@@ -396,14 +396,14 @@ This taxon-constrained approach implies that the final results of a full DateLif
 \emph{\textbf{Searching the database.-}}
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species.
 The DateLife search identified 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Barker et al., 2013, 2015; Burns et al., 2014; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hedges et al., 2015; Hooper \& Price, 2017; Jetz et al., 2012; Price et al., 2014).
-Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices.
+Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1206 different age data points available for species within the Fringillidae (supplementray table 1).
 
 \emph{\textbf{Summarizing search results.-}}
-The final step is to summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM.
+The final step is to congruify and summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM.
 As explained in the ``Description'' section, a tree topology to summarize age data upon is required.
-By default, DateLife uses the portion of OpenTree synthetic phylogeny that contains the species provided as search query as summarizing topology.
+By default, DateLife uses as summarizing topology the portion of OpenTree synthetic phylogeny that contains the species provided as search query.
 According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
-Age data from source chronograms is summarised into a single patristic distance matrix and then the available node ages are used as fixed node calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
+Age data from source chronograms was congruified, decreasing to 818 different age data points available (supplementray table 2) and then age summary statistics per congruified node are obtained and used as fixed secondary calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
 
 \hypertarget{cross-validation-test}{%
@@ -434,13 +434,13 @@ While most chronograms in DateLife's database are constructed using primary cali
 
 Graur and Martin (2004) cautioned on the increased error and uncertainty in estimated ages when using secondary calibrations in dating analyses.
 Schenk (2016) showed that, in simulations, divergence times inferred using secondary calibrations are significantly younger than those inferred with primary calibrations, when obtained with Bayesian inference methods, and when priors are implemented in similar ways in both analyses.
-Accordingly, the scientific community seems to have more confidence in chronograms obtained from a single analysis, using fossil data as primary sources of calibrations (Schenk, 2016), and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data used in the analysis reflect a coherent evolutionary history (Sauquet, 2013), as for example done by (Antonelli et al., 2017).
+Accordingly, the scientific community seems to have more confidence in chronograms obtained from a single analysis, using fossil data as primary sources of calibrations (Schenk, 2016), and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data reflect a coherent evolutionary history (Sauquet, 2013), as for example done by Antonelli et al. (2017).
 There have been attempts to create fossil calibration databases (Ksepka et al., 2015), though these still have room to grow.
 
-\textcolor{red}{LLSR: What does our cross validation analysis show in relation to diffs between primary and secondary calibrations?}
-
 It seems that using several (as opposed to just a few) secondary calibrations can provide sufficient information to alleviate or even neutralize potential biases (Sauquet, 2013).
-Certainly, further studies are required to fully understand the effect of secondary calibrations on outputs from different tree dating methods, and on downstream analyses. It is possible that secondary calibrations can be safely used with dating methods that do not require setting priors, such as penalized likelihood (Michael J. Sanderson, 2003), methods that do not make any assumptions on the ages and fix them to a node on a tree topology, such as BLADJ (Campbell O. Webb et al., 2008; Campbell O. Webb \& Donoghue, 2005), or methods that summarize age data unto a tree topology.
+Certainly, further studies are required to fully understand the effect of secondary calibrations on outputs from different tree dating methods, and on downstream analyses. It is possible that secondary calibrations can be safely used with dating methods that do not require setting priors, such as penalized likelihood (Michael J. Sanderson, 2003), with methods that do not make any assumptions on the ages and fix them to a node on a tree topology, such as BLADJ (Campbell O. Webb et al., 2008; Campbell O. Webb \& Donoghue, 2005), or methods that summarize age data unto a tree topology.
+
+Our cross validation analysis might provide some insight in this regard. When ages are estimated with secondary calibrations, nodes closer to the root do tend to be slightly younger than ages estimated with primary calibrations. However, nodes closer to the tip tend to be older when estimated using secondary calibrations with a dating method that does not make any prior assumptions on the nature of the calibrations themselves (Supplementary Figures 1-9), with a notable exception of cross validation of Burns et al. (2014) chronogram, which results in much younger node ages when estimated using secondary calibrations (Supplementary figs. 1 and 4).
 
 \hypertarget{variation-in-source-chronograms}{%
 \subsection{Variation in source chronograms}\label{variation-in-source-chronograms}}
@@ -450,8 +450,7 @@ Conflict among alternative dating studies is common in the literature
 
 Source chronograms may have been estimated using different types of primary calibrations (fossil record, geologic or biogeographic events, molecular substitution rates).
 These differences in approach can deepen the already substantial variation in time estimates between lineages, as observed from the comparison of source chronograms in the Fringillidae example.
-For example, the chronograms from Burns et al. (2014) tend to have much older date estimates for the same nodes than other inferences (Figure 5). This study inferred dates using molecular substitution rate estimates across birds (Weir \& Schluter, 2008)
-\textcolor{red}{EJM: MORE ON the FINCH examples and the cross validation here}
+For example, the chronograms from Burns et al. (2014) were inferred using molecular substitution rate estimates across birds (Weir \& Schluter, 2008), and have much older date estimates for the same nodes than chronograms that were inferred using fossils as primary calibrations (figs. fig:fringillidages and fig:cvXY; supplementary figs. 1 and 4).
 
 Different chronograms might also imply fundamentally distinct evolutionary hypotheses.
 For example, two different researchers working on the same clade could both carefully select and argue for their choices of fossil calibrations.
@@ -474,10 +473,6 @@ The exercise of summarizing age data from across multiple studies provides the o
 that reflects a unified evolutionary history for a lineage, by putting together evidence from different hypotheses.
 The largest, and taxonomically broadest chronogram currently available from OpenTree was constructed summarizing age data from 2,274 published chronograms using NCBI's taxonomic tree as backbone (Hedges et al., 2015).
 A summarizing exercise may also amplify the effect of uncertainty and errors in source data, and blur parts of the evolutionary history of a lineage that might only be reflected in source chronograms and lost on the summary chronogram (Sauquet et al., 2021).
-\textcolor{red}{EJM: ??? it's not clear to me what this last part means! What might you be losing?
-LLSR: I changed loosing to blurring. But I will elaborate more on it}
-Choosing source chronograms that we are going to keep and the ones that we are going to discard might be key.
-\textcolor{red}{LLSR: Example}
 
 \hypertarget{effects-on-downstream-analyses}{%
 \subsection{Effects on downstream analyses}\label{effects-on-downstream-analyses}}
@@ -909,7 +904,7 @@ Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{M
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%    FIGURE 3    %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%    FIGURE TOPOLOGIES    %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!h]
 \includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
@@ -956,76 +951,23 @@ Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phyl
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%    FIGURE 4    %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%    FIGURE FRINGILLIDAE    %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!h]
 \includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
-\caption{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes.}
+\caption{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes, from which 212 have age data from at least one published chronogram.}
 \label{fig:fringillidages}
 \end{figure}
 
-% in this file I leave the figure captions outside\ caption{} because I want them
-% to be formatted in the same way as the general text (double spaced and linenumbered)
-\captionsetup[figure]{labelfont={sc},labelformat={default},labelsep=period,name={Figure}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%    FIGURE CROSS VALIDATION    %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
 \includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots.pdf}
-\caption{Results from cross validation analysis.}
+\caption{Results from cross validation analysis. Each plot compares the original age estimate (x axis) with the age obtained with a DateLife analysis (y axis), per node.}
 \label{fig:cvXY}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots-diffs.pdf}
-\caption{Results from cross validation analysis.}
-\label{fig:cvXYdiffs}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_2.png}
-\caption{Cross validation of second source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv2}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_3.png}
-\caption{Cross validation of third source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv3}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_4.png}
-\caption{Cross validation of fourth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv4}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_6.png}
-\caption{Cross validation of sixth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv6}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_7.png}
-\caption{Cross validation of seventh source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv7}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_8.png}
-\caption{Cross validation of eight source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv8}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_9.png}
-\caption{Cross validation of ninth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv9}
-\end{figure}
-
-\begin{figure}[!h]
-\includegraphics{../figures/figure-cross-validation/cross_validation_10.png}
-\caption{Cross validation of tenth source chronogram. The chronogram shown in black corresponds to the dates published in the original study. The gray chronogram corresponds to the same tree topology dated with BLADJ using node ages from all other source chronograms as secondary calibrations.}
-\label{fig:cv10}
 \end{figure}
 
 \end{document}
