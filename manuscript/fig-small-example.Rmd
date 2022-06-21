@@ -1,0 +1,15 @@
+---
+title: "fig3"
+output: html_document
+date: '2022-06-21'
+---
+
+\vspace{10mm}
+
+\begin{center}
+\includegraphics[width = 6.5in]{../figures/figure2/figure2.pdf}
+\end{center}
+\captionof{figure}{DateLife analysis results for a small sample of A) 6 bird species within the Passeriformes. B) Processed species names were found across 9 chronograms within 6 independent studies (Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}).) C) This revealed 28 source age data points for the queried species names. Summarized age data is used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree, resulting in a summary chronogram of source ages.}
+\label{fig:figure2}
+
+\vspace{15mm}

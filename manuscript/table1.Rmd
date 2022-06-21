@@ -1,0 +1,13 @@
+---
+title: "table1"
+output: html_document
+date: '2022-06-21'
+---
+
+
+\begin{table}[H]
+  \caption{Ages of congruified nodes obtained from a datelife search for the Small Example presented. See Figure 3, step C2.}
+  \label{tbl:table1}
+  \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example.pdf}
+\end{table}
+

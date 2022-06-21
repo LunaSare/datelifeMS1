@@ -1,1 +1,8 @@
 \DeclareUnicodeCharacter{0301}{*************************************}
+
+% leave the figure captions outside\ caption{} because I want them
+% to be formatted in the same way as the general text (double spaced and linenumbered)
+
+\captionsetup[figure]{labelfont={sc},labelformat={default},labelsep=period,name={Figure}}
+\usepackage{caption}
+\usepackage{float}

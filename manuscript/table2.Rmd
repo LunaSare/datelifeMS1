@@ -1,0 +1,13 @@
+---
+title: "table2"
+output: html_document
+date: '2022-06-21'
+---
+
+
+\begin{table}[H]
+  \caption{Summary of congruified nodes ages. See Figure 3, step C3.}
+  \label{tbl:table2}
+  \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example-summary.png}
+\end{table}
+

@@ -1,14 +1,14 @@
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
-
-  \caption{Ages of congruified nodes belonging to step C2 from Figure3}
+[H]
+  \caption{Ages of congruified nodes obtained from a datelife search for the Small Example presented. See Figure 3, step C2.}
   \label{tbl:table1}
   \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example.pdf}
 \end{table*}
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
-
-  \caption{Summary of congruified nodes ages, corresponding to step C3 from Figure3}
+[H]
+  \caption{Summary of congruified nodes ages. See Figure 3, step C3.}
   \label{tbl:table2}
   \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example-summary.png}
 \end{table*}

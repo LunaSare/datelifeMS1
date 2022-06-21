@@ -70,8 +70,8 @@ output            :
   papaja::apa6_pdf:
     includes      :
       in_header: "preamble.tex"
-      after_body  : ["tables.tex",
-                     "figures-alt.tex"]
+      # after_body  : ["tables.tex",
+      #                "figures-alt.tex"]
 
 nocite: |
   @barker2013going, @barker2015new, @burns2014phylogenetics, @claramunt2015new, @gibb2015new, @Hedges2015, @hooper2017chromosomal, @Jetz2012, @price2014niche,
@@ -112,6 +112,7 @@ nocite: |
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("paper_references.bib")
+embed_figure <- TRUE
 ```
 
 ```{r analysis-preferences}
@@ -133,7 +134,7 @@ Building a chronogram is not an easy task.
 It requires obtaining and curating data to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring the full dated tree;
 it also generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
-Here we present the DateLife project which has the main goal of capturing age data from published chronograms, and making these data readily accessible to the community for reuse and reanalysis.
+Here we present the DateLife project which has the main goal of capturing age data from published chronograms, and making these data readily accessible to the community for reuse and reanalysis, for research, teaching, and science communication and policy.
   <!--  R has become mainstream in the biological-data analyst toolkit. Hence, to improve accessibility of time of evolutionary origin data we developed an R package that facilitates interaction, reanalysis and reuse of it, as well as incorporation of these data into the evolutionary analysis workflow. -->
 DateLife's core software application is available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database [@mctavish2015phylesystem], data stored and available in a computer readable format [@vos2012nexml], automated and programmatic ways of accessing the data [@Stoltzfus2013] and methods to summarize and compare the data.
 
@@ -153,6 +154,9 @@ taxize [@Chamberlain2013; @Chamberlain2018].
 Figure \ref{fig:workflow} provides a graphical summary of the three main steps of the DateLife algorithm: creating a search query, searching a database, and summarizing results from the search.
 
 <!--_**Processing an input.--**_ -->
+
+```{r fig1, child= if (embed_figure) "fig1.Rmd"}
+```
 
 ##  Creating a search query
 
@@ -242,6 +246,8 @@ Finally, users can save all source and summary chronograms in formats that permi
 
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
 
+```{r fig2, child= if (embed_figure) "fig-benchmark.Rmd"}
+```
 
 # Benchmark
 
@@ -292,9 +298,12 @@ Discovering this synonym allowed assigning five age data points for the parent n
 LLSR: it is related to the synonym found by tnrs processing, if we had used the synonym insted of the one accepted in the database, we would not have discovered that information
 LLSR: I moved it here, it makes more sense here, I think!.
 -->
+\vspace{5mm}
 
 _**Searching the database.-**_
 DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
+
+\vspace{5mm}
 
 _**Summarizing search results.-**_
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
@@ -302,6 +311,16 @@ The name processing step allowed including five data points for node "n4" (paren
 Age summary statistics per node were calculated (Table \ref{tbl:table2}) and used as calibrations to date the tree topology using the BLADJ algorithm.
 As expected, more inclusive nodes (e.g., node "n1") have more variance in age data than less inclusive nodes (e.g., node "n5").
 Summary age data for node "n2" were excluded as final calibration because they are older than age data of the more inclusive node, "n1" (Fig. \ref{fig:figure2}C4).
+
+```{r fig-small-example, child= if (embed_figure) "fig-small-example.Rmd"}
+```
+
+```{r table1, child= if (embed_figure) "table1.Rmd"}
+```
+
+```{r table2, child= if (embed_figure) "table2.Rmd"}
+```
+
 
 ## The family Fringillidae
 
@@ -314,22 +333,31 @@ This taxon-constrained approach implies that the final results of a full DateLif
 <!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?
 Luna: Clarified in text, I hope!-->
 
+\vspace{5mm}
+
 _**Searching the database.-**_
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species. 
 The DateLife search identified `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
 Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1206 different age data points available for species within the Fringillidae (supplementray table 1).
+
+\vspace{5mm}
 
 _**Summarizing search results.-**_
 The final step is to congruify and summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. 
 As explained in the "Description" section, a tree topology to summarize age data upon is required.
 By default, DateLife uses as summarizing topology the portion of OpenTree synthetic phylogeny that contains the species provided as search query. 
 According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
+
 Age data from source chronograms was congruified, decreasing to 818 different age data points available (supplementray table 2) and then age summary statistics per congruified node are obtained and used as fixed secondary calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
 <!-- ????????????????? Say some things about the results!
 ANSWER:
 (Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
 <!-- and hierarchical clustering method which appears to push ages back -->
+
+
+```{r fig4, child= if (embed_figure) "fig-topologies.Rmd"}
+```
 
 # Cross-validation test
 
