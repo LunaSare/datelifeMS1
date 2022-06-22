@@ -1,0 +1,20 @@
+\DeclareUnicodeCharacter{0301}{*************************************}
+
+% leave the figure captions outside\ caption{} if you want them
+% to be formatted in the same way as the general text (double spaced and linenumbered)
+% line numbers for captions trick from https://latex.org/forum/viewtopic.php?t=34614
+
+\usepackage{ragged2e}
+
+\usepackage{caption}
+
+\usepackage{lineno}
+\DeclareCaptionFont{linenumbers}{\internallinenumbers}
+
+\usepackage{float}
+\restylefloat{table}
+
+\captionsetup[figure]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Supplementary Figure}}
+
+\captionsetup[table]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Supplementary Table}}
+

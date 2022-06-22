@@ -20,7 +20,7 @@ affiliation:
     institution   : "Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville"
 
 floatsintext      : no
-figurelist        : NO
+figurelist        : no
 tablelist         : no
 footnotelist      : no
 linenumbers       : no
@@ -32,7 +32,7 @@ classoption       : "man"
 output            :
   papaja::apa6_pdf:
     includes      :
-      in_header: "preamble.tex"
+      in_header: "preamble-suppl.tex"
       after_body  : ["figures-supplementary.tex"]
 ---
 
