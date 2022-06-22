@@ -106,7 +106,7 @@ nocite: |
   @selvatti2015paleogene,
   @tietze2013complete,
   @treplin2008molecular,
-  @zuccon2012phylogeneti,
+  @zuccon2012phylogenetic
 ---
 
 ```{r setup, include = FALSE}
@@ -153,9 +153,7 @@ rotl [@Michonneau2016], and
 taxize [@Chamberlain2013; @Chamberlain2018].
 Figure \ref{fig:workflow} provides a graphical summary of the three main steps of the DateLife algorithm: creating a search query, searching a database, and summarizing results from the search.
 
-<!--_**Processing an input.--**_ -->
-
-```{r fig1, child= if (embed_figure) "fig1.Rmd"}
+```{r fig1, child= if (embed_figure) "fig-workflow.Rmd"}
 ```
 
 ##  Creating a search query
@@ -243,11 +241,7 @@ The MrBayes  [@Huelsenbeck2001; @Ronquist2003] approach in datelife uses the cal
 _**Visualizing results.--**_
 Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions available from the R package `datelifeplot` [@datelifeplot].
 
-
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
-
-```{r fig2, child= if (embed_figure) "fig-benchmark.Rmd"}
-```
 
 # Benchmark
 
@@ -266,13 +260,16 @@ Adding dates processing time: reflects more mrbayes speed than anything;
 get_bold_otol_tree running time: reflects bold downloading data speed.-->
 <!--Speed with different number of chronograms in database? NO-->
 <!--Speed of web interface and of r package in computers with different capacities? NOOOO-->
+
+```{r fig2, child= if (embed_figure) "fig-benchmark.Rmd"}
+```
+
 `datelife`'s code performance was evaluated with a set of unit tests designed and
 implemented with the R package testthat [@RCoreTeam2018] that were run both locally
 with the devtools package [@RCoreTeam2018], and on a public server --via
 GitHub, using the continuous integration tool Travis CI (<https://travis-ci.org>). At
 present, unit tests cover more than 40% of `datelife`'s code (<https://codecov.io/gh/phylotastic/datelife>). <!-- unit test make code robust, verifiable, debuggable, -->
 Unit testing helps identify potential issues as code is updated or, more critically, as services code relies upon may change.
-
 
 # Case studies
 
@@ -291,19 +288,19 @@ the yellowhammer -- *Emberiza citrinella*,
 the pine bunting --  *Emberiza leucocephalos* and
 the yellow-throated bunting --  *Emberiza elegans*;
 and one species of tanager, the vegetarian finch -- *Platyspiza crassirostris*.
-
-Processing input names found that *Emberiza elegans* is synonym for *Schoeniclus elegans* in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase [@lepage2004avibase; @lepage2014avibase; @avibase-emberiza].
+Processing of input names found that *Emberiza elegans* is synonym for *Schoeniclus elegans* in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase [@lepage2004avibase; @lepage2014avibase; @avibase-emberiza].
 Discovering this synonym allowed assigning five age data points for the parent node of *Emberiza elegans*, shown as *Schoeniclus elegans* in figure \ref{fig:figure2}A, which would not have had any data otherwise.
 <!--\textcolor{red}{EJM: I don't understand what this sentence means}
 LLSR: it is related to the synonym found by tnrs processing, if we had used the synonym insted of the one accepted in the database, we would not have discovered that information
 LLSR: I moved it here, it makes more sense here, I think!.
 -->
-\vspace{5mm}
+
+\vspace{3mm}
 
 _**Searching the database.-**_
 DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
 
-\vspace{5mm}
+\vspace{3mm}
 
 _**Summarizing search results.-**_
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
@@ -311,6 +308,8 @@ The name processing step allowed including five data points for node "n4" (paren
 Age summary statistics per node were calculated (Table \ref{tbl:table2}) and used as calibrations to date the tree topology using the BLADJ algorithm.
 As expected, more inclusive nodes (e.g., node "n1") have more variance in age data than less inclusive nodes (e.g., node "n5").
 Summary age data for node "n2" were excluded as final calibration because they are older than age data of the more inclusive node, "n1" (Fig. \ref{fig:figure2}C4).
+
+\vspace{30mm}
 
 ```{r fig-small-example, child= if (embed_figure) "fig-small-example.Rmd"}
 ```
@@ -321,8 +320,7 @@ Summary age data for node "n2" were excluded as final calibration because they a
 ```{r table2, child= if (embed_figure) "table2.Rmd"}
 ```
 
-
-## The family Fringillidae
+## An example with the family of true finches
 
 _**Creating a query.-**_
 To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the "get species from taxon" flag,
@@ -333,14 +331,14 @@ This taxon-constrained approach implies that the final results of a full DateLif
 <!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?
 Luna: Clarified in text, I hope!-->
 
-\vspace{5mm}
+\vspace{3mm}
 
 _**Searching the database.-**_
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species. 
 The DateLife search identified `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
 Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1206 different age data points available for species within the Fringillidae (supplementray table 1).
 
-\vspace{5mm}
+\vspace{3mm}
 
 _**Summarizing search results.-**_
 The final step is to congruify and summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. 
@@ -348,15 +346,22 @@ As explained in the "Description" section, a tree topology to summarize age data
 By default, DateLife uses as summarizing topology the portion of OpenTree synthetic phylogeny that contains the species provided as search query. 
 According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
 
-Age data from source chronograms was congruified, decreasing to 818 different age data points available (supplementray table 2) and then age summary statistics per congruified node are obtained and used as fixed secondary calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
-Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
-<!-- ????????????????? Say some things about the results!
-ANSWER:
-(Going from a summary distance matrix Using this method is better than using clustering algorithms  -->
-<!-- and hierarchical clustering method which appears to push ages back -->
-
+\vspace{50mm}
 
 ```{r fig4, child= if (embed_figure) "fig-topologies.Rmd"}
+```
+
+Age data from source chronograms was congruified to the chosen tree topology (OpenTree's synthetic subtree from figure \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (supplementray table 2). Age summary statistics per congruified node were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
+
+<!-- ????????????????? Say some things about the results!
+ANSWER:
+Compare median versus SDM:
+Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
+
+-->
+
+
+```{r fig5, child= if (embed_figure) "fig-fringillidae-full-example.Rmd"}
 ```
 
 # Cross-validation test
@@ -366,11 +371,13 @@ We performed a cross validation analysis of the DateLife workflow using the Frin
 We used the individual tree topologies from each of the 19 source chronograms from 13 studies as inputs, treating their node ages as unknown.
 We then estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
 
-We found that node ages from original study, and ages estimated using all other age data available are correlated (Supplementary Fig. \ref{fig:cvXY}).
+We found that node ages from original study, and ages estimated using all other age data available are correlated (Fig. \ref{fig:cvXY}).
 
-For five studies, Datelife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka 'closer to the root') relative to the orginal estimate, and overestimate ages for nodes closer to the tips.
+For five studies, Datelife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka 'closer to the root') relative to the original estimate, and overestimate ages for nodes closer to the tips.
 Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. \ref{fig:cvXYdiffs}).
 
+```{r fig6, child= if (embed_figure) "fig-cross-validation.Rmd"}
+```
 
 <!--
 %```{r, child = "cross-validation-pathd8.Rmd"}

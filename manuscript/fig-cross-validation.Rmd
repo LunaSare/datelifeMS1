@@ -1,0 +1,14 @@
+---
+title: "Figure Cross Validation"
+output: html_document
+date: '2022-06-21'
+---
+\newpage
+
+\begin{minipage}{18cm}
+\begin{center}
+\includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots.pdf}
+\end{center}
+\captionof{figure}{Results from cross validation analysis. Each plot compares the original age estimate (x axis) with the age obtained with a DateLife analysis (y axis), per node.}
+\label{fig:cvXY}
+\end{minipage}

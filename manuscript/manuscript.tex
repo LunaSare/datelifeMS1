@@ -103,12 +103,23 @@
 \def\languageshorthands#1{}
 \DeclareUnicodeCharacter{0301}{*************************************}
 
-% leave the figure captions outside\ caption{} because I want them
+% leave the figure captions outside\ caption{} if you want them
 % to be formatted in the same way as the general text (double spaced and linenumbered)
+% line numbers for captions trick from https://latex.org/forum/viewtopic.php?t=34614
 
-\captionsetup[figure]{labelfont={sc},labelformat={default},labelsep=period,name={Figure}}
+\usepackage{ragged2e}
+
 \usepackage{caption}
+
+\DeclareCaptionFont{linenumbers}{\internallinenumbers}
+
 \usepackage{float}
+\restylefloat{table}
+
+\captionsetup[figure]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Figure}}
+
+\captionsetup[table]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Table}}
+
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -173,7 +184,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4906}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4912}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -251,11 +262,13 @@ rotl (Michonneau, Brown, \& Winter, 2016), and
 taxize (Chamberlain \& Szöcs, 2013; Chamberlain et al., 2019).
 Figure \ref{fig:workflow} provides a graphical summary of the three main steps of the DateLife algorithm: creating a search query, searching a database, and summarizing results from the search.
 
+\begin{minipage}[t]{17.3cm}
 \begin{center}
-\includegraphics[width = 6.5in]{../figures/figure1/figure1-new.pdf}
-\captionof{figure}{Stylized DateLife workflow. This shows the general workflows and analyses that can be performed with \texttt{datelife}, via the R package or through the website at \url{http://www.datelife.org/}. Details on the functions involved on each workflow are shown in \texttt{datelife}'s R package vignette.}
+\includegraphics{../figures/figure1/figure1-new.pdf}
+\captionof{figure}{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{phylotastic.org/datelife}.}
 \label{fig:workflow}
 \end{center}
+\end{minipage}
 
 \hypertarget{creating-a-search-query}{%
 \subsection{Creating a search query}\label{creating-a-search-query}}
@@ -275,7 +288,7 @@ The processed input taxon names are saved as an R object of a newly defined clas
 \subsection{Searching a chronogram database}\label{searching-a-chronogram-database}}
 
 At the time of writing of this manuscript
-(Jun 20, 2022),
+(Jun 21, 2022),
 DateLife's chronogram database latest version consist of 253 chronograms published in 187 different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata (McTavish et al., 2015), which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the \texttt{datelife} R package.
 
 A unique feature of OpenTree's Phylesystem is that the community can add new published, state-of-the-art chronograms any time through their curator application (\url{https://tree.opentreeoflife.org/curator}). As chronograms are added to Phylesystem, they are incorporated into an updated \texttt{datelife}'s database that is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
@@ -346,13 +359,6 @@ The MrBayes (Huelsenbeck \& Ronquist, 2001; Ronquist \& Huelsenbeck, 2003) appro
 \emph{\textbf{Visualizing results.--}}
 Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R ``phylo'' format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions available from the R package \texttt{datelifeplot} (Sanchez-Reyes \& O'Meara, 2022).
 
-\begin{center}
-\includegraphics[width= 6.5in]{../figures/fig_runtime_main.pdf}
-\end{center}
-\captionof{figure}{Computation time used to process a datelife query and a datelife search across \texttt{datelife}'s chronogram database, relative to number of input taxon names. For each N = {10, 100, 200, ..., 1 000, ... , 9 000, 10 000}, we sampled N species names from the class Aves a hundred times, and then performed a datelife search with input processing, without implementing Taxon Names Resolution Service (TNRS; dark gray), and implementing TNRS (light gray). We also performed a search using a query that had been pre-processed with TNRS, for comparison (light blue).}
-
-\label{fig:runtime_main}
-
 \hypertarget{benchmark}{%
 \section{Benchmark}\label{benchmark}}
 
@@ -363,6 +369,22 @@ Query processing time increases roughly linearly with number of input taxon name
 increases considerably if Taxonomic Name Resolution Service (TNRS) is activated.
 Up to ten thousand names can be processed and searched in less than 30 minutes with the most time consuming settings.
 Once names have been processed as described in methods, a name search through the chronogram database can be performed in less than a minute, even with a very large number of taxon names (Fig. \ref{fig:runtime_main}).
+
+\begin{center}
+  \includegraphics{../figures/fig_runtime_main.pdf}
+\end{center}
+  \captionof{figure}{DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names.
+  \textit{Caption continues.}}
+
+\label{fig:runtime_main}
+
+\begin{justify}
+  \textit{Figure caption continued}. 
+For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a datelife search processing the input names with Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that had been pre-processed with TNRS (light blue).
+\end{justify}
+
+\vspace{20mm}
+
 \texttt{datelife}'s code performance was evaluated with a set of unit tests designed and
 implemented with the R package testthat (R Core Team, 2018) that were run both locally
 with the devtools package (R Core Team, 2018), and on a public server --via
@@ -388,15 +410,15 @@ the yellowhammer -- \emph{Emberiza citrinella},
 the pine bunting -- \emph{Emberiza leucocephalos} and
 the yellow-throated bunting -- \emph{Emberiza elegans};
 and one species of tanager, the vegetarian finch -- \emph{Platyspiza crassirostris}.
-
-Processing input names found that \emph{Emberiza elegans} is synonym for \emph{Schoeniclus elegans} in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase (Avibase, 2022; Lepage, 2004; Lepage, Vaidya, \& Guralnick, 2014).
+Processing of input names found that \emph{Emberiza elegans} is synonym for \emph{Schoeniclus elegans} in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase (Avibase, 2022; Lepage, 2004; Lepage, Vaidya, \& Guralnick, 2014).
 Discovering this synonym allowed assigning five age data points for the parent node of \emph{Emberiza elegans}, shown as \emph{Schoeniclus elegans} in figure \ref{fig:figure2}A, which would not have had any data otherwise.
-\vspace{5mm}
+
+\vspace{3mm}
 
 \emph{\textbf{Searching the database.-}}
 DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names (Barker, Burns, Klicka, Lanyon, \& Lovette, 2015; Hedges, Marin, Suleski, Paymer, \& Kumar, 2015; Jetz, Thomas, Joy, Hartmann, \& Mooers, 2012), one study matched four input names (Hooper \& Price, 2017) and two studies matched two input names (Barker, Burns, Klicka, Lanyon, \& Lovette, 2013; Burns et al., 2014). No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
 
-\vspace{5mm}
+\vspace{3mm}
 
 \emph{\textbf{Summarizing search results.-}}
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
@@ -405,16 +427,15 @@ Age summary statistics per node were calculated (Table \ref{tbl:table2}) and use
 As expected, more inclusive nodes (e.g., node ``n1'') have more variance in age data than less inclusive nodes (e.g., node ``n5'').
 Summary age data for node ``n2'' were excluded as final calibration because they are older than age data of the more inclusive node, ``n1'' (Fig. \ref{fig:figure2}C4).
 
-\vspace{10mm}
+\vspace{30mm}
 
 \begin{center}
-\includegraphics[width = 6.5in]{../figures/figure2/figure2.pdf}
+\includegraphics{../figures/figure2/figure2.pdf}
 \end{center}
+\vspace{10mm}
 \captionof{figure}{DateLife analysis results for a small sample of A) 6 bird species within the Passeriformes. B) Processed species names were found across 9 chronograms within 6 independent studies (Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}).) C) This revealed 28 source age data points for the queried species names. Summarized age data is used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree, resulting in a summary chronogram of source ages.}
 
 \label{fig:figure2}
-
-\vspace{15mm}
 
 \begin{table}[H]
   \caption{Ages of congruified nodes obtained from a datelife search for the Small Example presented. See Figure 3, step C2.}
@@ -428,8 +449,8 @@ Summary age data for node ``n2'' were excluded as final calibration because they
   \includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example-summary.png}
 \end{table}
 
-\hypertarget{the-family-fringillidae}{%
-\subsection{The family Fringillidae}\label{the-family-fringillidae}}
+\hypertarget{an-example-with-the-family-of-true-finches}{%
+\subsection{An example with the family of true finches}\label{an-example-with-the-family-of-true-finches}}
 
 \emph{\textbf{Creating a query.-}}
 To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the ``get species from taxon'' flag,
@@ -437,14 +458,14 @@ which gets all recognized species names within a named group from a taxonomy of 
 Following the NCBI taxonomy, our DateLife query has 289 Fringillidae species.
 This taxon-constrained approach implies that the final results of a full DateLife analysis will be done using a tree topology and ages for the species in a named group, which do not necessarily correspond to a monophyletic group. Users can change this behaviour by providing a monophyletic tree as input for a DateLife search, or as a tree topology for a DateLife summary.
 
-\vspace{5mm}
+\vspace{3mm}
 
 \emph{\textbf{Searching the database.-}}
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species.
 The DateLife search identified 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Barker et al., 2013, 2015; Burns et al., 2014; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hedges et al., 2015; Hooper \& Price, 2017; Jetz et al., 2012; Price et al., 2014).
 Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1206 different age data points available for species within the Fringillidae (supplementray table 1).
 
-\vspace{5mm}
+\vspace{3mm}
 
 \emph{\textbf{Summarizing search results.-}}
 The final step is to congruify and summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM.
@@ -452,16 +473,13 @@ As explained in the ``Description'' section, a tree topology to summarize age da
 By default, DateLife uses as summarizing topology the portion of OpenTree synthetic phylogeny that contains the species provided as search query.
 According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
 
-Age data from source chronograms was congruified, decreasing to 818 different age data points available (supplementray table 2) and then age summary statistics per congruified node are obtained and used as fixed secondary calibrations over a consensus tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
-Median summary chronograms are older and have wider variation in maximum ages than chronograms obtained with SDM.
+\vspace{50mm}
 
-\vspace{20mm}
-
-\begin{center}
-\includegraphics[width = 6.5in]{../figures/fringillidae-topologies/fringillidae-topology.pdf}
-\captionof{figure}{Tree topologies obtained from Open Tree of Life's (OpenTree) synthetic phylogenetic tree.
+\begin{minipage}{18.2cm}
+\includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
+  \captionof{figure}{Tree topologies obtained from Open Tree of Life's (OpenTree) synthetic phylogenetic tree.
 A) Topology of 2,333 tips and 1,305 internal nodes, encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same mrca node in OpenTree's synthetic tree (purple).
-B) Topology of 289 tips and 253 internal nodes, encompassing bird species within the Fringillidae only.
+B) Topology of 289 tips and 253 internal nodes, encompassing bird species within the Fringillidae only. 
 This tree results from pruning species that are not assigned to the family Fringillidae (purple branches in topology A) but that form a monophyletic group with them.
 Bird species within the Fringillidae are paraphyletic
 (Alström et al. \protect\hyperlink{ref-alstrom2014discovery}{2014},
@@ -480,7 +498,7 @@ Hackett et al. \protect\hyperlink{ref-hackett2008phylogenomic}{2008},
 Jetz et al. \protect\hyperlink{ref-Jetz2012}{2012},
 Johansson, Fjeldså, \& Bowi \protect\hyperlink{ref-johansson2008phylogenetic}{200},
 Kimball et al. \protect\hyperlink{ref-kimball2019phylogenomic}{2019},
-Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014},
+Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014}, 
 Lamichhaney et al. \protect\hyperlink{ref-lamichhaney2015evolution}{2015},
 Lerner, Meyer, James, Hofreiter, \& Fleischer \protect\hyperlink{ref-lerner2011multilocus}{2011},
 Lovette et al. \protect\hyperlink{ref-lovette2010comprehensive}{2010},
@@ -490,15 +508,25 @@ Oliveros et al. \protect\hyperlink{ref-oliveros2019earth}{2019},
 Päckert et al. \protect\hyperlink{ref-packert2012horizontal}{2012},
 Parchman, Benkman, \& Mezquida \protect\hyperlink{ref-parchman2007coevolution}{2007},
 Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
-Price et al. \protect\hyperlink{ref-price2014niche}{2014},
-Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka \protect\hyperlink{ref-pulgarin2013multilocus}{2013},
-Selvatti, Gonzaga, \& Moraes Russo \protect\hyperlink{ref-selvatti2015paleogene}{2015},
-Tietze, Päckert, Martens, Lehmann, \& Sun \protect\hyperlink{ref-tietze2013complete}{2013},
-Treplin et al. \protect\hyperlink{ref-treplin2008molecular}{2008},
-Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012}).
-}
+  Price et al. \protect\hyperlink{ref-price2014niche}{2014},
+  Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka \protect\hyperlink{ref-pulgarin2013multilocus}{2013},
+  Selvatti, Gonzaga, \& Moraes Russo \protect\hyperlink{ref-selvatti2015paleogene}{2015},
+  Tietze, Päckert, Martens, Lehmann, \& Sun \protect\hyperlink{ref-tietze2013complete}{2013},
+  Treplin et al. \protect\hyperlink{ref-treplin2008molecular}{2008},
+  Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012}).}
 \label{fig:fringillidae-topologies}
+\end{minipage}
+
+Age data from source chronograms was congruified to the chosen tree topology (OpenTree's synthetic subtree from figure \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (supplementray table 2). Age summary statistics per congruified node were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
+
+\begin{minipage}{18cm}
+\begin{center}
+\includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
 \end{center}
+
+\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes, from which 212 have age data from at least one published chronogram.}
+\label{fig:fringillidages}
+\end{minipage}
 
 \hypertarget{cross-validation-test}{%
 \section{Cross-validation test}\label{cross-validation-test}}
@@ -507,10 +535,20 @@ We performed a cross validation analysis of the DateLife workflow using the Frin
 We used the individual tree topologies from each of the 19 source chronograms from 13 studies as inputs, treating their node ages as unknown.
 We then estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
 
-We found that node ages from original study, and ages estimated using all other age data available are correlated (Supplementary Fig. \ref{fig:cvXY}).
+We found that node ages from original study, and ages estimated using all other age data available are correlated (Fig. \ref{fig:cvXY}).
 
-For five studies, Datelife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka `closer to the root') relative to the orginal estimate, and overestimate ages for nodes closer to the tips.
+For five studies, Datelife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka `closer to the root') relative to the original estimate, and overestimate ages for nodes closer to the tips.
 Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. \ref{fig:cvXYdiffs}).
+
+\newpage
+
+\begin{minipage}{18cm}
+\begin{center}
+\includegraphics{../figures/figure-cross-validation/fig-cross-validation-xy-plots.pdf}
+\end{center}
+\captionof{figure}{Results from cross validation analysis. Each plot compares the original age estimate (x axis) with the age obtained with a DateLife analysis (y axis), per node.}
+\label{fig:cvXY}
+\end{minipage}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -918,6 +956,9 @@ Webb, Campbell O., \& Donoghue, M. J. (2005). Phylomatic: Tree assembly for appl
 
 \leavevmode\vadjust pre{\hypertarget{ref-weir2008calibrating}{}}%
 Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{Molecular Ecology}, \emph{17}(10), 2321--2328.
+
+\leavevmode\vadjust pre{\hypertarget{ref-zuccon2012phylogenetic}{}}%
+Zuccon, D., Prŷs-Jones, R., Rasmussen, P. C., \& Ericson, P. G. (2012). The phylogenetic relationships and generic limits of finches (fringillidae). \emph{Molecular Phylogenetics and Evolution}, \emph{62}(2), 581--596.
 
 \end{CSLReferences}
 

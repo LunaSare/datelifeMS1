@@ -1,0 +1,14 @@
+---
+title: "Figure Fringillidae full Example"
+output: html_document
+date: '2022-06-21'
+---
+
+\begin{minipage}{18cm}
+\begin{center}
+\includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
+\end{center}
+
+\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes, from which 212 have age data from at least one published chronogram.}
+\label{fig:fringillidages}
+\end{minipage}
