@@ -4,9 +4,7 @@ output: html_document
 date: '2022-06-21'
 ---
 \begin{minipage}[t]{17.3cm}
-\begin{center}
 \includegraphics{../figures/figure1/figure1-new.pdf}
-\captionof{figure}{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{phylotastic.org/datelife}.}
+\captionof{figure}{\textit{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{phylotastic.org/datelife}.}}
 \label{fig:workflow}
-\end{center}
 \end{minipage}

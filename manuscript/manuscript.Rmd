@@ -35,12 +35,12 @@ author:
 
 affiliation:
   - id            : "1"
-    institution   : "University of California, Merced"
+    institution   : "University of California, Merced, USA"
   - id            : "2"
-    institution   : "University of Tennessee, Knoxville"
+    institution   : "University of Tennessee, Knoxville, USA"
 
 authornote: |
-  School of Natural Sciences, University of California, Merced, Science and Engineering Building 1.
+  School of Natural Sciences, University of California, Merced, 258 Science and Engineering Building 1, Merced, CA 95340, USA.
 
   Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 446 Hesler Biology Building, Knoxville, TN 37996, USA.
 
@@ -141,7 +141,7 @@ DateLife's core software application is available as an R package [@datelifeR], 
 
 # Description
 
-DateLife's core software application consists of the R package `datelife`. Its latest stable version -- v`r packageVersion("datelife")`, is available from the CRAN repository [@datelifeR], and relies on functionalities from various biological R packages:
+DateLife's core software application consists of the R package `datelife`. Its current stable version -- v`r packageVersion("datelife")`, is available from the The Comprehensive R Archive Network (CRAN) repository [@datelifeR], and relies on functionalities from various biological R packages:
 ape [@paradis2004],
 bold [@Chamberlain2018],
 geiger [@pennell2014geiger],
@@ -162,13 +162,13 @@ DateLife starts by processing an input consisting of at least two taxon names, w
 If the input is a tree, it can be provided as a classic newick character string [@archie1986newick], or as a "phylo" R object [@paradis2004]. 
 The input tree is not required to have branch lengths, and its topology is used in the summary steps described in the next section.
 
-DateLife accepts scientific names that can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or a binomial species name. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group, DateLife has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, DateLife retrieves all species names within the inclusive taxonomic group (following a taxonomy of choice; current options are Open Tree of Life, NCBI, GBIF, or IRMNG taxonomies) and adds them to the input string. 
+DateLife accepts scientific names that can belong to any inclusive taxonomic group (e.g., genus, family, tribe, etc.) or a binomial species name. Subspecies and variants are ignored. If an input taxon name belongs to an inclusive taxonomic group, DateLife has two alternative behaviors defined by the "get species from taxon" flag. If the flag is active, DateLife retrieves all species names within the inclusive taxonomic group following a standard taxonomy of choice, and adds them to the input string. Taxonomies currently supported by DateLife are Open Tree of Life (OpenTree) unified Taxonomy [OTT, @rees2017automated], the National Center of Biotechnology Information (NCBI) taxonomic database [@schoch2020ncbi], the Global Biodiversity Information Facility (GBIF) taxonomic backbone [@gbif2022taxonomy], and the Interim Register of Marine and Nonmarine Genera (IRMNG) database [@rees2017irmng]. 
 If the flag is inactive, DateLife excludes any taxon names above the species level from the search query.
 
-DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard [@Boyle2013]. DateLife implements TNRS using OpenTree's unified taxonomy as standard [@opentreeAPIs; @rees2017automated], storing OpenTree's Taxonomy identification numbers for further processing.
+DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard [@Boyle2013]. DateLife implements TNRS with OTT as standard [@opentreeAPIs; @rees2017automated], storing taxonomic identification numbers for further processing.
 <!-- We are using OpenTree's TNRS [BCO: yes], Boyle described TNRS first, right?  [BCO: earliest I can find, but feels like there should be much older work]-->
 
-The processed input taxon names are saved as an R object of a newly defined class, \texttt{datelifeQuery}, that is used in the following steps. This object contains the standardized names, the corresponding OpenTree taxonomic id numbers, and the topology of the input tree if any was provided.
+The processed input taxon names are saved as an R object of a newly defined class, \texttt{datelifeQuery}, that is used in the following steps. This object contains the standardized names, the corresponding OTT identification numbers, and the topology of the input tree if any was provided.
 
 <!--_**Searching the database.--**_  -->
 
@@ -176,13 +176,12 @@ The processed input taxon names are saved as an R object of a newly defined clas
 
 At the time of writing of this manuscript 
 (`r format(Sys.time(), "%b %d, %Y")`),
-DateLife's chronogram database latest version consist of `r length(opentree_chronograms$trees)` chronograms published in `r length(unique(opentree_chronograms$studies))` different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata [@mctavish2015phylesystem], which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the `datelife` R package.
+DateLife's chronogram database latest version consist of `r format(length(opentree_chronograms$trees), big.mark=",")` chronograms published in `r length(unique(opentree_chronograms$studies))` different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata [@mctavish2015phylesystem], which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the `datelife` R package.
 
-A unique feature of OpenTree's Phylesystem is that the community can add new published, state-of-the-art chronograms any time through their curator application (https://tree.opentreeoflife.org/curator). As chronograms are added to Phylesystem, they are incorporated into an updated `datelife`'s database that is assigned a new version number, followed by a package release on CRAN. `datelife`'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months. <!--BCO: Nicely done-->
-Users can also upload and curate new chronograms to OpenTree themselves. Then, trigger an update of their local `datelife` database to incorporate the new chronograms and have them available for their current analysis. <!--BCO: What is immediately? Also, it's not just uploading -- they have to include metadata on what brlen mean, maybe? indicate the ingroup/outgroup, do TNRS within OToL, right? Maybe this has improved. I remember being frustrated trying to load in giant trees for datelife use b/c I had to click on the ingroup node. 
-Luna: Very true, it is not that easy, I added the curation step to hint that there are more steps that simply uploading the chronogram.-->
-<!--BCO; this duplicates an earlier section and feels more methods-y. Maybe move up and merge? 
-Luna: Done! Moved here.-->
+A unique feature of the Phylesystem is that any user can add new published, state-of-the-art chronograms any time, through their curator application (https://tree.opentreeoflife.org/curator). As chronograms are added to Phylesystem, they are incorporated into the chronogram database of the `datelife` package. The updated database is assigned a new version number, followed by a package release on CRAN. `datelife`'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months. <!--BCO: Nicely done-->
+Users can also implement functions from the `datelife` R package to trigger an update of the local chronogram database, to incorporate any new chronograms to the user's DateLife analysis before an official database update is released on CRAN. <!--BCO: What is immediately? Also, it's not just uploading -- they have to include metadata on what brlen mean, maybe? indicate the ingroup/outgroup, do TNRS within OToL, right? Maybe this has improved. I remember being frustrated trying to load in giant trees for datelife use b/c I had to click on the ingroup node. 
+Luna: Very true, it is not that easy, I added the curation step to hint that there are more steps than simply uploading the chronogram.-->
+
 
 A DateLife search is implemented by matching processed taxon names provided by the user to tip labels in the chronogram database. Chronograms with at least two matching taxon names on their tip labels are identified and pruned down to preserve only the matched taxa.
 These matching pruned chronograms are referred to as source chronograms.
@@ -206,7 +205,7 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 
 _**Choosing a topology.--**_
 DateLife requires a tree topology to summarize age data upon.
-We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically obtains one from the OpenTree synthetic tree [@opentreeoflife2019synth]. These are known as "induced" OpenTree subtrees, which do not necessarily correspond to a monophyletic group.
+We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically extracts one from the OpenTree synthetic tree, a phylogeny encompassing 2.3 million taxa across all life, assembled from 1, 239 published phylogenetic trees and OpenTree's unified Taxonomy, OTT  [@opentreeoflife2019synth]. 
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach.
 To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife workflow identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reconstruction will fail.
@@ -232,20 +231,21 @@ BLADJ does not use branch lengths even when they are present in the input tree o
 When there is conflict in ages between nodes with calibration data, BLADJ ignores node ages that are older than the age of a parent node.
 BLADJ requires a root age estimate. If there is no information on the age of the root in the chronogram database, users can provide an estimate from the literature. If none is provided, DateLife assigns an arbitrary age to the root as 10% older than the oldest age available within the group.
 
-Alternative options supported in DateLife (MrBayes, PATHD8, TreePL) incorporate branch length information from the input topology in combination with the calibrations.
+Alternative phylogenetic dating options supported in DateLife (MrBayes, PATHD8, TreePL) incorporate branch length information from the input topology in combination with the calibrations.
 PATHd8 is a non-clock, rate-smoothing method [@Britton2007] to date trees.
-treePL [@Smith2012], is a semi-parametric, rate-smoothing, penalized likelihood dating method
-[@sanderson2002].
-The MrBayes  [@Huelsenbeck2001; @Ronquist2003] approach in datelife uses the calibrations as priors on node ages.
+treePL [@Smith2012], is a semi-parametric, rate-smoothing, penalized likelihood dating method [@sanderson2002].
+The MrBayes  [@Huelsenbeck2001; @Ronquist2003] approach in DateLife uses the calibrations as priors on node ages.
 
 _**Visualizing results.--**_
-Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using \texttt{datelife}'s chronogram plot generation functions available from the R package `datelifeplot` [@datelifeplot].
+Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using DateLife's chronogram plot generation functions available from the R package `datelifeplot` [@datelifeplot].
 
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
 
+\newpage
+
 # Benchmark
 
-`datelife`'s code speed was tested on an Apple iMac
+`datelife`'s R package code speed was tested on an Apple iMac
 with one 3.4 GHz Intel Core i5 processor. <!--No multiprocessor tests were performed-->
 We registered variation in computing time of query processing and search through the database relative to number of queried taxon names.
 Query processing time increases roughly linearly with number of input taxon names, and
@@ -266,9 +266,8 @@ get_bold_otol_tree running time: reflects bold downloading data speed.-->
 
 `datelife`'s code performance was evaluated with a set of unit tests designed and
 implemented with the R package testthat [@RCoreTeam2018] that were run both locally
-with the devtools package [@RCoreTeam2018], and on a public server --via
-GitHub, using the continuous integration tool Travis CI (<https://travis-ci.org>). At
-present, unit tests cover more than 40% of `datelife`'s code (<https://codecov.io/gh/phylotastic/datelife>). <!-- unit test make code robust, verifiable, debuggable, -->
+with the devtools package [@RCoreTeam2018], and on a public server using the continuous integration tool of GitHub actions (<https://docs.github.com/en/actions>). 
+At present, unit tests cover more than 40% of `datelife`'s code (<https://codecov.io/gh/phylotastic/datelife>). <!-- unit test make code robust, verifiable, debuggable, -->
 Unit testing helps identify potential issues as code is updated or, more critically, as services code relies upon may change.
 
 # Case studies
@@ -278,7 +277,8 @@ We illustrate the DateLife workflow using a family within the Passeriform birds 
 
 ## A small example
 
-_**Creating a search query.-**_
+### Creating a search query
+
 We chose 6 bird species within the Passeriformes. The sample includes
 two species of cardinals:
 the black-thighed grosbeak -- *Pheucticus tibialis* and
@@ -288,28 +288,30 @@ the yellowhammer -- *Emberiza citrinella*,
 the pine bunting --  *Emberiza leucocephalos* and
 the yellow-throated bunting --  *Emberiza elegans*;
 and one species of tanager, the vegetarian finch -- *Platyspiza crassirostris*.
-Processing of input names found that *Emberiza elegans* is synonym for *Schoeniclus elegans* in the default reference taxonomy (Open Tree of Life Taxonomy v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase [@lepage2004avibase; @lepage2014avibase; @avibase-emberiza].
+Processing of input names found that *Emberiza elegans* is synonym for *Schoeniclus elegans* in the default reference taxonomy (OTT v3.3, June 1, 2021). For a detailed discussion on the state of the synonym, refer to Avibase [@lepage2004avibase; @lepage2014avibase; @avibase-emberiza].
 Discovering this synonym allowed assigning five age data points for the parent node of *Emberiza elegans*, shown as *Schoeniclus elegans* in figure \ref{fig:figure2}A, which would not have had any data otherwise.
 <!--\textcolor{red}{EJM: I don't understand what this sentence means}
 LLSR: it is related to the synonym found by tnrs processing, if we had used the synonym insted of the one accepted in the database, we would not have discovered that information
 LLSR: I moved it here, it makes more sense here, I think!.
 -->
 
-\vspace{3mm}
+\newpage
 
-_**Searching the database.-**_
+### Searching the database
+
 DateLife used the processed input names to search the local chronogram database and found 9 matching chronograms in 6 different studies (Fig. \ref{fig:figure2}B). Three studies matched five input names [@barker2015new; @Hedges2015; @Jetz2012], one study matched four input names [@hooper2017chromosomal] and two studies matched two input names [@barker2013going; @burns2014phylogenetics]. No studies matched all input names. Together, source chronograms provide 28 unique age data points, covering all nodes on our chosen tree topology to date (Table \ref{tbl:table1}).
 
 \vspace{3mm}
 
-_**Summarizing search results.-**_
+### Summarizing search results
+
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
 The name processing step allowed including five data points for node "n4" (parent of _Schoeniclus elegans_; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
 Age summary statistics per node were calculated (Table \ref{tbl:table2}) and used as calibrations to date the tree topology using the BLADJ algorithm.
 As expected, more inclusive nodes (e.g., node "n1") have more variance in age data than less inclusive nodes (e.g., node "n5").
 Summary age data for node "n2" were excluded as final calibration because they are older than age data of the more inclusive node, "n1" (Fig. \ref{fig:figure2}C4).
 
-\vspace{30mm}
+\newpage
 
 ```{r fig-small-example, child= if (embed_figure) "fig-small-example.Rmd"}
 ```
@@ -320,9 +322,12 @@ Summary age data for node "n2" were excluded as final calibration because they a
 ```{r table2, child= if (embed_figure) "table2.Rmd"}
 ```
 
+\newpage
+
 ## An example with the family of true finches
 
-_**Creating a query.-**_
+### Creating a query
+
 To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the "get species from taxon" flag,
 which gets all recognized species names within a named group from a taxonomy of choice.
 Following the NCBI taxonomy, our DateLife query has `r length(dquery$cleaned_names)` Fringillidae species.
@@ -331,27 +336,25 @@ This taxon-constrained approach implies that the final results of a full DateLif
 <!--BCO: it's ambiguous: it gets a topology and age for the larger clade that includes all Fringillidae species? Or for the paraphyletic Fringillidae group?
 Luna: Clarified in text, I hope!-->
 
-\vspace{3mm}
+### Searching the database
 
-_**Searching the database.-**_
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species. 
 The DateLife search identified `r length(dres)` chronograms containing at least two Fringillidae species, published in `r length(unique(names(dres)))` different studies [@barker2013going; @barker2015new; @burns2014phylogenetics; @claramunt2015new; @gibb2015new; @Hedges2015; @hooper2017chromosomal; @Jetz2012; @price2014niche].
-Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1206 different age data points available for species within the Fringillidae (supplementray table 1).
+Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1, 206 different age data points available for species within the Fringillidae (Supplementray Table 1).
 
-\vspace{3mm}
+### Summarizing search results
 
-_**Summarizing search results.-**_
 The final step is to congruify and summarize the age data available for the Fringillidae species into single summary chronograms, using different types of summary ages, median and SDM. 
 As explained in the "Description" section, a tree topology to summarize age data upon is required.
-By default, DateLife uses as summarizing topology the portion of OpenTree synthetic phylogeny that contains the species provided as search query. 
-According to this phylogeny, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
+By default, DateLife uses the topology from OpenTree's synthetic tree that contains the species in the search query to summarize age data upon. 
+According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
 
 \vspace{50mm}
 
 ```{r fig4, child= if (embed_figure) "fig-topologies.Rmd"}
 ```
 
-Age data from source chronograms was congruified to the chosen tree topology (OpenTree's synthetic subtree from figure \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (supplementray table 2). Age summary statistics per congruified node were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
+Age data from source chronograms was congruified to OpenTree's topology (Fig. \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (Supplementray Table 2). For each congruent node, age summary statistics were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 
 <!-- ????????????????? Say some things about the results!
 ANSWER:
@@ -370,9 +373,7 @@ Median summary chronograms are older and have wider variation in maximum ages th
 We performed a cross validation analysis of the DateLife workflow using the Fringillidae chronograms.
 We used the individual tree topologies from each of the 19 source chronograms from 13 studies as inputs, treating their node ages as unknown.
 We then estimated dates for these topologies using the node ages from the chronograms from the other studies as calibrations and smoothing using BLADJ.
-
 We found that node ages from original study, and ages estimated using all other age data available are correlated (Fig. \ref{fig:cvXY}).
-
 For five studies, Datelife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka 'closer to the root') relative to the original estimate, and overestimate ages for nodes closer to the tips.
 Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. S1).
 
@@ -386,16 +387,27 @@ Accordingly, root ages are generally older in the original study than estimated 
 
 # Discussion
 
-`datelife` makes state-of-the-art data on evolutionary time frame easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the species or group they want to work with, for any of its functionality.
+DateLife makes state-of-the-art data on evolutionary time frame easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the species or group they want to work with, for any of its functionality.
 
-A total of `r length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label")))))` unique terminal taxa are represented in `datelife`'s database.
-Incorporation of more chronograms into `datelife`'s database will continue to improve its services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository.  Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
+A total of `r format(length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label"))))), big.mark=",")` unique terminal taxa are represented in DateLife's database.
+Incorporation of more chronograms into the database will continue to improve DateLife's services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository.  Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
 We would like to emphasize on the importance of sharing chronogram data,  including systematically curated metadata, into open repositories, such as OpenTree's Phylesystem [@mctavish2015phylesystem] for the benefit of the scientific community as a whole.
 
-## Primary vs Secondary calibrations in dating analyses
+## Age variation in source chronograms
 
-While most chronograms in DateLife's database are constructed using primary calibrations (molecular substitution rates or ages obtained from the fossil record or geological events), DateLife summarizes chronograms using secondary calibrations only (ages coming from other chronograms). 
+Conflict in estimated ages among alternative studies is common in the literature. See, for example, the robust ongoing debate about crown group age of angiosperms  [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time].
+Source chronograms available for the same organisms have potentially been estimated implementing calibrations very differently.
+For example, the chronograms from @burns2014phylogenetics were inferred using molecular substitution rate estimates across birds [@weir2008calibrating], and have much older age estimates for the same nodes than chronograms that were inferred using fossils as calibrations (Figs. \ref{fig:fringillidages}, \ref{fig:cvXY}; Supplementary Figs. S1, S4).
+<!--\textcolor{red}{EJM: MORE ON the FINCH examples and the cross validation here}-->
 
+Different calibration implementations might also imply fundamentally distinct evolutionary hypotheses [@antonelli2017supersmart].
+For example, two independent researchers working on the same clade should both carefully select and justify their choices of fossil calibration placement.
+Yet, if one researcher concludes that a fossil should calibrate the ingroup of a clade, while another researcher concludes that the same fossil should calibrate the outgroup of the clade, the resulting age estimates will differ, as the placement of calibrations as stem or crown group has been proven to significantly affect time of lineage divergence estimates [@sauquet2013practical]. 
+
+
+### Primary vs Secondary calibrations
+
+While most chronograms in DateLife's database are constructed using primary calibrations (molecular substitution rates or ages obtained from the fossil record or geological events), DateLife summarizes chronograms using secondary calibrations (ages coming from other chronograms). 
 @graur2004reading cautioned on the increased error and uncertainty in estimated ages when using secondary calibrations in dating analyses.
 @schenk2016sec showed that, in simulations, divergence times inferred using secondary calibrations are significantly younger than those inferred with primary calibrations, when obtained with Bayesian inference methods, and when priors are implemented in similar ways in both analyses.
 Accordingly, the scientific community seems to have more confidence in chronograms obtained from a single analysis, using fossil data as primary sources of calibrations [@schenk2016sec], and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data reflect a coherent evolutionary history [@sauquet2013practical], as for example done by @antonelli2017supersmart. <!-- Will this be implemented in future `datelife` versions? Probably not. -->
@@ -405,22 +417,7 @@ There have been attempts to create fossil calibration databases [@ksepka2015foss
 It seems that using several (as opposed to just a few) secondary calibrations can provide sufficient information to alleviate or even neutralize potential biases [@sauquet2013practical]. 
 Certainly, further studies are required to fully understand the effect of secondary calibrations on outputs from different tree dating methods, and on downstream analyses. It is possible that secondary calibrations can be safely used with dating methods that do not require setting priors, such as penalized likelihood [@sanderson2003r8s], with methods that do not make any assumptions on the ages and fix them to a node on a tree topology, such as BLADJ [@Webb2008; @webb2005phylomatic], or methods that summarize age data unto a tree topology.
 
-Our cross validation analysis might provide some insight in this regard. When ages are estimated with secondary calibrations, nodes closer to the root do tend to be slightly younger than ages estimated with primary calibrations. However, nodes closer to the tip tend to be older when estimated using secondary calibrations with a dating method that does not make any prior assumptions on the nature of the calibrations themselves (Supplementary Figures S2-S9). The only excpetion to tjis was observed on results of the cross validation analysis of the @burns2014phylogenetics chronogram, which results in much younger node ages when estimated using secondary calibrations (Supplementary figs. S1 and S4).
-
-
-## Variation in source chronograms
-
-Conflict among alternative dating studies is common in the literature
-(see, for example, the robust ongoing debate about crown group age of angiosperms [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time]).
-
-Source chronograms may have been estimated using different types of primary calibrations (fossil record, geologic or biogeographic events, molecular substitution rates).
-These differences in approach can deepen the already substantial variation in time estimates between lineages, as observed from the comparison of source chronograms in the Fringillidae example.
-For example, the chronograms from @burns2014phylogenetics were inferred using molecular substitution rate estimates across birds [@weir2008calibrating], and have much older date estimates for the same nodes than chronograms that were inferred using fossils as primary calibrations (figs. \ref{fig:fringillidages}, \ref{fig:cvXY}; supplementary figs. S1, S4).
-<!--\textcolor{red}{EJM: MORE ON the FINCH examples and the cross validation here}-->
-
-Different chronograms might also imply fundamentally distinct evolutionary hypotheses.
-For example, two different researchers working on the same clade could both carefully select and argue for their choices of fossil calibrations.
-Still, if one researcher decides a fossil will calibrate the ingroup of a clade, while another researcher uses the same one to calibrate outside the clade, the resulting age estimates will often differ substantially, as the placement of calibrations as stem or crown group is proved to deeply affect estimated times of lineage divergence [@sauquet2013practical]. 
+Our cross validation analysis might provide some insight in this regard. When ages are estimated with secondary calibrations, nodes closer to the root do tend to be slightly younger than ages estimated with primary calibrations. However, nodes closer to the tip tend to be older when estimated using secondary calibrations with a dating method that does not make any prior assumptions on the nature of the calibrations themselves (Supplementary Figures S2-S9). The only excpetion to tjis was observed on results of the cross validation analysis of the @burns2014phylogenetics chronogram, which results in much younger node ages when estimated using secondary calibrations (Supplementary Figs. S1 and S4).
 
 ## Sumarizing chronograms
 
@@ -455,7 +452,7 @@ For downstream analyses, using alternative chronogram may deeply affect our infe
 
 In ecology and conservation biology, incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance [@Webb2008].
 Hence, DateLife's workflow features different ways of estimating node ages in the absence of calibrations and branch length information for certain taxa.
-"Making up" branch lengths is a common practice in scientific publications: @Jetz2012, created a time-calibrated tree of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a time-calibrated tree of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a tree of 353,185 seed plants where only 23% had molecular data.
+"Making up" branch lengths is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data.
 
 Notably, risks come with this practice.
 Taken to the extreme, one could make a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration, using polytomy resolution and branch estimation methods.
@@ -479,14 +476,10 @@ Both summary and newly generated trees are useful to evaluate evolutionary hypot
 
 # Availability
 
-The `datelife` software is free and open source and it can be used through its R shiny web application at
-<http://www.datelife.org>, through the `datelife` R package, and through Phylotastic's project web portal <https://phylo.cs.nmsu.edu/>.
-DateLife's web application is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker and Open Tree of Life's infrastructure (dates.opentreeoflife.org/datelife).
-`datelife`'s R package stable version `r availability`
-for installation from the CRAN repository (<https://cran.r-project.org/package=datelife>)
-using the command `install.packages(pkgs = "datelife")` from within R. Development versions
-are available from the GitHub repository (<https://github.com/phylotastic/datelife>)
-and can be installed using the command `devtools::install_github("phylotastic/datelife")`.
+The DateLife software is free and open source and it can be used through its R shiny web application at <http://www.datelife.org>, through the `datelife` R package, and through Phylotastic's project web portal <https://phylo.cs.nmsu.edu/>.
+DateLife's web application is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker and OpenTree's infrastructure (dates.opentreeoflife.org/datelife).
+`datelife`'s R package stable version `r availability` for installation from the CRAN repository (<https://cran.r-project.org/package=datelife>) using the command `install.packages(pkgs = "datelife")` from within R. 
+Development versions are available from the GitHub repository (<https://github.com/phylotastic/datelife>) and can be installed using the command `devtools::install_github("phylotastic/datelife")`.
 
 
 # Supplementary Material

@@ -4,15 +4,6 @@ output: html_document
 date: '2022-06-21'
 ---
 
-\begin{center}
-  \includegraphics{../figures/fig_runtime_main.pdf}
-\end{center}
-  \captionof{figure}{DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names.
-  \textit{Caption continues.}}
-  \label{fig:runtime_main}
-\begin{justify}
-  \textit{Figure caption continued}. 
-For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a datelife search processing the input names with Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that had been pre-processed with TNRS (light blue).
-\end{justify}
-
-\vspace{20mm}
+\includegraphics{../figures/fig_runtime_main.pdf}
+\captionof{figure}{\textit{DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names. For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a datelife search processing the input names with Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that had been pre-processed with TNRS (light blue).}}
+\label{fig:runtime_main}
