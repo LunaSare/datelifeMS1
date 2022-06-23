@@ -184,7 +184,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4924}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 4926}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -285,8 +285,7 @@ The processed input taxon names are saved as an R object of a newly defined clas
 \hypertarget{searching-a-chronogram-database}{%
 \subsection{Searching a chronogram database}\label{searching-a-chronogram-database}}
 
-At the time of writing of this manuscript
-(Jun 22, 2022),
+At the time of writing of this manuscript (Jun 22, 2022),
 DateLife's chronogram database latest version consist of 253 chronograms published in 187 different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata (McTavish et al., 2015), which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the \texttt{datelife} R package.
 
 A unique feature of the Phylesystem is that any user can add new published, state-of-the-art chronograms any time, through their curator application (\url{https://tree.opentreeoflife.org/curator}). As chronograms are added to Phylesystem, they are incorporated into the chronogram database of the \texttt{datelife} package. The updated database is assigned a new version number, followed by a package release on CRAN. \texttt{datelife}'s chronogram database is updated as new chronogram data is added to Phylesystem, at a minimum of once a month and a maximum of every 6 months.
@@ -461,7 +460,7 @@ This taxon-constrained approach implies that the final results of a full DateLif
 
 Next, we used the processed species names in our DateLife query to identify chronograms with at least two Fringillidae species.
 The DateLife search identified 13 chronograms containing at least two Fringillidae species, published in 9 different studies (Barker et al., 2013, 2015; Burns et al., 2014; Claramunt \& Cracraft, 2015; Gibb et al., 2015; Hedges et al., 2015; Hooper \& Price, 2017; Jetz et al., 2012; Price et al., 2014).
-Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1, 206 different age data points available for species within the Fringillidae (Supplementray Table 1).
+Once identified, DateLife pruned matching chronograms to keep Fringillidae species names on tips only, and transformed these pruned chronograms to pairwise distance matrices, revealing 1, 206 different age data points available for species within the Fringillidae (Supplementray Table S1).
 
 \hypertarget{summarizing-search-results-2}{%
 \subsubsection{Summarizing search results}\label{summarizing-search-results-2}}
@@ -514,7 +513,7 @@ Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
 \label{fig:fringillidae-topologies}
 \end{minipage}
 
-Age data from source chronograms was congruified to OpenTree's topology (Fig. \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (Supplementray Table 2). For each congruent node, age summary statistics were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
+Age data from source chronograms was congruified to OpenTree's topology (Fig. \ref{fig:fringillidae-topologies}B), reducing the age data set to 818 different data points (Supplementray Table S2). For each congruent node, age summary statistics were calculated and used as fixed secondary calibrations over the chosen tree topology, to obtain a fully dated phylogeny with the program BLADJ (Fig. \ref{fig:fringillidages}).
 
 \begin{minipage}{18cm}
 \begin{center}
@@ -559,7 +558,7 @@ We would like to emphasize on the importance of sharing chronogram data, includi
 
 Conflict in estimated ages among alternative studies is common in the literature. See, for example, the robust ongoing debate about crown group age of angiosperms (Barba-Montoya, Reis, Schneider, Donoghue, \& Yang, 2018; Magallón, Gómez-Acevedo, Sánchez-Reyes, \& Hernández-Hernández, 2015; Ramshaw et al., 1972; Sanderson \& Doyle, 2001; Sauquet, Ramírez-Barahona, \& Magallón, 2021).
 Source chronograms available for the same organisms have potentially been estimated implementing calibrations very differently.
-For example, the chronograms from Burns et al. (2014) were inferred using molecular substitution rate estimates across birds (Weir \& Schluter, 2008), and have much older age estimates for the same nodes than chronograms that were inferred using fossils as calibrations (Figs. \ref{fig:fringillidages}, \ref{fig:cvXY}; Supplementary Figs. S1, S4).
+For example, the chronograms from Burns et al. (2014) were inferred using molecular substitution rate estimates across birds (Weir \& Schluter, 2008), and have much older age estimates for the same nodes than chronograms that were inferred using fossils as calibrations (Figs. \ref{fig:fringillidages}, \ref{fig:cvXY}; Supplementary Figs. S1, S5).
 
 Different calibration implementations might also imply fundamentally distinct evolutionary hypotheses (Antonelli et al., 2017).
 For example, two independent researchers working on the same clade should both carefully select and justify their choices of fossil calibration placement.
@@ -577,7 +576,7 @@ There have been attempts to create fossil calibration databases (Ksepka et al., 
 It seems that using several (as opposed to just a few) secondary calibrations can provide sufficient information to alleviate or even neutralize potential biases (Sauquet, 2013).
 Certainly, further studies are required to fully understand the effect of secondary calibrations on outputs from different tree dating methods, and on downstream analyses. It is possible that secondary calibrations can be safely used with dating methods that do not require setting priors, such as penalized likelihood (Sanderson, 2003), with methods that do not make any assumptions on the ages and fix them to a node on a tree topology, such as BLADJ (Webb et al., 2008; Webb \& Donoghue, 2005), or methods that summarize age data unto a tree topology.
 
-Our cross validation analysis might provide some insight in this regard. When ages are estimated with secondary calibrations, nodes closer to the root do tend to be slightly younger than ages estimated with primary calibrations. However, nodes closer to the tip tend to be older when estimated using secondary calibrations with a dating method that does not make any prior assumptions on the nature of the calibrations themselves (Supplementary Figures S2-S9). The only excpetion to tjis was observed on results of the cross validation analysis of the Burns et al. (2014) chronogram, which results in much younger node ages when estimated using secondary calibrations (Supplementary Figs. S1 and S4).
+Our cross validation analysis might provide some insight in this regard. When ages are estimated with secondary calibrations, nodes closer to the root do tend to be slightly younger than ages estimated with primary calibrations. However, nodes closer to the tip tend to be older when estimated using secondary calibrations with a dating method that does not make any prior assumptions on the nature of the calibrations themselves (Supplementary Figures S2-S20). The only excpetion to tjis was observed on results of the cross validation analysis of the Burns et al. (2014) chronogram, which results in much younger node ages when estimated using secondary calibrations (Supplementary Figs. S1, S5).
 
 \hypertarget{sumarizing-chronograms}{%
 \subsection{Sumarizing chronograms}\label{sumarizing-chronograms}}

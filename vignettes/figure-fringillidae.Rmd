@@ -27,7 +27,7 @@ dquery <- datelife::make_datelife_query(input = "fringillidae",
                                              use_tnrs = TRUE,
                                              get_spp_from_taxon = TRUE,
                                              taxonomic_source = "ncbi")
-# dquery <- fringillidae_v0.6.2$dquery
+# dquery <- fringillidae_v2022.01.28$dquery
 ```
 
 ## Get a `datelifeResult` object
@@ -35,13 +35,13 @@ dquery <- datelife::make_datelife_query(input = "fringillidae",
 ```{r, eval = TRUE}
 dres = datelife::get_datelife_result(input = dquery, cache = opentree_chronograms)
 
-# dres <- fringillidae_v0.6.2$dres
+# dres <- fringillidae_v2022.01.28$dres
 ```
 
 ## Get a `datelifeSummary` object
 ```{r}
 # you can add a tree topology to summarize if you do not want the Open Tree synthetic tree topology as default
-# dquery$phy <- fringillidae_v0.6.2$dsumm$phylo_median
+# dquery$phy <- fringillidae_v2022.01.28$dsumm$phylo_median
 
 dsumm <- datelife:::summary.datelifeResult(datelife_query = dquery, object = dres)
 ```
@@ -63,24 +63,24 @@ assign(data_filename, value = list(dquery = dquery,
 ```
 
 ```{r}
-ls(fringillidae_v0.6.2)
+ls(fringillidae_v2022.01.28)
 ```
 
 ```{r}
-usethis::use_data(fringillidae_v0.6.2, 
+usethis::use_data(fringillidae_v2022.01.28, 
                   overwrite = TRUE)
 ```
 
 ## Load data objects 
 
 ```{r}
-load(file = "../data/fringillidae_v0.6.2.rda")
+load(file = "../data/fringillidae_v2022.01.28.rda")
 ```
 
 Make an object with all source chronograms, and reorder chronogram list alphabetically:
 
 ```{r}
-phylo_all <- fringillidae_v0.6.2$dsumm$phylo_all
+phylo_all <- fringillidae_v2022.01.28$dsumm$phylo_all
 alphabetic_order <- order(names(phylo_all))
 phylo_all <- phylo_all[alphabetic_order]
 names(phylo_all)
@@ -150,13 +150,13 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 
 ## Get calibrations
 
-### Uncongruified
+### Uncongruified, i.e., all ages available
 
 Get calibrations for the topology in `dsumm$phylo_median`
 
 First, get all calibrations per chronogram against themselves:
 ```{r}
-phylo_median <- fringillidae_v0.6.2$dsumm$phylo_median
+phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
 all_calibrations <- datelife::extract_calibrations_phylo(
   input = phylo_all,
   each = FALSE)
@@ -180,7 +180,7 @@ calib_summ <- datelife:::summary.matchedCalibrations(
 nrow(calib_summ$in_phy) # 1206
 ```
 
-#### Table of matched calibrations
+#### Table of all ages
 
 Make it pretty.
 
@@ -220,7 +220,7 @@ dev.off()
 
 ### Congruified
 
-Congruify source chronograms with a chosen tree topology:
+Congruify source chronograms to a chosen tree topology:
 
 ```{r}
 # devtools::load_all("../../datelife")
@@ -250,7 +250,6 @@ congruified_calibs
 ```
 Use congruified calibrations with bladj:
 ```{r}
-devtools::load_all("../../datelife")
 inherits(congruified_calibs, "congruifiedCalibrations")
 phylo_median_congruified <- datelife::use_calibrations_bladj(calibrations = congruified_calibs)
 
@@ -312,16 +311,6 @@ Save congruified calibs as csv
 write.csv(pretty_calibrations, paste0("../tables/table-fringillidae-all-congruified.csv"))
 ```
 
-<!-- 
-Writing congruified calibrations as PDF??
-
-```{r}
-## set the theme to have italics in species names:
-number_of_rows <- nrow(pretty_calibrations)
-tt2 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
-```
--->
-
 Table of summary statistics of congruified ages. Creating summary table with a function:
 
 ```{r}
@@ -336,21 +325,21 @@ write.csv(summary_ages, paste0("../tables/table-fringillidae-all-summary.csv"))
 
 ```{r}
 # Export PDF and PNG
-png(paste0("../tables/table-fringillidae-all-summary.png"), 
-    width = 10, 
-    height = 55, 
-    units = "in",
-    res = 300)
-# pdf(paste0("../tables/table-fringillidae-small-example.pdf"), 
-#      width = 10, 
-#      height = 8)
+# png(paste0("../tables/table-fringillidae-all-summary.png"), 
+#     width = 10, 
+#     height = 55, 
+#     units = "in",
+#     res = 300)
+pdf(paste0("../tables/table-fringillidae-all-summary.pdf"), 
+     width = 10, 
+     height = 55)
 gridExtra::grid.table(summary_ages, 
                       rows = NULL) # I do not want row numbers
 dev.off()
 
 ```
 
-### Plot matched calibrations from source chronograms.
+### Plot congruified calibrations from source chronograms.
 
 Choose a color scheme for the studies:
 
@@ -502,7 +491,7 @@ cc_calibs$in_phy$nodeAge <- cc_calibs$in_phy$MaxAge
 Assemble arguments for plotting:
 ```{r}
 point_colors <- list(a1 = color_studies, a2 = color_median)
-all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
+fringillidae_all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
 points_median <- stats::setNames(c("/", "*"), names(color_median))
 point_type <- list(a1 =  "•", a2 = points_median)
 cex_median <- stats::setNames(c(2, 3), names(color_median))
@@ -527,7 +516,46 @@ png(filename = paste0(writing_dir, "/median_and_calibration_ages-congruified.png
     width = 20,
     units = "in",
     res = 300)
-source("../R/plot_node_ages2_custom.R")
+# source("../R/plot_node_ages2_custom.R")
+datelifeplot::plot_node_ages2(my_chronogram,
+               title = c("Fringillidae Median Summary Chronogram"),
+               pos_title = -6,
+               cex_title = 2,
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               cex_axis = 1,
+               edge.width = 3,
+               cex_tiplabels = 0.5,
+               matched_ages  = fringillidae_all_ages,
+               pch_type = point_type,
+               pch_color = point_colors,
+               pch_cex = point_cex,
+               bars_lwd = 7,
+               bars_color = "#80808060",
+#               legend_x = -5,
+#               legend_y = 200,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+#               mai1 = 1,
+#               mai2 = 0.8,
+#               mai4 = 3.6,
+               axis_label = "",
+               legend_title = leg_title,
+               legend_box = leg_box,
+               mai1 = 0,
+               mai2 = 0,
+               mai3 = 0.5,
+               mai4 = 1,
+               omi1 = 0,
+               omi2 = 0,
+               omi3 = 0,
+               legend_cex = leg_cex,
+               legend_pt_cex = leg_pt_cex,
+               legend_x = c(1, 1),
+               legend_y = c(140, 80)
+)
 dev.off()
 ```        
 

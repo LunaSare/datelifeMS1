@@ -56,34 +56,39 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Uyeda et al. 2017") # 19
 ```
 
-Check that functions work validating the first study only:
+Check that functions work by cross-validating one study only:
 
 ```{r}
 names(phylo_all)
-not_before <- c(12,13,14,17,18,19)
-names(phylo_all)[-not_before]
-cv1 <- congruify_other_calibrations(phylo_all = phylo_all[-not_before], index = 1)
+# not_before <- c(12,13,14,17,18,19)
+# names(phylo_all)[-not_before]
+cv1 <- congruify_other_calibrations(phylo_all = phylo_all, 
+                                    index = 6)
+attributes(cv1[[1]])
 ```
 
 ```{r}
-class(cv1$`Barker et al. 2013`)
 names(cv1)
 length(cv1)
-cv1[[1]]$matched_calibrations
+class(cv1[[1]])
+names(cv1[[1]])
+ls(cv1[[1]])
+cv1[[1]]$MinAge
 ```
 
 ```{r}
-cd1 <- cross_date(cv1, index =1)
+cd1 <- cross_date(calibrations = cv1, index =1)
 cd1
 ape::branching.times(cd1)
 ```
 ```{r}
-ape::branching.times(cv1$`Barker et al. 2013`$matched_phy)
+chronogram_from_original_study <- attributes(cv1[[1]])$phy
+ape::branching.times(chronogram_from_original_study)
 ```
 
 ```{r}
 ape::ltt.plot(cd1, col = "red")
-ape::ltt.lines(cv1$`Barker et al. 2013`$matched_phy)
+ape::ltt.lines(chronogram_from_original_study)
 ```
 
 Next, get calibrations for all other chronograms, using `congruify_other_calibrations()`.
@@ -122,7 +127,7 @@ color_studies <- frin_color_studies
 ### plot chronograms, overlapped
 
 ```{r}
-index = 1
+index = 5
 ls(validated_trees[[index]])
 plot_max_time <- 45
 
@@ -133,16 +138,24 @@ plot_all <- function(writing_dir,
                      validated_trees, 
                      plot_max_time = 45,
                      cex_tiplabels = 1,
-                     mai4 = 1) {
+                     mai4 = 1,
+                     file_type = "pdf") {
     #
   if (length(validated_trees[[index]]) == 1) {
     return(NA)
   }
+  if ("png" %in% file_type) {
   grDevices::png(filename = paste0(writing_dir, "cross_validation_", index, ".png"),
       height = height,
       width = 5*72,
       bg = "transparent")
-  plot_chronogram(chronogram = phylo_all[[index]],
+  }
+  if ("pdf" %in% file_type) {
+    grDevices::pdf(file = paste0(writing_dir, "cross_validation_", index, ".pdf"),
+                   height = height,
+                   width = 5)
+  }
+  datelifeplot::plot_chronogram(chronogram = phylo_all[[index]],
                          title = "",
                          time_depth = plot_max_time,
                          time_axis = FALSE,
@@ -151,7 +164,7 @@ plot_all <- function(writing_dir,
                          cex_tiplabels = cex_tiplabels,
                          mai4 = mai4)
 
-  plot_chronogram(chronogram = validated_trees[[index]],
+ datelifeplot::plot_chronogram(chronogram = validated_trees[[index]],
                          title = names(validated_trees)[index],
                          time_depth = plot_max_time,
                          time_axis = TRUE,
@@ -168,17 +181,34 @@ plot_all <- function(writing_dir,
 dev.off()
 }
 
-nice_height <- c(792, 792, 792, 792, NA, 300, 792, 792, 792, 792)
-nice_cex <- c(1, 0.5, 0.5, 1, NA, 1, 0.2, 0.2, 0.8, 0.5)
-i = 10
-for (i in 1:8) {
+nice_height <- c(792, 792, 792, 792, 300, 300, 792, 792, 792, 792, rep(792, 9))
+nice_cex <- c(1, 0.5, 0.5, 1, 1, 1, 0.2, 0.2, 0.8, 0.5, rep(1, 9))
+
+for (i in 1:19) {
+    print(i)
     plot_all(writing_dir = writing_dir,
              index = i, 
              height = nice_height[i],
              phylo_all = phylo_all,
              validated_trees = validated_trees,
              cex_tiplabels = nice_cex[i],
-             mai4 = 2.37)
+             mai4 = 2.37,
+             file_type = "png")
+}
+```
+
+Convert png images to jpg:
+
+```{r}
+library(png)
+library("jpeg")
+
+for (index in 1:19) {
+  cat(index, " -- done \n")
+  image_name <- paste0(writing_dir, "cross_validation_", index, ".png")
+  img <- readPNG(image_name)
+  new_name <- paste0(writing_dir, "cross_validation_", index, ".jpg")
+  writeJPEG(img, target = new_name, quality = 1)
 }
 ```
 
