@@ -197,7 +197,7 @@ for (i in 1:19) {
 }
 ```
 
-Convert png images to jpg:
+Convert png images to jpg and save in the dryad folder:
 
 ```{r}
 library(png)
@@ -207,7 +207,7 @@ for (index in 1:19) {
   cat(index, " -- done \n")
   image_name <- paste0(writing_dir, "cross_validation_", index, ".png")
   img <- readPNG(image_name)
-  new_name <- paste0(writing_dir, "cross_validation_", index, ".jpg")
+  new_name <- paste0("../dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index + 1, ".jpg")
   writeJPEG(img, target = new_name, quality = 1)
 }
 ```
