@@ -1,5 +1,5 @@
 ---
-title: 'README for Dryad Data Package from study "DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life"'
+title: 'Dryad Data Package for study "DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life"'
 output:
   pdf_document:
       keep_md: yes
@@ -7,7 +7,7 @@ output:
 
 
 
-This README file was generated on 2022-07-02 by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>
+This README file was generated on 2022-07-06 by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>
 
 
 GENERAL INFORMATION
@@ -18,18 +18,15 @@ GENERAL INFORMATION
 
 2. Author Information
 
-	Corresponding Researcher
-		name: Luna L. Sanchez Reyes
-    institution: University of California, Merced, USA
-    email: sanchez.reyes.luna@gmail.com
+	Corresponding Researcher name: Luna L. Sanchez Reyes
+  Corresponding Researcher institution: University of California, Merced, USA
+  Corresponding Researcher email: sanchez.reyes.luna@gmail.com
 
-	Co-researcher 1
-		name: Emily Jane McTavish
-		institution: University of California, Merced, USA
+	Co-researcher 1 name: Emily Jane McTavish
+	Co-researcher 1	institution: University of California, Merced, USA
 
-	Co-researcher 2
-		name: Brian C. O'Meara
-		institution: University of Tennessee, Knoxville, USA
+	Co-researcher 2 name: Brian C. O'Meara
+	Co-researcher 2	institution: University of Tennessee, Knoxville, USA
 
 3. Date of data collection: 2022-01-28
 
@@ -39,6 +36,10 @@ GENERAL INFORMATION
 
 6. Recommended citation for this dataset:
 
+    Sánchez-Reyes LL, McTavish EJ & O’Meara BC. (2019). DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life. BioRxiv, 782094.
+    
+    Data from: DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life. Dryad, Dataset
+
 
 DATA & FILE OVERVIEW
 
@@ -46,10 +47,12 @@ DATA & FILE OVERVIEW
 
 These data were generated to investigate and showcase the performance of the datelife R package (<https://github.com/phylotastic/datelife>).
 We showcased the application of the package with one mock example and two different biological examples.
-The mock example was GENERATED WITH
+
 The first biological example uses datelife on a small sample of bird species.
 The second one uses datelife on bird species belonging to the family Fringillidae of "true finches", following the NCBI taxonomy.
-We investigate the performance of the package datelife with two analysis: a benchmarking analysis to measure computing time of functions, and a cross validation analysis to test the accuracy and precision of the functions.
+The mock example was created by replacing species names from the small example with letters, and reducing the number of source chronograms.
+
+We evaluated the performance of the package datelife with two analysis: a benchmarking analysis to measure computing time of functions, and a cross validation analysis to test the accuracy and precision of the functions.
 
 
 2. File List:
