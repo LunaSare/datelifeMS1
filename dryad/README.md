@@ -96,113 +96,113 @@ We evaluated the performance of the package datelife with two analysis: a benchm
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S2 (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2015, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S3 (gray).
 	
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2015, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S4 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S5.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Burns et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S5.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S5 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S6.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Claramunt et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S6.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S6 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S7.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Gibb et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S7.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S7 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S8.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hedges et al. 2015, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S8.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S8 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S9.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hedges et al. 2015, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S9.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S9 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S10.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hooper et al. 2017. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S10.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S10 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S11.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Jetz et al. 2012, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S11.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S11 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S12.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Jetz et al. 2012, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S12.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S12 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S13.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Kimball et al. 2019, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S13.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S13 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S14.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Kimball et al. 2019, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S14.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S14 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S15.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Oliveros et al. 2019. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S15.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S15 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S16.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Price et al. 2014, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S16.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S16 (gray).
 	
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S17.pdf    
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Price et al. 2014, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.tre    
-	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S17.tre    
+	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S17 (gray).
 	
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S18.pdf    
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Roquet et al. 2014, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.tre    
-	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S18.tre    
+	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S18 (gray).
 	
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S19.pdf    
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Roquet et al. 2014, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.tre    
-	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S19.tre    
+	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S19 (gray).
 	
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.pdf    
-	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from XXX. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.pdf    
+	File XXX Description: Results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Uyeda et al. 2017. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S.tre    
-	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S (gray).
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.tre    
+	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S20 (gray).
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv    
 	File XXX Description: 
