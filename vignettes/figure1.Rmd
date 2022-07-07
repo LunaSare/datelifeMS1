@@ -1,5 +1,5 @@
 ---
-title: "Plots for new figure 1"
+title: "Plots for workflow figure using a mock example"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Plots for new figure 1}
