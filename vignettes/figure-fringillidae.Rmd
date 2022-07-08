@@ -174,76 +174,7 @@ for (tree in phylo_all) {
 }
 ```
 
-## Get calibrations
-
-### Uncongruified, i.e., all ages available
-
-Get calibrations for the topology in `dsumm$phylo_median`
-
-First, get all calibrations per chronogram against themselves:
-
-```{r}
-phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
-all_calibrations <- datelife::extract_calibrations_phylo(
-  input = phylo_all,
-  each = FALSE)
-nrow(all_calibrations) # 1206
-```
-
-Then match node pairs to topology. This will use all node ages as calibrations regardless if the node is monophyletic in the target tree (topology to add dates to) and source tree (chronogram from original study).
-
-```{r}
-matched <- datelife::match_all_calibrations(
-  phy = phylo_median, 
-  calibrations = all_calibrations)
-ls(matched)
-nrow(matched$matched_calibrations) # 1206
-```
-
-```{r}
-calib_summ <- datelife:::summary.matchedCalibrations(
-  matched$matched_calibrations)
-nrow(calib_summ$in_phy) # 1206
-```
-
-#### Table of all ages
-
-Make it pretty.
-
-```{r}
-source("../R/make_pretty_tables.R")
-my_calibrations <- calib_summ$in_phy
-number_of_tips <- min(my_calibrations$mrca_node_number)-1
-my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
-head(my_calibrations$mrca_node_name)
-
-pretty_calibs <- make_pretty_table(some_table = my_calibrations,
-                                   order_rows = TRUE)
-
-my_calibrations[35:36,]
-nrow(pretty_calibs)
-head(pretty_calibs)
-```
-
-Print table as pdf. Trick to print in multiple pages from <https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page>
-
-```{r}
-## set the theme to have italics in species names:
-number_of_rows <- nrow(pretty_calibs)
-tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
-```
-
-# Export PDF
-
-```{r}
-pdf("../tables/table-fringillidae-all.pdf", 
-    width = 12.5,
-    height = 336 )
-gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
-dev.off()
-```
-
-### Congruified
+## Get congruified calibrations (these are the good ones for a dating analysis)
 
 Congruify source chronograms to a chosen tree topology:
 
@@ -354,11 +285,13 @@ summary_ages <- summarize_congruifiedCalibrations(congruified_calibs)
 summary_ages
 ```
 
-Save summary table as csv
+Save summary table as CSV:
 
 ```{r}
 write.csv(summary_ages, paste0("../tables/table-fringillidae-all-summary.csv"))
 ```
+
+And then PDF:
 
 ```{r}
 # Export PDF and PNG
@@ -816,4 +749,72 @@ datelifeplot::plot_node_ages(all_summary_chronograms[[i]],
                )
   dev.off() 
 }
+```
+
+
+## Getting uncongruified, i.e., all ages available from source chronograms
+
+Get calibrations for the topology in `dsumm$phylo_median`
+
+First, get all calibrations per chronogram against themselves:
+
+```{r}
+phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all,
+  each = FALSE)
+nrow(all_calibrations) # 1206
+```
+
+Then match node pairs to topology. This will use all node ages as calibrations regardless if the node is monophyletic in the target tree (topology to add dates to) and source tree (chronogram from original study).
+
+```{r}
+matched <- datelife::match_all_calibrations(
+  phy = phylo_median, 
+  calibrations = all_calibrations)
+ls(matched)
+nrow(matched$matched_calibrations) # 1206
+```
+
+```{r}
+calib_summ <- datelife:::summary.matchedCalibrations(
+  matched$matched_calibrations)
+nrow(calib_summ$in_phy) # 1206
+```
+
+#### Table of all ages
+
+Make it pretty.
+
+```{r}
+source("../R/make_pretty_tables.R")
+my_calibrations <- calib_summ$in_phy
+number_of_tips <- min(my_calibrations$mrca_node_number)-1
+my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
+head(my_calibrations$mrca_node_name)
+
+pretty_calibs <- make_pretty_table(some_table = my_calibrations,
+                                   order_rows = TRUE)
+
+my_calibrations[35:36,]
+nrow(pretty_calibs)
+head(pretty_calibs)
+```
+
+Print table as pdf. Trick to print in multiple pages from <https://stackoverflow.com/questions/15937131/print-to-pdf-file-using-grid-table-in-r-too-many-rows-to-fit-on-one-page>
+
+```{r}
+## set the theme to have italics in species names:
+number_of_rows <- nrow(pretty_calibs)
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", number_of_rows), rep("italic", number_of_rows*2), rep("plain", number_of_rows*2)))))
+```
+
+# Export PDF
+
+```{r}
+pdf("../tables/table-fringillidae-all.pdf", 
+    width = 12.5,
+    height = 336 )
+gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
 ```
