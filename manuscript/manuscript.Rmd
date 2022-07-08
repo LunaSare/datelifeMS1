@@ -272,7 +272,7 @@ Unit testing helps identify potential issues as code is updated or, more critica
 
 # Case studies
 
-We illustrate the DateLife workflow using a family within the Passeriform birds encompassing the true finches, Fringillidae, as case study. On a small example, we analyse 6 bird species, and show all steps of the workflow (Fig. \ref{fig:figure2}). As a second example, we analyse 289 species in the family Fringillidae that are included in the NCBI taxonomy (Fig. \ref{fig:fringillidages}).
+We illustrate the DateLife workflow using a family within the Passeriform birds encompassing the true finches, Fringillidae, as case study. On a small example, we analysed 6 bird species, and results from each step of the workflow are shown in Fig. \ref{fig:figure2}. As a second example, we analysed 289 bird species in the family Fringillidae that are included in the NCBI taxonomy. The resulting summary chronogram is shown in Fig. \ref{fig:fringillidages}, and results from previous steps of the workflow are available as Supplementary Figures.
 <!--We used `r cite_r("r-references.bib")` for all our analyses.-->
 
 ## A small example
