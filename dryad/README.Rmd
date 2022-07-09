@@ -12,6 +12,7 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  echo = FALSE,
   results = 'hide'
 )
 ```
@@ -291,222 +292,49 @@ Bacterial detection was performed on the ViiA7 Real-time PCR System (Thermo Fish
 Diversity profiling was performed by AGRF (Australian Genome Research Facility, Melbourne Australia). Samples were amplified with universal primers to the V1-V3 region of the bacterial 16S gene (forward AGAGTTTGATCMTGGCTCAG; reverse GWATTACCGCGGCKGCTG). Amplicons were indexed using the Nextera XT Index Kit (Illumina, San Diego, CA, USA) followed by Paired End sequencing on a MiSeq next generation sequencer (Illumina). Paired-end reads were assembled by aligning the forward and reverse reads using PEAR1 (version 0.9.5). Primers were identified and trimmed. Trimmed sequences were processed using Quantitative Insights into Microbial Ecology (QIIME 1.8) USEARCH (version 8.0.1623) and UPARSE software. Sequences were quality filtered and sorted by abundance after removal of full-length duplicate sequences. Singletons or unique reads were discarded. Sequences were clustered and then chimera filtered using “rdp_gold” database as reference. Reads were mapped back to Operational Taxonomic Units with a minimum identity of 97% and taxonomy was assigned using the QIIME 1 default classifier, pre-trained against Greengenes database5 (Version 13_8, Aug 2013).
 
 
-```{r, echo = FALSE}
+```{r}
+
+var_description_1 <- c("Node names in tree topology, as defined by taxon A and taxon B",
+                       "Scientific name of the first element of a taxon pair that defines a node from a tree topology",
+                       "Scientific name of the second element of a taxon pair that defines a node from a tree topology",
+                       "Ages of nodes defined by taxon A and taxon B, in Million years",
+                       "Reference of the study that published the chronogram from which the node ages were extracted")
+
+var_description_2 <- c("Names of nodes from the tree topology used for the dating analysis",
+                       "Minimum node age, in Million years",
+                       "First quartile of node age distributions, in Million years",
+                       "Mean node age, in Million years",
+                       "Median node age, in Million years",
+                       "Third quartile of node age distributions, in Million years",
+                       "Maximum node age, in Million years",
+                       "Variance of node age, in Million years",
+                       "Standar deviation of node age, in Million years")
+```
+
+```{r}
 text <- c()
+var_descriptions <- list(var_description_1, var_description_2, var_description_1, var_description_2) 
+names(var_descriptions) <- csv_file_names
+
 for (file_name in csv_file_names) {
   # read the csv file in:
   tt <- utils::read.csv(file = paste0("../dryad/", file_name), header = TRUE, row.names = NULL)
   # remove the column with row numbers:
   tt <- tt[,-1]
   # create the description text
-  var_list <- paste("\\tab", gsub("[.]", " ", colnames(tt)))
-  var_list <- paste(var_list, collapse = ": \\newline")
+  var_list <- gsub("[.]", " ", colnames(tt))
+  var_list <- paste0("\\tab ", var_list, ": ", var_descriptions[[file_name]], "\\n ")
+  var_list <- paste0(var_list, collapse = "")
+  print(var_list)
   text <- paste(text, 
-                paste("DATA-SPECIFIC INFORMATION FOR:", file_name, "\\newline"),
-                "1. Number of variables: ",
-                ncol(tt), "\\newline",
-                "2. Number of cases/rows:",
-                nrow(tt), "\\newline",
-                "3. Variable List: \\newline", var_list, "\\newline",
-                "4. Missing data codes: None \\newline
-                5. Abbreviations used: NA = not applicable \\newline \\newline")
+                paste("DATA-SPECIFIC INFORMATION FOR:", file_name, "\\n "),
+                "\\n1. Number of variables/columns:", ncol(tt), "\\n ",
+                "\\n2. Number of cases/rows:", nrow(tt), "\\n ",
+                "\\n3. Variable List \\n ", var_list,
+                "\\n4. Missing data codes: None \\n ",
+                "\\n5. Abbreviations used: NA = not applicable \\n \\n ")
 }
 ```
 
 `r text`
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_a_Cohort_IDs.xlsx
 
-1. Number of variables: 4
-
-2. Number of cases/rows: 73
-
-3. Variable List:
-	Screening_cohort: Patient included in screening cohort; yes/no
-	Screening_cohort_ID: Patient ID number for screening cohort
-	Site_inv_cohort: Patient included in site investigation cohort; yes/no
-	Site_inv_cohort_ID: Patient ID number for site investigation cohort
-
-4. Missing data codes:
-	None
-
-5. Abbreviations used:
-	N/A; not applicable
-
-6. Other relevant information:
-	20 of 21 patients in the screening cohort whose tumour tested positive for F. nucleatum, B. fragilis or both species were included in the site investigation cohort, along with 31 additional patients. Tumour material for one screening cohort patient whose tumour was positive for both species (patient 24) was not available for further DNA extraction.
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_b_Screening_qPCR_data.xlsx
-
-1. Number of variables: 9
-
-2. Number of cases/rows: 42
-
-3. Variable List:
-	Screening_cohort_ID: Screening cohort patient ID number
-	B-actin_mean_Ct: Mean Ct for beta-actin; no. cycles
-	PGT_mean_Ct: Mean Ct for prostaglandin transporter; no. cycles
-	F_nucleatum_mean_Ct: Mean Ct for Fusobaterium nucleatum; no. cycles
-	B_fragilis_gyrase_mean_Ct: Mean Ct for Bacteroides fragilis gyrase; no. cycles
-	B_fragilis_bft_mean_Ct: Mean Ct for Bacteroides fragilis toxin; no. cycles
-	B_breve_mean_Ct: Mean Ct for Bifidobacterium breve; no. cycles
-	C_showae_mean_Ct: Mean Ct for Campylobacter showae; no. cycles
-	L_buccalis_mean_Ct: Mean Ct for Leptotrichia buccalis ; no. cycles
-
-
-4. Missing data codes:
-	No Amp; No amplification
-
-5. Abbreviations used:
-	Amp; amplification, BFT; Bacteroides fragilis toxin, PGT; prostaglandin transporter
-
-6. Other relevant information:
-	Reactions were performed in duplicate. Results were reported where one or both samples amplified. Values represent the mean Ct where both samples amplified or the individual Ct for single amplifications.
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_c_Site_inv_species_by_site.xlsx
-
-1. Number of variables: 9 + comments field
-
-2. Number of cases/rows: 436
-
-3. Variable List:
-	Site_inv_cohort_ID: Site investigation cohort patient ID number
-	Tumour_ID: Tumour ID number for patients with synchronous tumours (n = 5); 1/2
-	Site: Area of tissue targeted; Normal (proximal), Normal (distal), Normal (adjacent), Tum luminal surface, Tumour, Tumour (mutinous), Invading margin, Inflammation, Stroma, Lymph node
-	Site_code: Numerical code assigned to site; 1-11
-	Site_code_2: Second site if same area used to represent more than one site; 1-11
-	B_actin_mean_Ct: Mean Ct for beta-actin; no. cycles
-	PGT_mean_Ct: Mean Ct for prostaglandin transporter; no. cycles
-	F_nucleatum_mean_Ct: Mean Ct for Fusobaterium nucleatum; no. cycles
-	B_fragilis_mean_Ct: Mean Ct for Bacteroides fragilis gyrase; no. cycles
-	Comments: Used to flag values excluded from analysis
-
-4. Missing data codes:
-	No Amp; No amplification
-	Single Amp; Single amplification
-	N/A: not applicable
-
-5. Abbreviations used:
- 	Amp; amplification, PGT; prostaglandin transporter, Tum; tumour
-
-6. Other relevant information:
-	Target sites included: normal tissue from the proximal and distal surgical margins of the resection specimen, normal tissue adjacent to the tumour region, the tumour luminal surface, central tumour, mucinous tumour (where applicable), invading margin, sites of inflammation, stroma, lymph nodes containing tumour deposits and metastatic sites where available. Metastatic site data have been excluded from this dataset to minimise any risk of deductive disclosure of patient identities.
-	B-actin and PGT reactions were performed in duplicate and all samples amplified.
-	F. nucleatum and B. fragilis reactions were performed in triplicate and results reported where two or more samples amplified.  Mean cT values were excluded from analysis if the SD of the replicate Ct values > 5 (highlighted red).
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_d_Site_inv_16S_qPCR_data.xlsx
-
-1. Number of variables: 4
-
-2. Number of cases/rows: 51
-
-3. Variable List:
-	Site_inv cohort_ ID: Site investigation cohort patient ID number
-	PGT_mean_Ct: Mean Ct for prostaglandin transporter; no. cycles
-	16S_TFS_mean_Ct: Mean Ct for 16S rRNA using primer set 1
-	16S_IDT_mean_Ct: Mean Ct for 16S rRNA using primer set 2
-
-4. Missing data codes:
-	None
-
-5. Abbreviations used:
-	IDT; Integrated DNA Technologies, PGT; prostaglandin transporter, TFS; Thermo Fisher Scientific
-
-6. Other relevant information:
-	Primer set 1: Obtained from Integrated DNA Technologies; Sequences as published in Nadkarni et al. Determination of bacterial load by real-time PCR using a broad-range (universal) probe and primers set. Microbiology. 2002;148(Pt 1):257-66. doi: 10.1099/00221287-148-1-257. PubMed PMID: 11782518.
-	Primer set 2: Obtained from Thermo Fisher Scientific; Assay ID Ba04230899_s1.
-	Performed on DNA samples extracted from the tumour luminal surface.
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_e_Seq_data_absolute_abundance.xlsx
-
-1. Number of variables: 7
-
-2. Number of cases/rows: 308
-
-3. Variable List:
-	OTU_ID: OTU ID number
-	Pt_32: Absolute abundance of each OTU for patient 32; no. sequence reads
-	Pt_26: Absolute abundance of each OTU for patient 26; no. sequence reads
-	Pt_35: Absolute abundance of each OTU for patient 35; no. sequence reads
-	Pt_28: Absolute abundance of each OTU for patient 28; no. sequence reads
-	Pt_29: Absolute abundance of each OTU for patient 29; no. sequence reads
-	Consensus_Lineage: Consensus lineage
-
-4. Missing data codes:
-	None
-
-5. Abbreviations used:
-	OTU; Operational Taxonomic Unit, Pt; patient
-
-6. Other relevant information:
-	Performed on DNA samples extracted from the tumour luminal surface.
-	Taxonomy assigned using the QIIME 1 default classifier, pre-trained against Greengenes database5 (Version 13_8, Aug 2013).
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_f_Seq_data_otu_table.xlsx
-
-1. Number of variables: 6
-
-2. Number of cases/rows:
-	Sheet 1 'Phylum_level': 13
-	Sheet 2 'Class_level': 21
-	Sheet 3 'Order_level': 28
-	Sheet 4 'Family_level': 49
-	Sheet 5 'Genus_level': 85
-	Sheet 6 'Species_level': 101
-
-3. Variable List:
-	Taxon: Assigned taxon
-	Pt_32: Relative abundance of each taxon for patient 32; proportion of total sequence reads
-	Pt_26: Relative abundance of each taxon for patient 26; proportion of total sequence reads
-	Pt_35: Relative abundance of each taxon for patient 35; proportion of total sequence reads
-	Pt_28: Relative abundance of each taxon for patient 28; proportion of total sequence reads
-	Pt_29: Relative abundance of each taxon for patient 29; proportion of total sequence reads
-
-4. Missing data codes:
-	None
-
-5. Abbreviations used:
-	Pt; patient
-
-6. Other relevant information:
-	Performed on DNA samples extracted from the tumour luminal surface.
-	Taxonomy assigned using the QIIME 1 default classifier, pre-trained against Greengenes database5 (Version 13_8, Aug 2013).
-
-
-DATA-SPECIFIC INFORMATION FOR: Rye_2021_g_Seq_data_mg_blast.xlsx
-
-1. Number of variables: 16
-
-2. Number of cases/rows: 366
-
-3. Variable List:
-	subject: OTU ID
-	gi: Nucleotide BLAST accession number
-	evalue: Expectation Value
-	bit-score: Bit score
-	score: Raw alignment score
-	alignment-length: Alignment length; number of bases
-	%identity: Percentage of bases identical to OTU group reference sequence
-	identical: Number of bases identical to OTU group reference sequence
-	positives: Number of bases with a positive match to OTU group reference sequence
-	%positives: Percentage of bases with a positive match to OTU group reference sequence
-	scientific-names: Scientific name of OTU classification group
-	common-names: Common name of OTU classification group
-	subject-blast-names: Grouping name
-	subject-super-kingdoms: Kingdom names
-	subject-title: Descriptive title for OTU group
-	OTU-seq: OTU reference Sequence
-
-
-4. Missing data codes:
-	None
-
-5. Abbreviations used:
-	OTU; Operational Taxonomic Unit
-
-6. Other relevant information:
-	Taxonomy assigned using the QIIME 1 default classifier, pre-trained against Greengenes database5 (Version 13_8, Aug 2013).
