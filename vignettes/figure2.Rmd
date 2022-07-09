@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-writing_dir <- "../figures/figure2/"
+writing_dir <- "../figures/figure-small-example/"
 ```
 ## Getting source chronograms
 
@@ -20,7 +20,7 @@ writing_dir <- "../figures/figure2/"
 # library(datelifeMS1)
 devtools::load_all("../../datelifeplot")
 devtools::load_all("../../datelife")
-devtools::load_all()
+load("../data/frin_sample_dsumm.rda")
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
 spp_write <- sub("_", " ", spp)
@@ -86,14 +86,14 @@ datelifeplot::plot_phylo(chronogram,
                          plot_type = "phyloch",
                          time_depth = plot_max_time,
                          write = "pdf",
-                         file_name = "../figures/figure2/test.pdf",
+                         file_name = "../figures/figure-small-example/test.pdf",
                          cex_tiplabels = 2,
                          cex_axislabel = 1.5,
                          cex_title = 2,
                          pos_title = 2.2,
                          pos_axis = 2)
 ```
-[!Source chronogram test]("../figures/figure2/test.pdf")
+[!Source chronogram test]("../figures/figure-small-example/test.pdf")
 
 
 ### Plotting ALL source chronograms
@@ -114,7 +114,7 @@ Plot as pdf:
 
 ```{r}
 datelifeplot::plot_phylo_all(chronograms = phylo_all,
-                             folder_name = "../figures/figure2/source_phylo_all",
+                             folder_name = "../figures/figure-small-example/source_phylo_all",
                              plot_height = 440,
                              plot_width = 600,
                              mai1 = 1,
@@ -139,7 +139,7 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 ```
 
 
-I combined source chronogram plots with ppt (files in `figures/figure2/source_phylo_all*.pptx`), because combining with `magick` was not
+I combined source chronogram plots with ppt (files in `figures/figure-small-example/source_phylo_all*.pptx`), because combining with `magick` was not
 doing what I needed. This is the code I tried:
 
 ```
@@ -156,9 +156,8 @@ magick::image_append(magick::image_scale(img, "200x"))
 dev.off()
 ```
 
-## Get calibrations
+## Get calibrations (uncongruified are the same as congruified)
 
-### Uncongruified
 All calibrations, even those that are not congruent:
 
 ```{r}
@@ -276,7 +275,7 @@ gridExtra::grid.table(pretty_calibs, theme = tt1) # if you do not want row numbe
 dev.off()
 ```
 
-Save table as .tex, but it is not formatted pretty
+Save table as TEX, but it is not formatted pretty:
 
 ```{r}
 df <- knitr::kable(pretty_calibs, 
@@ -286,6 +285,12 @@ df <- knitr::kable(pretty_calibs,
                    caption = "Ages of congruified nodes.",
                    label = "table1")
 writeLines(df, '../manuscript/table-fringillidae-small-example.tex')
+```
+
+
+Write table as CSV:
+```{r}
+write.csv(pretty_calibs, paste0("../tables/table-fringillidae-small-example.csv"))
 ```
 
 ### Congruified
@@ -315,33 +320,7 @@ class(only_calibs$`node`)
 summary(only_calibs)
 ```
 
-```{r}
-library(dplyr)
-summary_table <- only_calibs %>%                               
-# Summary by group using dplyr
-  group_by(node) %>% 
-  summarize(min = min(x),
-            q1 = quantile(x, 0.25),
-            median = median(x),
-            mean = mean(x),
-            q3 = quantile(x, 0.75),
-            max = max(x))
-```
-
-```{r}
-class(summary_table)
-summary_table <- as.data.frame(summary_table)
-class(summary_table)
-colnames(summary_table) <- c("Node Name",
-                             "Min Age",
-                             "Q1",
-                             "Median Age",
-                             "Mean Age",
-                             "Q3",
-                             "Max Age")
-```
-Creating it with a loop:
-Add variance and sd:
+Creating summary table with a loop to add variance and sd:
 
 ```{r}
 min_ages <- q1 <- median_ages <- mean_ages <- q3 <- max_ages <- sd_ages <- var_ages <- c()
@@ -396,6 +375,11 @@ dev.off()
 
 ```
 
+Write summary table as CSV:
+```{r}
+write.csv(summary_table, paste0("../tables/table-fringillidae-small-example-summary.csv"))
+```
+
 ### Plot matched calibrations from source chronograms.
 
 Choose a color scheme for the studies:
@@ -442,7 +426,7 @@ usethis::use_data(color_studies)
 Now, we can plot:
 
 ```{r}
-svg(filename = "../figures/figure2/node_ages_matched.svg",
+svg(filename = "../figures/figure-small-example/node_ages_matched.svg",
     height = 10,
     width = 7)
 datelifeplot::plot_node_ages(phylo_median,
@@ -560,7 +544,7 @@ Print table as pdf
 tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 15), rep("italic", 30), rep("plain", 30)))))
 
 # Export PDF
-pdf("../figures/figure2/median_table.pdf", width = 10)
+pdf("../figures/figure-small-example/median_table.pdf", width = 10)
 gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
@@ -628,7 +612,7 @@ tt1 <- gridExtra::ttheme_default(core=list(
 Writing the table out:
 
 ```{r}
-pdf("../figures/figure2/median_table_simple.pdf", width = 10)       # Export PDF
+pdf("../figures/figure-small-example/median_table_simple.pdf", width = 10)       # Export PDF
 gridExtra::grid.table(pretty_median, theme = tt1) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
@@ -655,7 +639,7 @@ leg_text <- names(leg_color)
 Plot:
 
 ```{r}
-svg(filename = "../figures/figure2/median_and_calibration_ages.svg",
+svg(filename = "../figures/figure-small-example/median_and_calibration_ages.svg",
     height = 8.5 ,
     width = 10.5)
 datelifeplot::plot_node_ages2(phylo_median,
@@ -736,7 +720,7 @@ leg_box <- c(TRUE, TRUE)
 
 Plot again:
 ```{r}
-pdf(file = "../figures/figure2/median_and_calibration_ages_simple.pdf",
+pdf(file = "../figures/figure-small-example/median_and_calibration_ages_simple.pdf",
     height = 8.5,
     width = 10.5)
 datelifeplot::plot_node_ages2(phylo_median,
@@ -792,7 +776,7 @@ pp$edge.length <- pp$edge.length*plot_max_time
 Plot median tree topology with node labels and no time axis
 
 ```{r}
-svg(filename = "../figures/figure2/median_tree_topology.svg",
+svg(filename = "../figures/figure-small-example/median_tree_topology.svg",
     height = 5,
     width = 6,
     bg = "transparent")

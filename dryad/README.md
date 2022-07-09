@@ -2,12 +2,15 @@
 title: 'Dryad Data Package for study "DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life"'
 output:
   pdf_document:
-      keep_md: yes
+    keep_md: yes
+    pandoc_args: --listings
+    includes:
+      in_header: preamble.tex
 ---
 
 
 
-This README file was generated on 2022-07-13 by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>
+This README file was generated on 2022-07-15 by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>
 
 
 GENERAL INFORMATION
@@ -65,12 +68,38 @@ We evaluated the performance of the package datelife with two analysis: a benchm
 
 2. File List:
 
-	File 1 Name: Sanchez-Reyes_etal_2022_table_1.csv    
+
+
+
+
+  File 1 Name: Sanchez-Reyes_etal_2022_table_1.csv    
 	File 1 Description: CSV (comma separated values) file containing results from the small example. Names and ages (in Million years) of nodes from source chronograms that have been congruified to nodes of the chosen tree topology.
 
-	File 2 Name: Sanchez-Reyes_etal_2022_table_2.csv    
-	File 2 Description: CSV (comma separated values) file containing a summary of node age (in Million years) data from table S1. 
 
+
+	File 2 Name: Sanchez-Reyes_etal_2022_table_2.csv    
+	File 2 Description: CSV (comma separated values) file containing a summary of node age (in Million years) data from table 1. 
+
+
+	
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv    
+	File XXX Description: CSV (comma separated values) file containing results from the Fringillidae example. Names and ages (in Million years) of nodes from source chronograms that have been congruified to nodes of the chosen tree topology shown in Figure 4B of the manuscript.
+
+
+	
+	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S1.pdf    
+	File XXX Description: PDF version of file Sanchez-Reyes_etal_2022_supplementary_table_S1.csv 
+
+
+
+  File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S2.csv    
+	File XXX Description: CSV (comma separated values) file containing a summary of node age data (in Million years) from table S1.
+
+
+
+  File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S2.pdf    
+	File XXX Description: PDF file version of file Sanchez-Reyes_etal_2022_supplementary_table_S2.csv.
+	
 	File 3 Name: Sanchez-Reyes_etal_2022_figure_1_chronogram_mock_example.tre    
 	File 3 Description: Newick version of chronogram from the mock example shown in Figure 1 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
@@ -100,7 +129,6 @@ We evaluated the performance of the package datelife with two analysis: a benchm
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S3 (gray).
-	
 	
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.jpg    
 	File XXX Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2015, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
@@ -203,18 +231,8 @@ We evaluated the performance of the package datelife with two analysis: a benchm
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.tre    
 	File XXX Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S20 (gray).
-	
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv    
-	File XXX Description: CSV (comma separated values) file
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S1.pdf    
-	File XXX Description: PDF file of 
 
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S2.csv    
-	File XXX Description: CSV (comma separated values) file
-
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_table_S2.pdf    
-	File XXX Description: PDF file of r
 
 	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_    
 	File XXX Description: 
@@ -239,19 +257,12 @@ Diversity profiling was performed by AGRF (Australian Genome Research Facility, 
 
 
 
-```r
-files <- c()
-text <- c()
-for (file in 1:10) {
-  
-  text <- paste(text, 
-                paste("DATA-SPECIFIC INFORMATION FOR:", file, "\\newline"))
-}
-text
-#> [1] " DATA-SPECIFIC INFORMATION FOR: 1 \\newline DATA-SPECIFIC INFORMATION FOR: 2 \\newline DATA-SPECIFIC INFORMATION FOR: 3 \\newline DATA-SPECIFIC INFORMATION FOR: 4 \\newline DATA-SPECIFIC INFORMATION FOR: 5 \\newline DATA-SPECIFIC INFORMATION FOR: 6 \\newline DATA-SPECIFIC INFORMATION FOR: 7 \\newline DATA-SPECIFIC INFORMATION FOR: 8 \\newline DATA-SPECIFIC INFORMATION FOR: 9 \\newline DATA-SPECIFIC INFORMATION FOR: 10 \\newline"
-```
 
- DATA-SPECIFIC INFORMATION FOR: 1 \newline DATA-SPECIFIC INFORMATION FOR: 2 \newline DATA-SPECIFIC INFORMATION FOR: 3 \newline DATA-SPECIFIC INFORMATION FOR: 4 \newline DATA-SPECIFIC INFORMATION FOR: 5 \newline DATA-SPECIFIC INFORMATION FOR: 6 \newline DATA-SPECIFIC INFORMATION FOR: 7 \newline DATA-SPECIFIC INFORMATION FOR: 8 \newline DATA-SPECIFIC INFORMATION FOR: 9 \newline DATA-SPECIFIC INFORMATION FOR: 10 \newline
+ DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_1.csv \newline 1. Number of variables:  5 \newline 2. Number of cases/rows: 28 \newline 3. Variable List: \newline \tab Node Name: \newline\tab taxon A: \newline\tab taxon B: \newline\tab Node Age: \newline\tab Study chronogram \newline 4. Missing data codes: None \newline
+                5. Abbreviations used: NA = not applicable \newline \newline DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_2.csv \newline 1. Number of variables:  9 \newline 2. Number of cases/rows: 5 \newline 3. Variable List: \newline \tab Node Name: \newline\tab Min Age: \newline\tab Q1: \newline\tab Median Age: \newline\tab Mean Age: \newline\tab Q3: \newline\tab Max Age: \newline\tab Variance: \newline\tab SD \newline 4. Missing data codes: None \newline
+                5. Abbreviations used: NA = not applicable \newline \newline DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv \newline 1. Number of variables:  5 \newline 2. Number of cases/rows: 818 \newline 3. Variable List: \newline \tab Node Name: \newline\tab taxon A: \newline\tab taxon B: \newline\tab Node Age: \newline\tab Study reference \newline 4. Missing data codes: None \newline
+                5. Abbreviations used: NA = not applicable \newline \newline DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S2.csv \newline 1. Number of variables:  9 \newline 2. Number of cases/rows: 194 \newline 3. Variable List: \newline \tab Node Name: \newline\tab Min Age: \newline\tab Q1: \newline\tab Median Age: \newline\tab Mean Age: \newline\tab Q3: \newline\tab Max Age: \newline\tab Variance: \newline\tab SD \newline 4. Missing data codes: None \newline
+                5. Abbreviations used: NA = not applicable \newline \newline
 DATA-SPECIFIC INFORMATION FOR: Rye_2021_a_Cohort_IDs.xlsx
 
 1. Number of variables: 4
