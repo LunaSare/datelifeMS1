@@ -182,6 +182,8 @@ Congruify source chronograms to a chosen tree topology:
 # devtools::load_all("../../datelife")
 phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
 
+ape::write.tree(phylo_median, "../figures/figure-fringillidae/median_chronogram.tre")
+
 sc1 <- datelife::congruify_and_mrca_phylo(phy = phylo_median,
                              source_chronogram = phylo_all[[1]],
                              reference = names(phylo_all)[1])

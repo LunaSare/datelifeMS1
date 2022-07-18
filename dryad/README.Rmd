@@ -98,6 +98,9 @@ file.copy(from = "../figures/figure-workflow/median_chronogram.tre",
 file.copy(from = "../figures/figure-small-example/median_chronogram.tre",
           to = "../dryad/Sanchez-Reyes_etal_2022_figure_3_chronogram_small_example.tre",
           overwrite = TRUE)
+file.copy(from = "../figures/figure-fringillidae/median_chronogram.tre",
+          to = "../dryad/Sanchez-Reyes_etal_2022_figure_5_chronogram_finches_example.tre",
+          overwrite = TRUE)
 ```
 
 # Description of data files
