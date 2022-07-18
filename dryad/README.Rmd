@@ -110,7 +110,7 @@ file.copy(from = "../figures/fringillidae-topologies/fringillidae_paraphyletic_t
 
 files_in_path <- list.files(path = "../figures/figure-fringillidae/source_chronograms")
 
-# get only newick file names
+# get source chronograms newick file names
 newick_files <- files_in_path[grep("[.]tre", files_in_path)]
 
 # order files numerically
@@ -122,7 +122,26 @@ for (file_name in newick_files) {
   file.copy(from = paste0("../figures/figure-fringillidae/source_chronograms/", file_name),
           to = paste0("../dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index, "_source.tre"),
           overwrite = TRUE)
+  write(paste0("https://raw.githubusercontent.com/LunaSare/datelifeMS1/main/dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index, "_source.tre"), file = "../dryad/urls.txt", append=TRUE)
 }
+
+# get cross validated chronograms newick file names
+files_in_path <- list.files(path = "../figures/fringillidae-cross-validation")
+
+newick_files <- files_in_path[grep("[.]tre", files_in_path)]
+
+# order files numerically
+newick_files <- stringr::str_sort(newick_files, numeric = TRUE)
+
+index <- 1
+for (file_name in newick_files) {
+  index <- index + 1
+  file.copy(from = paste0("../figures/fringillidae-cross-validation/", file_name),
+          to = paste0("../dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index, "_cross_validated.tre"),
+          overwrite = TRUE)
+  write(paste0("https://raw.githubusercontent.com/LunaSare/datelifeMS1/main/dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index, "_cross_validated.tre"), file = "../dryad/urls.txt", append=TRUE)
+}
+
 ```
 
 # Description of data files

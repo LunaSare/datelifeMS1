@@ -1,5 +1,5 @@
 ---
-title: "figure-cross-validation"
+title: "Cross validation analysis and figures"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{figure-cross-validation}
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 devtools::load_all()
 devtools::load_all("../../datelifeplot")
 devtools::load_all("../../datelife")
-writing_dir <- "../figures/figure-cross-validation/"
+writing_dir <- "../figures/fringillidae-cross-validation/"
 ```
 
 ## Cross validation of Fringillidae source chronograms.
@@ -112,6 +112,22 @@ validated_trees <- lapply(seq(frin_other_calibs), function(i)
 names(validated_trees) <- names(frin_other_calibs)
 
 usethis::use_data(validated_trees, overwrite = TRUE)
+
+```
+
+Save as newick
+
+```{r}
+refs <- gsub(" - ", "_", names(validated_trees))
+refs <- gsub(" ", "_", refs)
+refs <- gsub("[.]", "", refs)
+for (i in seq(validated_trees)) {
+  ape::write.tree(validated_trees[[i]], file = paste0(writing_dir, 
+                                                      i, 
+                                                      "_", 
+                                                      refs[i],
+                                                      "_cross_validated.tre"))
+}
 
 ```
 
