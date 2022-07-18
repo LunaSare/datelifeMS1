@@ -37,6 +37,9 @@ spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = 
 
 ```{r}
 phylo_median <- spp_summ$phylo_median
+
+ape::write.tree(phylo_median, file = "../figures/figure-small-example/median_chronogram.tre")
+
 phylo_all <- spp_summ$phylo_all
 # Reorder chronogram list alphabetically:
 alphabetic_order <- order(names(phylo_all))

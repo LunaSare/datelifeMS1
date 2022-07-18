@@ -93,7 +93,11 @@ file.copy(from = ".../tables/table-fringillidae-all-summary.pdf",
           to = "../dryad/anchez-Reyes_etal_2022_supplementary_table_S2.pdf",
           overwrite = TRUE)
 file.copy(from = "../figures/figure-workflow/median_chronogram.tre",
-          to = "../dryad/Sanchez-Reyes_etal_2022_figure_1_chronogram_mock_example.tre")
+          to = "../dryad/Sanchez-Reyes_etal_2022_figure_1_chronogram_mock_example.tre",
+          overwrite = TRUE)
+file.copy(from = "../figures/figure-small-example/median_chronogram.tre",
+          to = "../dryad/Sanchez-Reyes_etal_2022_figure_3_chronogram_small_example.tre",
+          overwrite = TRUE)
 ```
 
 # Description of data files
