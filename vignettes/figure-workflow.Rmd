@@ -13,6 +13,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+To create the mock datelife example for the workflow figure of the manuscript, we used the real data from the samll example.
+
+
 ## Getting source chronograms
 
 ```{r setup}
@@ -25,7 +29,7 @@ spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 ```
 
-As you can see in figure X, there is one chronogram that has inconsistent ages for one node relative to other node ages. It is Study 6, Burns et al.
+There is one chronogram that has inconsistent ages for one node relative to other node ages. It is Study 6, Burns et al.
 To produce a figure that would showcase the datelife workflow in a clear and straightforward way, we decided to keep only 3 source chronograms:
 
 Study 1, and
@@ -87,7 +91,7 @@ I combined source chronogram plots with ppt.
 plot_max_time <- 30
 datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
                              write = "pdf",
-                             folder_name = "../figures/figure1/source_chronograms",
+                             folder_name = "../figures/figure-workflow/source_chronograms",
                              file_name = "phylo_all",
                              plot_type = "phyloch",
                              max_depth = plot_max_time,
@@ -111,6 +115,12 @@ Rename median chronogram tip labels:
 phylo_median <- spp_summ$phylo_median
 is_in_tree <- match(gsub(" ", "_", phylo_median$tip.label), mock_spp_names)
 phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
+```
+
+Save as newick:
+
+```{r}
+ape::write.tree(phylo_median, file = "../figures/figure-workflow/median_chronogram.tre")
 ```
 
 Get calibrations:
@@ -159,7 +169,7 @@ names(color_studies) <- studies
 
 plot_max_time <- 30
 
-svg(filename = "../figures/figure1/opentree_source_ages.svg",
+svg(filename = "../figures/figure-workflow/opentree_source_ages.svg",
     height = 5,
     width = 5)
 datelifeplot::plot_node_ages(pp,
@@ -189,9 +199,9 @@ dev.off()
 
 ```{r}
 plot_max_time <- 30
-svg(filename = "../figures/figure1/opentree_topology.svg",
-#pdf(file = "../figures/figure1/opentree_topology.pdf",
-#png(filename = "../figures/figure1/opentree_topology.png",
+svg(filename = "../figures/figure-workflow/opentree_topology.svg",
+#pdf(file = "../figures/figure-workflow/opentree_topology.pdf",
+#png(filename = "../figures/figure-workflow/opentree_topology.png",
     height = 5,
     width = 5,
     bg = "transparent")
@@ -277,12 +287,12 @@ colnames(pretty)[1] <- "Node Name"
 pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
 
 # Print table as pdf
-pdf("../figures/figure1/median_table.pdf")       # Export PDF
+pdf("../figures/figure-workflow/median_table.pdf")       # Export PDF
 gridExtra::grid.table(pretty) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
 
-
+## Median chronogram
 
 ```{r}
 mm_summ$in_phy$reference <- rep("Median pairwise \nnode ages", 
@@ -295,7 +305,7 @@ mm_summ$in_phy[, c("mrca_node_name", "nodeAge")]
 color_median
 names(color_median) <- mm_summ$in_phy$reference[1]
 
-svg(filename = "../figures/figure1/median_ages.svg",
+svg(filename = "../figures/figure-workflow/median_ages.svg",
     height = 5,
     width = 5.5)
 datelifeplot::plot_node_ages(phylo_median,
@@ -366,7 +376,7 @@ sdm_summ$in_phy$reference <- rep("SDM pairwise \nnode ages\n", nrow(sdm_summ$in_
 
 names(color_reference) <- c("SDM pairwise \nnode ages\n")
 
-svg(filename = "../figures/figure1/sdm_ages.svg",
+svg(filename = "../figures/figure-workflow/sdm_ages.svg",
     height = 5,
     width = 7)
 datelifeplot::plot_node_ages(phylo_sdm,
@@ -410,7 +420,7 @@ point_colors <- list(a1 = color_studies, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ)
 point_type <- list(a1 = "|", a2 = "•")
 
-svg(filename = "../figures/figure1/median_and_calibration_ages.svg",
+svg(filename = "../figures/figure-workflow/median_and_calibration_ages.svg",
     height = 5,
     width = 5.5)
 datelifeplot::plot_node_ages2(phylo_median,
