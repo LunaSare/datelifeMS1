@@ -180,6 +180,8 @@ Congruify source chronograms to a chosen tree topology:
 
 ```{r}
 # devtools::load_all("../../datelife")
+phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
+
 sc1 <- datelife::congruify_and_mrca_phylo(phy = phylo_median,
                              source_chronogram = phylo_all[[1]],
                              reference = names(phylo_all)[1])
@@ -261,13 +263,12 @@ row_order <- order(node_numbers,
 pretty_calibrations <- pretty_calibrations[row_order,]
 
 head(pretty_calibrations)
-pretty_calibrations$`Node Name` == "n1"
 ```
 
 Save congruified calibs as CSV and PDF:
 
 ```{r}
-write.csv(pretty_calibrations, paste0("../tables/table-fringillidae-all-congruified.csv"))
+write.csv(pretty_calibrations, row.names = FALSE, paste0("../tables/table-fringillidae-all-congruified.csv"))
 
 pdf(paste0("../tables/table-fringillidae-all-congruified.pdf"), 
      width = 10, 
@@ -281,14 +282,14 @@ dev.off()
 Table of summary statistics of congruified ages. Creating summary table with a function:
 
 ```{r}
-summary_ages <- summarize_congruifiedCalibrations(congruified_calibs)
+summary_ages <- summarize_congruifiedCalibrations(my_calibrations)
 summary_ages
 ```
 
 Save summary table as CSV:
 
 ```{r}
-write.csv(summary_ages, paste0("../tables/table-fringillidae-all-summary.csv"))
+write.csv(summary_ages, row.names = FALSE, paste0("../tables/table-fringillidae-all-summary.csv"))
 ```
 
 And then PDF:
@@ -759,7 +760,6 @@ Get calibrations for the topology in `dsumm$phylo_median`
 First, get all calibrations per chronogram against themselves:
 
 ```{r}
-phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
 all_calibrations <- datelife::extract_calibrations_phylo(
   input = phylo_all,
   each = FALSE)

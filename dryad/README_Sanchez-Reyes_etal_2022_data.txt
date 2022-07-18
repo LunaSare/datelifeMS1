@@ -213,16 +213,16 @@ All age data and chronograms were obtained using the R package datelife v0.6.5 h
 
 DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_1.csv 
 
-1. Number of variables/columns: 5 
+1. Number of variables/columns: 4 
 
 2. Number of cases/rows: 28 
 
 3. Variable List:
-	Node Name: Node names in tree topology, as defined by taxon A and taxon B.
-	taxon A: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
-	taxon B: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
-	Node Age: Ages of nodes defined by taxon A and taxon B, in Million years.
-	Study chronogram: Reference of the study that published the chronogram from which the node ages were extracted.
+	taxon A: Node names in tree topology, as defined by taxon A and taxon B.
+	taxon B: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
+	Node Age: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
+	Study chronogram: Ages of nodes defined by taxon A and taxon B, in Million years.
+	taxon A: Reference of the study that published the chronogram from which the node ages were extracted.
 
 4. Missing data codes: None
 
@@ -231,20 +231,20 @@ DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_1.csv
 
 DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_2.csv 
 
-1. Number of variables/columns: 9 
+1. Number of variables/columns: 8 
 
 2. Number of cases/rows: 5 
 
 3. Variable List:
-	Node Name: Names of nodes from the tree topology used for the dating analysis.
-	Min Age: Minimum node age, in Million years.
-	Q1: First quartile of node age distributions, in Million years.
-	Median Age: Mean node age, in Million years.
-	Mean Age: Median node age, in Million years.
-	Q3: Third quartile of node age distributions, in Million years.
-	Max Age: Maximum node age, in Million years.
-	Variance: Variance of node age, in Million years.
-	SD: Standard deviation of node age, in Million years.
+	Min Age: Names of nodes from the tree topology used for the dating analysis.
+	Q1: Minimum node age, in Million years.
+	Median Age: First quartile of node age distributions, in Million years.
+	Mean Age: Mean node age, in Million years.
+	Q3: Median node age, in Million years.
+	Max Age: Third quartile of node age distributions, in Million years.
+	Variance: Maximum node age, in Million years.
+	SD: Variance of node age, in Million years.
+	Min Age: Standard deviation of node age, in Million years.
 
 4. Missing data codes: None
 
@@ -253,16 +253,16 @@ DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_2.csv
 
 DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv 
 
-1. Number of variables/columns: 5 
+1. Number of variables/columns: 4 
 
 2. Number of cases/rows: 818 
 
 3. Variable List:
-	Node Name: Node names in tree topology, as defined by taxon A and taxon B.
-	taxon A: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
-	taxon B: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
-	Node Age: Ages of nodes defined by taxon A and taxon B, in Million years.
-	Study reference: Reference of the study that published the chronogram from which the node ages were extracted.
+	taxon A: Node names in tree topology, as defined by taxon A and taxon B.
+	taxon B: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
+	Node Age: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
+	Study reference: Ages of nodes defined by taxon A and taxon B, in Million years.
+	taxon A: Reference of the study that published the chronogram from which the node ages were extracted.
 
 4. Missing data codes: None
 
@@ -271,20 +271,20 @@ DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S1.cs
 
 DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S2.csv 
 
-1. Number of variables/columns: 9 
+1. Number of variables/columns: 8 
 
 2. Number of cases/rows: 194 
 
 3. Variable List:
-	Node Name: Names of nodes from the tree topology used for the dating analysis.
-	Min Age: Minimum node age, in Million years.
-	Q1: First quartile of node age distributions, in Million years.
-	Median Age: Mean node age, in Million years.
-	Mean Age: Median node age, in Million years.
-	Q3: Third quartile of node age distributions, in Million years.
-	Max Age: Maximum node age, in Million years.
-	Variance: Variance of node age, in Million years.
-	SD: Standard deviation of node age, in Million years.
+	Min Age: Names of nodes from the tree topology used for the dating analysis.
+	Q1: Minimum node age, in Million years.
+	Median Age: First quartile of node age distributions, in Million years.
+	Mean Age: Mean node age, in Million years.
+	Q3: Median node age, in Million years.
+	Max Age: Third quartile of node age distributions, in Million years.
+	Variance: Maximum node age, in Million years.
+	SD: Variance of node age, in Million years.
+	Min Age: Standard deviation of node age, in Million years.
 
 4. Missing data codes: None
 

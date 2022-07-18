@@ -71,17 +71,23 @@ GENERAL INFORMATION
 ```r
 
 file.copy(from = "../tables/table-fringillidae-small-example.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_table_1.csv")
+          to = "../dryad/Sanchez-Reyes_etal_2022_table_1.csv",
+          overwrite = TRUE)
 file.copy(from = "../tables/table-fringillidae-small-example-summary.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_table_2.csv")
+          to = "../dryad/Sanchez-Reyes_etal_2022_table_2.csv",
+          overwrite = TRUE)
 file.copy(from = "../tables/table-fringillidae-all-congruified.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.csv")
+          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.csv",
+          overwrite = TRUE)
 file.copy(from = "../tables/table-fringillidae-all-congruified.pdf",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.pdf")
+          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.pdf",
+          overwrite = TRUE)
 file.copy(from = "../tables/table-fringillidae-all-summary.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S2.csv")
+          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S2.csv",
+          overwrite = TRUE)
 file.copy(from = ".../tables/table-fringillidae-all-summary.pdf",
-          to = "../dryad/anchez-Reyes_etal_2022_supplementary_table_S2.pdf")
+          to = "../dryad/anchez-Reyes_etal_2022_supplementary_table_S2.pdf",
+          overwrite = TRUE)
 ```
 
 # Description of data files

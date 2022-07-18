@@ -290,7 +290,7 @@ writeLines(df, '../manuscript/table-fringillidae-small-example.tex')
 
 Write table as CSV:
 ```{r}
-write.csv(pretty_calibs, paste0("../tables/table-fringillidae-small-example.csv"))
+write.csv(pretty_calibs, row.names = FALSE, paste0("../tables/table-fringillidae-small-example.csv"))
 ```
 
 ### Congruified
@@ -377,7 +377,7 @@ dev.off()
 
 Write summary table as CSV:
 ```{r}
-write.csv(summary_table, paste0("../tables/table-fringillidae-small-example-summary.csv"))
+write.csv(summary_table, row.names = FALSE, paste0("../tables/table-fringillidae-small-example-summary.csv"))
 ```
 
 ### Plot matched calibrations from source chronograms.
