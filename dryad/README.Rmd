@@ -101,6 +101,12 @@ file.copy(from = "../figures/figure-small-example/median_chronogram.tre",
 file.copy(from = "../figures/figure-fringillidae/median_chronogram.tre",
           to = "../dryad/Sanchez-Reyes_etal_2022_figure_5_chronogram_finches_example.tre",
           overwrite = TRUE)
+file.copy(from = "../figures/fringillidae-topologies/fringillidae_monophyletic_topology.tre",
+          to = "../dryad/Sanchez-Reyes_etal_2022_figure_4A_topology_finches_mrca.tre",
+          overwrite = TRUE)
+file.copy(from = "../figures/fringillidae-topologies/fringillidae_paraphyletic_topology.tre",
+          to = "../dryad/Sanchez-Reyes_etal_2022_figure_4B_topology_finches_ncbi.tre",
+          overwrite = TRUE)
 ```
 
 # Description of data files

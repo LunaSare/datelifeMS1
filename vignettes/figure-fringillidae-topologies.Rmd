@@ -39,7 +39,10 @@ rotl::tol_mrca(ott_ids = fringillidae_v0.6.2$dquery$ott_ids)
 fringillidae_monophyletic <- rotl::tol_subtree(node_id = "mrcaott4083ott370807",
                                                label_format = "name")
 
+ape::write.tree(fringillidae_monophyletic, file = paste0(writing_dir, "fringillidae_monophyletic_topology.tre"))
+
 fringillidae_monophyletic
+
 ```
 
 ```{r}
@@ -47,6 +50,8 @@ fringillidae_v0.6.2$dquery$phy
   
 fringillidae_paraphyletic <- rotl::tol_induced_subtree(ott_ids = fringillidae_v0.6.2$dquery$ott_ids,
                                           label_format = "name")
+
+ape::write.tree(fringillidae_paraphyletic, file = paste0(writing_dir, "fringillidae_paraphyletic_topology.tre"))
 
 fringillidae_paraphyletic
 ```
