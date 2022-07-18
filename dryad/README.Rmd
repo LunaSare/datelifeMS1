@@ -107,6 +107,22 @@ file.copy(from = "../figures/fringillidae-topologies/fringillidae_monophyletic_t
 file.copy(from = "../figures/fringillidae-topologies/fringillidae_paraphyletic_topology.tre",
           to = "../dryad/Sanchez-Reyes_etal_2022_figure_4B_topology_finches_ncbi.tre",
           overwrite = TRUE)
+
+files_in_path <- list.files(path = "../figures/figure-fringillidae/source_chronograms")
+
+# get only newick file names
+newick_files <- files_in_path[grep("[.]tre", files_in_path)]
+
+# order files numerically
+newick_files <- stringr::str_sort(newick_files, numeric = TRUE)
+
+index <- 1
+for (file_name in newick_files) {
+  index <- index + 1
+  file.copy(from = paste0("../figures/figure-fringillidae/source_chronograms/", file_name),
+          to = paste0("../dryad/Sanchez-Reyes_etal_2022_supplementary_figure_S", index, "_source.tre"),
+          overwrite = TRUE)
+}
 ```
 
 # Description of data files
