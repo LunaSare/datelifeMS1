@@ -112,7 +112,7 @@ file.copy(from = "../figures/fringillidae-topologies/fringillidae_paraphyletic_t
 # Description of data files
 
 ```{r}
-line2 <- "DATA & FILE OVERVIEW
+line2.1 <- "DATA & FILE OVERVIEW
 
 1. Description of dataset
 
@@ -162,121 +162,49 @@ File 11 Description: Newick version of chronogram from the finch example shown i
 
 File 12 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S1.pdf    
 File 12 Description: PDf file showing results of cross validation analysis of datelife's chronogram generating functions. 
-
-File 13 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S2.jpg    
-File 13 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2013. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 14 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S2.tre    
-File 14 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S2 (gray).
-
-File 15 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.jpg    
-File 15 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2015, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 16 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.tre    
-File 16 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S3 (gray).
-	
-File 17 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.jpg    
-File 17 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Barker et al. 2015, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 18 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.tre    
-File 18 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S4 (gray).
-	
-File 19 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S5.jpg    
-File 19 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Burns et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 20 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S5.tre    
-File 20 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S5 (gray).
-	
-File 21 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S6.jpg    
-File 21 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Claramunt et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 22 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S6.tre    
-File 22 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S6 (gray).
-	
-File 23 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S7.jpg    
-File 23 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Gibb et al. 2015. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 24 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S7.tre    
-File 24 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S7 (gray).
-	
-File 25 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S8.jpg    
-File 25 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hedges et al. 2015, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 26 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S8.tre    
-File 26 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S8 (gray).
-	
-File 27 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S9.jpg    
-File 27 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hedges et al. 2015, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 28 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S9.tre    
-File 28 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S9 (gray).
-	
-File 29 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S10.jpg    
-File 29 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Hooper et al. 2017. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 30 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S10.tre    
-File 30 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S10 (gray).
-	
-File 31 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S11.jpg    
-File 31 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Jetz et al. 2012, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 32 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S11.tre    
-File 32 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S11 (gray).
-	
-File 33 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S12.jpg    
-File 33 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Jetz et al. 2012, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 34 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S12.tre    
-File 34 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S12 (gray).
-	
-File 35 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S13.jpg    
-File 35 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Kimball et al. 2019, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 36 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S13.tre    
-File 36 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S13 (gray).
-	
-File 37 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S14.jpg    
-File 37 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Kimball et al. 2019, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 38 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S14.tre    
-File 38 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S14 (gray).
-	
-File 39 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S15.jpg    
-File 39 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Oliveros et al. 2019. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 40 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S15.tre    
-File 40 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S15 (gray).
-	
-File 41 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S16.jpg    
-File 41 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Price et al. 2014, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 42 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S16.tre    
-File 42 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S16 (gray).
-	
-File 43 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S17.jpg    
-File 43 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Price et al. 2014, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 44 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S17.tre    
-File 44 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S17 (gray).
-	
-File 45 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S18.jpg    
-File 45 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Roquet et al. 2014, chronogram 1. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 46 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S18.tre    
-File 46 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S18 (gray).
-	
-File 47 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S19.jpg    
-File 47 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Roquet et al. 2014, chronogram 2. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 48 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S19.tre    
-File 48 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S19 (gray).
-	
-File 49 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.jpg    
-File 49 Description: JPG file of results of cross validation analysis of datelife's chronogram generating functions, using a tree topology from Uyeda et al. 2017. Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).
-
-File 50 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.tre    
-File 50 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S20 (gray).
 "
+```
+
+
+```{r}
+line2.2 <- c()
+# short study references:
+names_phylo_all <- c("Barker et al. 2013",  # 1
+                      "Barker et al. 2015 - chronogram 1",  # 2
+                      "Barker et al. 2015 - chronogram 2",  # 3
+                      "Burns et al. 2014",  # 4
+                      "Claramunt et al. 2015",  # 5
+                      "Gibb et al. 2015", # 6
+                      "Hedges et al. 2015 - chronogram 1",  # 7
+                      "Hedges et al. 2015 - chronogram 2",  # 8
+                      "Hooper et al. 2017",  # 9
+                      "Jetz et al. 2012 - chronogram 1",  # 10
+                      "Jetz et al. 2012 - chronogram 2",  # 11
+                      "Kimball et al. 2019 - chronogram 1", # 12
+                      "Kimball et al. 2019 - chronogram 2", # 13
+                      "Oliveros et al. 2019", # 14
+                      "Price et al. 2014 - chronogram 1", # 15
+                      "Price et al. 2014 - chronogram 2", # 16
+                      "Roquet et al. 2014 - chronogram 1", # 17
+                      "Roquet et al. 2014 - chronogram 2", # 18 
+                      "Uyeda et al 2017")
+file_index <- 12
+fig_index <- 1
+for (name in names_phylo_all) {
+  file_index <- file_index + 1
+  fig_index <- fig_index + 1
+  x1 <- paste0("File ", file_index, " Name: Sanchez-Reyes_etal_2022_supplementary_figure_S", fig_index, ".jpg")
+  x2 <- paste0("File ", file_index, " Description: JPG file of results of cross validation analysis of datelife chronogram generating functions, using a tree topology from ", name, ". Comparison of original chronogram (black) and the chronogram obtained using datelife (gray).\n")
+  file_index <- file_index + 1
+  x3 <- paste0("File ", file_index, " Name: Sanchez-Reyes_etal_2022_supplementary_figure_S", fig_index, "_cross_validated.tre")
+  x4 <- paste0("File ", file_index, " Description: Newick file of chronogram cross validated using dates obtained with datelife, shown in gray on supplementary figure Sanchez-Reyes_etal_2022_supplementary_figure_S", fig_index, ".jpg\n")
+  file_index <- file_index + 1
+  x5 <- paste0("File ", file_index, " Name: Sanchez-Reyes_etal_2022_supplementary_figure_S", fig_index, "_source.tre")
+  x6 <- paste0("File ", file_index, " Description: Newick file of source chronogram from", name, " used for the cross validaton analysis shown on supplementary figure Sanchez-Reyes_etal_2022_supplementary_figure_S", fig_index, ".jpg\n")
+               
+  line2.2 <- c(line2.2, x1, x2, x3, x4, x5, x6)
+}
+
 ```
 
 <!--
@@ -353,7 +281,8 @@ line4 <- text
 
 writeLines(text = c(line0, 
                     line1,
-                    line2,
+                    line2.1,
+                    line2.2,
                     line3,
                     line4), con = "../dryad/README_Sanchez-Reyes_etal_2022_data.txt")
 ```
