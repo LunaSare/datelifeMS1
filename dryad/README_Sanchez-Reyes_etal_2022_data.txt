@@ -1,27 +1,5 @@
----
-title: 'Generating a README.txt file for the Dryad submission of data from study "DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life"'
-output:
-  pdf_document:
-    keep_md: yes
-    pandoc_args: --listings
-    includes:
-      in_header: preamble.tex
----
+This README file was generated on 2022-07-18 by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>
 
-
-
-# Description of README file
-
-
-```r
-line0 <- paste("This README file was generated on", Sys.Date(), "by Luna L. Sánchez Reyes, <https://orcid.org/0000-0001-7668-2528>")
-```
-
-# General Information on data set
-
-
-```r
-line1 <- "
 
 GENERAL INFORMATION
 
@@ -61,34 +39,8 @@ GENERAL INFORMATION
     
     Data from: DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life. Dryad, Dataset
 
-"
-```
 
-
-# Original file names, rename
-
-
-```r
-
-file.copy(from = "../tables/table-fringillidae-small-example.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_table_1.csv")
-file.copy(from = "../tables/table-fringillidae-small-example-summary.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_table_2.csv")
-file.copy(from = "../tables/table-fringillidae-all-congruified.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.csv")
-file.copy(from = "../tables/table-fringillidae-all-congruified.pdf",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S1.pdf")
-file.copy(from = "../tables/table-fringillidae-all-summary.csv",
-          to = "../dryad/Sanchez-Reyes_etal_2022_supplementary_table_S2.csv")
-file.copy(from = ".../tables/table-fringillidae-all-summary.pdf",
-          to = "../dryad/anchez-Reyes_etal_2022_supplementary_table_S2.pdf")
-```
-
-# Description of data files
-
-
-```r
-line2 <- "DATA & FILE OVERVIEW
+DATA & FILE OVERVIEW
 
 1. Description of dataset
 
@@ -252,87 +204,89 @@ File 49 Description: JPG file of results of cross validation analysis of datelif
 
 File 50 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S20.tre    
 File 50 Description: Newick file of chronogram obtained with datelife, shown in supplementary Figure S20 (gray).
-"
-```
-
-<!--
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_    
-	File XXX Description: 
-
-	File XXX Name: Sanchez-Reyes_etal_2022_supplementary_    
-	File XXX Description: 
--->
-
-# Methods that generated the data files
 
 
-```r
-line3 <- "
 METHODOLOGICAL INFORMATION
 
 All age data and chronograms were obtained using the R package datelife v0.6.5 https://CRAN.R-project.org/package=datelife and the chronogram database OpenTreeChronograms v2022.1.28
-"
-```
-
-# Individual descriptions of each data file
 
 
-```r
-var_description_1 <- c("Node names in tree topology, as defined by taxon A and taxon B.",
-                       "Scientific name of the first element of a taxon pair that defines a node from a tree topology.",
-                       "Scientific name of the second element of a taxon pair that defines a node from a tree topology.",
-                       "Ages of nodes defined by taxon A and taxon B, in Million years.",
-                       "Reference of the study that published the chronogram from which the node ages were extracted.")
+DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_1.csv 
 
-var_description_2 <- c("Names of nodes from the tree topology used for the dating analysis.",
-                       "Minimum node age, in Million years.",
-                       "First quartile of node age distributions, in Million years.",
-                       "Mean node age, in Million years.",
-                       "Median node age, in Million years.",
-                       "Third quartile of node age distributions, in Million years.",
-                       "Maximum node age, in Million years.",
-                       "Variance of node age, in Million years.",
-                       "Standard deviation of node age, in Million years.")
+1. Number of variables/columns: 5 
 
-csv_file_names <- c("Sanchez-Reyes_etal_2022_table_1.csv",
-                    "Sanchez-Reyes_etal_2022_table_2.csv",
-                    "Sanchez-Reyes_etal_2022_supplementary_table_S1.csv",
-                    "Sanchez-Reyes_etal_2022_supplementary_table_S2.csv")
-tre_file_names <- c("Sanchez-Reyes_etal_2022_figure_1_chronogram_mock_example.tre")
+2. Number of cases/rows: 28 
 
-text <- c()
-var_descriptions <- list(var_description_1, var_description_2, var_description_1, var_description_2) 
-names(var_descriptions) <- csv_file_names
+3. Variable List:
+	Node Name: Node names in tree topology, as defined by taxon A and taxon B.
+	taxon A: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
+	taxon B: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
+	Node Age: Ages of nodes defined by taxon A and taxon B, in Million years.
+	Study chronogram: Reference of the study that published the chronogram from which the node ages were extracted.
 
-for (file_name in csv_file_names) {
-  # read the csv file in:
-  csv_data <- utils::read.csv(file = paste0("../dryad/", file_name), header = TRUE, row.names = NULL)
-  # remove the column with row numbers:
-  csv_data <- csv_data[,-1]
-  # create the description text
-  var_list <- gsub("[.]", " ", colnames(csv_data))
-  var_list <- paste0("\t", var_list, ": ", var_descriptions[[file_name]])
-  text <- c(text, 
-            c(paste("\nDATA-SPECIFIC INFORMATION FOR:", file_name, "\n"),
-              paste("1. Number of variables/columns:", ncol(csv_data), "\n"),
-              paste("2. Number of cases/rows:", nrow(csv_data), "\n"),
-              "3. Variable List:", var_list,
-              "\n4. Missing data codes: None",
-              "\n5. Abbreviations used: NA = not applicable\n"))
-}  
+4. Missing data codes: None
 
-line4 <- text
-```
+5. Abbreviations used: NA = not applicable
 
 
-# Writing everything to TXT file
+DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_table_2.csv 
+
+1. Number of variables/columns: 9 
+
+2. Number of cases/rows: 5 
+
+3. Variable List:
+	Node Name: Names of nodes from the tree topology used for the dating analysis.
+	Min Age: Minimum node age, in Million years.
+	Q1: First quartile of node age distributions, in Million years.
+	Median Age: Mean node age, in Million years.
+	Mean Age: Median node age, in Million years.
+	Q3: Third quartile of node age distributions, in Million years.
+	Max Age: Maximum node age, in Million years.
+	Variance: Variance of node age, in Million years.
+	SD: Standard deviation of node age, in Million years.
+
+4. Missing data codes: None
+
+5. Abbreviations used: NA = not applicable
 
 
-```r
+DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S1.csv 
 
-writeLines(text = c(line0, 
-                    line1,
-                    line2,
-                    line3,
-                    line4), con = "../dryad/README_Sanchez-Reyes_etal_2022_data.txt")
-```
+1. Number of variables/columns: 5 
+
+2. Number of cases/rows: 818 
+
+3. Variable List:
+	Node Name: Node names in tree topology, as defined by taxon A and taxon B.
+	taxon A: Scientific name of the first element of a taxon pair that defines a node from a tree topology.
+	taxon B: Scientific name of the second element of a taxon pair that defines a node from a tree topology.
+	Node Age: Ages of nodes defined by taxon A and taxon B, in Million years.
+	Study reference: Reference of the study that published the chronogram from which the node ages were extracted.
+
+4. Missing data codes: None
+
+5. Abbreviations used: NA = not applicable
+
+
+DATA-SPECIFIC INFORMATION FOR: Sanchez-Reyes_etal_2022_supplementary_table_S2.csv 
+
+1. Number of variables/columns: 9 
+
+2. Number of cases/rows: 194 
+
+3. Variable List:
+	Node Name: Names of nodes from the tree topology used for the dating analysis.
+	Min Age: Minimum node age, in Million years.
+	Q1: First quartile of node age distributions, in Million years.
+	Median Age: Mean node age, in Million years.
+	Mean Age: Median node age, in Million years.
+	Q3: Third quartile of node age distributions, in Million years.
+	Max Age: Maximum node age, in Million years.
+	Variance: Variance of node age, in Million years.
+	SD: Standard deviation of node age, in Million years.
+
+4. Missing data codes: None
+
+5. Abbreviations used: NA = not applicable
+
