@@ -68,7 +68,6 @@ If you are the first author and your manuscript is based on work done while you 
 Please note that the accepted version of your manuscript will be published on Advance Access prior to typesetting and copyediting; it is therefore important that all files, including tables, figures, and supplementary files, are properly labelled and with the editorial office at this stage of the process -  it is the author’s responsibility to ensure that the correct files are submitted.  Please also keep in mind that files will be published as submitted (ie, please review table formatting and labelling and position of figure images, etc). For further information please see the Advance Access Publication section at: https://academic.oup.com/sysbio/pages/General_Instructions.
 
 ---
-
 > Associate Editor: Dr Daniele Silvestro
 
 > Recommendation #1: Accept with minor revisions
@@ -78,27 +77,40 @@ Please note that the accepted version of your manuscript will be published on Ad
 
 > many thanks for submitting your manuscript to Systematic Biology. Your study was reviewed by two highly qualified reviewers who provided an overall positive assessment of the paper while listing a number of things that should be revised and clarified. Based on their assessment and my own reading of the manuscript I invite you to resubmit it after carefully revising to address each and all points raised by the reviewers.
 
+Thanks for your reviews and comments! They were most helpful.
+
 ---
 > In addition to that, please also address the following points:
 
 > 1. how and why is a parsimony method used to estimate branch lengths and how is this used in combination with a likelihood method (line 174)?
 
+
+
 ---
 > 2. Why are the node ages evenly distributed between calibrations? I would expect an exponential distribution of node ages under a standard birth-death process.
 
----
-Clarify that this just happens on BLADJ
+This is a parricularity of one of the sotware used to assign ages to nodes with no information (BLADJ).
+Othe rsoftware behvae differently. We calrify thi sin the text on L
+
 ---
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
 
+We agree. We addressed this in the code. 
 Coding! Stop with an informative message on how users can provide an age for the root. Making the users awre taht there is no age for that root!
+
 ---
 > Please make sure to carefully revise the text to remove typos. As one of the reviewers pointed out, it is good to provide links to permanent repositories for your code. I see that DateLife actually is already hosted in a Zenodo repository, so maybe you can add the link to your Availability section to make it more visible.
 
+We added the link to our code on Zenodo 
+
+---
 > I hope you will be willing to revise and resubmit your paper and that you’ll find these and the Reviewers’ comments useful.
 
 > Best regards, Daniele Silvestro
 
+Thanks!
+
+---
 > Reviewer(s)' comments to author:
 
 > Reviewer: 1
@@ -115,9 +127,12 @@ Coding! Stop with an informative message on how users can provide an age for the
 > * Title and Rabosky MEE 2019
 > * Sun et al AJB 2020
 
+We added a paragraph clarifying and using a different language.
+
+---
 > There were many typographical errors in the manuscript which should be corrected prior to publication.
 
-
+---
 > Reviewer: 2
 
 > Comments to the Author
@@ -125,32 +140,76 @@ Coding! Stop with an informative message on how users can provide an age for the
 
 > DL synthesizes results from previous research. On the one hand that's great, but on the other, it invites the 'garbage in - garbage out' problem. Although OTOL has its own curation and QC facilities, the fact that users can provide their own garbage trees makes it so that the service might end up decorating nonsensical data, tainting its own reputation in the process. It would be good if the authors could emphasize this a bit more.
 
+Indeed, we emphasized this in abstract, intro and discussion.
+
+---
 > A separate but related point that I would also like to see discussed is that synthesizing services such as DL and OTOL seem capable of ending up in loops where bad trees with bad calibration points provide the skeleton for further bad trees based on the former - with their own seemingly well-supported but in fact dodgy secondary calibrations. Is that a risk? What can be done about it?
 
+It is a risk that we are aware of, but it is possible to avoit it. We explain how in the text.
+
+---
 > Also related: will we gradually start developing a body of literature with trees where the root always just happens to be ±10% older than the oldest nodes? Might that be bad?
 
+Good point. It would certainly be a bad thing. The reason we implemented this initially is because of the goal of DL: providing trees with age data.
+When the root age is absent, it is not possible
+
+
+---
 > Apart from these general points that might be touched upon a bit more in the Discussion, here now some specifics about the manuscript:
 
 > - The Abstract looks like an extreme afterthought. I understand how that works, but please have another look. I see verb disagreement on line 21 and on line 23. Probably needs a comma after databases on line 25. On the same line, 'timeframe' is spelt as one word (fine by me), but elsewhere it's two words. Line 27: 'incetivizited' is not a thing. Line 29, 'finding' scans weird, maybe use 'discovery'? Line 36 probably needs 'use' instead of 'using' but the sentence is hard to parse. Line 38, 'awereness' is wrong. In this way, the Abstract is quite different from the rest of the MS, which is otherwise well written.
 
+
+
+---
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
 
+
+
+---
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
 
+
+
+---
 > - On page 7, third paragraph: how does the TNRS deal with homonyms? Given that we are in the tree realm it should be possible to infer intelligently whether some label is zoological or botanical code. Or is Aotus simply always the monkey, which is much cooler than that Australian legume genus?
 
+
+
+---
 > - On page 8, fourth paragraph, it's not quite clear whether DL's database syncs automatically with Phylesystem or whether you have volunteered yourself for this task. Which would be noble, but hard to sustain.
 
+
+
+---
 > - On page 10, second paragraph: mining BOLD and aligning the sequences automatically is very cool functionality but I did not see it exposed on the website at all. How can users get at those alignments? Also, might there be performance issues? MAFFT can be quite greedy with larger data sets.
 
+
+
+---
 > - On page 25 you mention the fossilcalibrations.org initiative. Maybe that's a good opportunity to go a bit into what we need as a community. I suspect that, in general, most people in this field think that doing it by themself is 'better', i.e. do a bunch of sequencing (hybseq right now, I guess?) and then get good primary calibration points. Natural history collections must have many more of those, both as fossils but also from geology (i.e. vicariant events having to do with tectonics, orogeny, etc.). Shouldn't we want *that*?
 
+
+
+---
 > - Page 26, line 416 has some typos.
 
+
+
+---
 > - On page 26 you discuss some criteria for scoring quality of chronograms. One additional criterion might be where the calibration points are placed. Nodes that have a calibration point between them and the root have less freedom of movement and hence narrower confidence intervals. Ages ago, I did a bit of simulation work on that (Vos & Mooers, 2004 - definitely no need to cite). Maybe someone else has discussed this a bit better?
 
+
+
+---
 > - Page 27 line 448, chronogram should be plural, I think.
 
+
+
+---
 > - Page 28 line 473: I think it should be either 'public-funded' or 'publicly funded'
 
+
+
+---
 > - Page 29, Supplementary Material: it's probably better to sync the repos with Zenodo and cite the DOI, just so that it's guaranteed unchanging.
