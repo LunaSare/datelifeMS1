@@ -484,7 +484,7 @@ Development versions are available from the GitHub repository (<https://github.c
 
 # Supplementary Material
 
-Code used to generate all versions of this manuscript, the biological examples, as well as the benchmark of functionalities are available at [datelifeMS1](https://github.com/LunaSare/datelifeMS1), [datelife_examples](https://github.com/LunaSare/datelife_examples), and [datelife_benchmark](https://github.com/LunaSare/datelife_benchmark) repositories in LLSR's GitHub account.
+Supplementary material, including code, biological examples and benchmark results data files and online-only appendices, can be found in the Dryad data repository (<https://doi.org/10.5061/dryad.cnp5hqc6w>), as well as in the GitHub repositories used to develop the reproducible manuscript (<https://doi.org/10.5281/zenodo.7435094>), the biological examples (<https://doi.org/10.5281/zenodo.7435101>), and the software benchmark (<https://doi.org/10.5281/zenodo.7435106>).
 
 # Funding
 
