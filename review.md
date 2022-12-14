@@ -110,13 +110,13 @@ Othe rsoftware behvae differently. We calrify thi sin the text on L
 ---
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
 
-We agree. We addressed this in the code. 
+We agree. We addressed this in the code.
 Coding! Stop with an informative message on how users can provide an age for the root. Making the users awre taht there is no age for that root!
 
 ---
 > Please make sure to carefully revise the text to remove typos. As one of the reviewers pointed out, it is good to provide links to permanent repositories for your code. I see that DateLife actually is already hosted in a Zenodo repository, so maybe you can add the link to your Availability section to make it more visible.
 
-We added the link to our code on Zenodo 
+We added the link to our code on Zenodo
 
 ---
 > I hope you will be willing to revise and resubmit your paper and that you’ll find these and the Reviewers’ comments useful.
@@ -230,5 +230,3 @@ When the root age is absent, it is not possible
 > - Page 29, Supplementary Material: it's probably better to sync the repos with Zenodo and cite the DOI, just so that it's guaranteed unchanging.
 
 Thanks for the suggestion! We created stable versions for all three repositories on Zenodo, and refer the doi instead of the GitHub address for the repos.
-
-
