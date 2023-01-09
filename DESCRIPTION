@@ -1,6 +1,6 @@
 Package: datelifeMS1
 Title: Code, Markdown, Data and Instructions to reproduce first DateLife's manuscript.
-Version: 0.0.1
+Version: 2.0.0
 Authors@R:
     c(
     person("Luna Luisa",
