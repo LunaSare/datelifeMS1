@@ -8,7 +8,7 @@ date: '2022-06-21'
 \includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
 \captionof{figure}{Tree topologies extracted from Open Tree of Life's (OpenTree) synthetic phylogenetic tree.
 A) Topology of 2,333 tips and 1,305 internal nodes, encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same Most Recent Common Ancestor (MRCA) node in OpenTree's synthetic tree (purple).
-B) Subtree topology of of 289 tips and 253 internal nodes, resulting from pruning species that do not belong to the family Fringillidae according to the NCBI taxonomy (purple branches in topology A).
+B) Subtree topology of 289 tips and 253 internal nodes, resulting from pruning species that do not belong to the family Fringillidae according to the NCBI taxonomy (purple branches in topology A).
 Bird species within the Fringillidae are paraphyletic
 (Alström et al. \protect\hyperlink{ref-alstrom2014discovery}{2014},
 Barker, Cibois, Schikler, Feinstein, \& Cracraft \protect\hyperlink{ref-barker2004phylogeny}{2004},
@@ -26,7 +26,7 @@ Hackett et al. \protect\hyperlink{ref-hackett2008phylogenomic}{2008},
 Jetz et al. \protect\hyperlink{ref-Jetz2012}{2012},
 Johansson, Fjeldså, \& Bowi \protect\hyperlink{ref-johansson2008phylogenetic}{200},
 Kimball et al. \protect\hyperlink{ref-kimball2019phylogenomic}{2019},
-Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014}, 
+Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014},
 Lamichhaney et al. \protect\hyperlink{ref-lamichhaney2015evolution}{2015},
 Lerner, Meyer, James, Hofreiter, \& Fleischer \protect\hyperlink{ref-lerner2011multilocus}{2011},
 Lovette et al. \protect\hyperlink{ref-lovette2010comprehensive}{2010},
@@ -44,4 +44,3 @@ Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
   Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012}).}
 \label{fig:fringillidae-topologies}
 \end{minipage}
-
