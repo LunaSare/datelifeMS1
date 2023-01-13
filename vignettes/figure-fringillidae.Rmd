@@ -1,5 +1,5 @@
 ---
-title: "Graphs for figure of all fringillidae"
+title: "Graphs for figure of all fringillidae v2022.01.28"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{figure-fringillidae}
@@ -25,29 +25,39 @@ if (!dir_exists) dir.create(path = source_chronograms_dir)
 
 ## Get a `datelifeQuery` object
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 dquery <- datelife::make_datelife_query(input = "fringillidae",
                                              use_tnrs = TRUE,
                                              get_spp_from_taxon = TRUE,
                                              taxonomic_source = "ncbi")
-# dquery <- fringillidae_v2022.01.28$dquery
+```
+
+
+```{r, eval = TRUE}
+dquery <- fringillidae_v2022.01.28$dquery
 ```
 
 ## Get a `datelifeResult` object
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 dres = datelife::get_datelife_result(input = dquery, cache = opentree_chronograms)
+```
 
-# dres <- fringillidae_v2022.01.28$dres
+```{r, eval = TRUE}
+dres <- fringillidae_v2022.01.28$dres
 ```
 
 ## Get a `datelifeSummary` object
 
-```{r}
+```{r, eval = FALSE}
 # you can add a tree topology to summarize if you do not want the Open Tree synthetic tree topology as default
 # dquery$phy <- fringillidae_v2022.01.28$dsumm$phylo_median
 
 dsumm <- datelife:::summary.datelifeResult(datelife_query = dquery, object = dres)
+```
+
+```{r, eval = TRUE}
+dsumm <- fringillidae_v2022.01.28$dsumm
 ```
 
 ## Save data objects
@@ -280,6 +290,15 @@ gridExtra::grid.table(pretty_calibrations,
 dev.off()
 
 ```
+Saving the congruified table as data
+
+```{r}
+congruified_calibrations_v2022.01.28 <- pretty_calibrations
+
+usethis::use_data(congruified_calibrations_v2022.01.28, 
+                  overwrite = TRUE)
+```
+
 
 Table of summary statistics of congruified ages. Creating summary table with a function:
 
