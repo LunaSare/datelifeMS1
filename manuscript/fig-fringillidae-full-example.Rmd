@@ -9,6 +9,6 @@ date: '2022-06-21'
 \includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
 \end{center}
 
-\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes, from which 212 have age data from at least one published chronogram.}
+\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 289 tips and 253 nodes, from which 212 have age data from at least one published chronogram. These nodes have age data points from 19 different chronograms from 13 different studies (colored circles), which were summarized into 194 data points that were used as secondary calibrations (purple slashes) with the Branch Length Adjuster (BLADJ ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).}
 \label{fig:fringillidages}
 \end{minipage}
