@@ -444,7 +444,7 @@ By default, DateLife currently summarizes all source chronograms that overlap wi
 Strictly speaking, a good chronogram should reflect the real time of lineage divergence accurately and precisely.
 To our knowledge, there are no tested measures to determine independently when a chronogram is better than another. Yet, several characteristics of the data used for dating analyses, as well as from the output chronogram itself, could be used to score the quality of source chronograms.
 
-Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used [@magallon2010using, @magallon2015metacalibrated].
+Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used [@magallon2010using; @magallon2015metacalibrated].
 Some characteristics that are often cited in published studies as a measure of improved age estimates as compared to previously published estimates are: quality of alignment (missing data, GC content), lineage sampling (strategy and proportion), phylogenetic and dating inference method, number of fossils used as calibrations, support for nodes and ages, and magnitude of confidence intervals.
 
 DateLife provides an opportunity to capture concordance and conflict among date estimates, which can also be used as a metric for chronogram reliability.

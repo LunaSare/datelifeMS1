@@ -136,7 +136,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 5355}
+\keywords{Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations\newline\indent Word count: 5386}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -201,12 +201,12 @@ It requires obtaining and curating data to construct a phylogeny, selecting and 
 it also generally requires specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
 
 Here we present the DateLife project which has the main goal of capturing age data from published chronograms, and making these data readily accessible to the community for reuse and reanalysis, for research, teaching, and science communication and policy.
-DateLife's core software application is available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database (McTavish et al., 2015), data stored and available in a computer readable format (Vos et al., 2012), automated and programmatic ways of accessing the data (Stoltzfus et al., 2013) and methods to summarize and compare the data.
+DateLife's core software application is available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database (McTavish et al., 2015) that stores data in a computer-readable format (Vos et al., 2012); automated and programmatic ways of accessing and downloading the data in a compuer-redable format also (Stoltzfus et al., 2013); and methods to summarize and compare the data.
 
 \hypertarget{description}{%
 \section{Description}\label{description}}
 
-DateLife's core software application consists of the R package \texttt{datelife}. Its current stable version -- v0.6.6, is available from the The Comprehensive R Archive Network (CRAN) repository (Sanchez-Reyes et al., 2022), and relies on functionalities from various biological R packages:
+DateLife's core software application consists of the R package \texttt{datelife}. Its current stable version -- v0.6.6, is available from the Comprehensive R Archive Network (CRAN) repository (Sanchez-Reyes et al., 2022), and relies on functionalities from various biological R packages:
 ape (Paradis, Claude, \& Strimmer, 2004),
 bold (Chamberlain, 2018),
 geiger (Pennell et al., 2014),
@@ -220,7 +220,7 @@ Figure \ref{fig:workflow} provides a graphical summary of the three main steps o
 
 \begin{minipage}[t]{17.3cm}
 \includegraphics{../figures/figure-workflow/figure1-new.pdf}
-\captionof{figure}{\textit{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{phylotastic.org/datelife}.}}
+\captionof{figure}{\textit{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{https://phylotastic.org/datelife}.}}
 \label{fig:workflow}
 \end{minipage}
 
@@ -432,10 +432,10 @@ Once identified, DateLife pruned these matching chronograms to remove tips that 
 \hypertarget{summarizing-search-results-2}{%
 \subsubsection{Summarizing search results}\label{summarizing-search-results-2}}
 
-The final step entailed congruifying and summarizing the age data available for the Fringillidae species into single summary chronograms, using two different types of summary ages, median and SDM.
+The final step entailed congruifying and summarizing the age data available for the Fringillidae species into two single summary chronograms, using two different types of summary ages, median and SDM.
 As explained in the \enquote{Description} section, a tree topology to summarize age data upon is required.
-By default, to do this, DateLife uses the topology from OpenTree's synthetic tree that contains species from the search query.
-According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}).
+By default, to do this, DateLife uses the topology from OpenTree's synthetic tree that contains all taxa from the search query.
+According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}). Hence, a topology containing only the 289 species from the original query was extracted from Open Tree of Life's synthetic tree v12.3 (Open Tree Of Life et al., 2019).
 
 \vspace{50mm}
 
@@ -487,7 +487,7 @@ Age data from source chronograms was congruified to OpenTree's topology (Fig. \r
 \includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
 \end{center}
 
-\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 256 tips and 233 nodes, from which 212 have age data from at least one published chronogram.}
+\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 289 tips and 253 nodes, from which 212 have age data from at least one published chronogram. These nodes have age data points from 19 different chronograms from 13 different studies (colored circles), which were summarized into 194 data points that were used as secondary calibrations (purple slashes) with the Branch Length Adjuster (BLADJ ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).}
 \label{fig:fringillidages}
 \end{minipage}
 
@@ -552,7 +552,7 @@ By default, DateLife currently summarizes all source chronograms that overlap wi
 Strictly speaking, a good chronogram should reflect the real time of lineage divergence accurately and precisely.
 To our knowledge, there are no tested measures to determine independently when a chronogram is better than another. Yet, several characteristics of the data used for dating analyses, as well as from the output chronogram itself, could be used to score the quality of source chronograms.
 
-Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used (Magallón, 2010, @magallon2015metacalibrated).
+Some measures that have been proposed are the proportion of lineage sampling and the number of calibrations used (Magallón, 2010; Magallón et al., 2015).
 Some characteristics that are often cited in published studies as a measure of improved age estimates as compared to previously published estimates are: quality of alignment (missing data, GC content), lineage sampling (strategy and proportion), phylogenetic and dating inference method, number of fossils used as calibrations, support for nodes and ages, and magnitude of confidence intervals.
 
 DateLife provides an opportunity to capture concordance and conflict among date estimates, which can also be used as a metric for chronogram reliability.
@@ -612,7 +612,7 @@ Supplementary material, including code, biological examples and benchmark result
 \hypertarget{funding}{%
 \section{Funding}\label{funding}}
 
-Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603 to the Datelife project; DBI-0905606 to the National Evolutionary Synthesis Center (NESCent), ABI-1458572 to the Phylotastic project, and ABI-1759846 to the Open Tree of Life project.
+Funding was provided by the US National Science Foundation (NSF) grants ABI-1458603 to the Datelife project; DBI-0905606 to the National Evolutionary Synthesis Center (NESCent); ABI-1458572 to the Phylotastic project; and ABI-1759846 to the Open Tree of Life project.
 
 \hypertarget{acknowledgements}{%
 \section{Acknowledgements}\label{acknowledgements}}

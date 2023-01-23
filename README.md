@@ -11,23 +11,24 @@ devtools::install_deps()
 From the manuscript directory, choose the version of the paper that you want to reproduce, for example `manuscript-1st-submission.Rmd`.
 You can open this in RStudio and hit the `knit` button. Or you can go to the R terminal and use `rmarkdown::render("manuscript.Rmd", "all")`, or straight from the terminal do:
 
-```
-mv manuscript/
-R -e 'rmarkdown::render("manuscript-1st-submission.Rmd", "all")'
-```
+
+    cd manuscript/
+    R -e 'rmarkdown::render("manuscript-1st-submission.Rmd", "all")'
+    R -e 'rmarkdown::render("manuscript.Rmd", "all")'
+
 
 ## Generate a differences file
 
 To create a "differences.tex" file, use [latexdiff](https://www.ctan.org/pkg/latexdiff)
 (I installed latexdiff using brew with `brew install latexdiff`):
 
-    latexdiff manuscript/manuscript-1st-submission.tex manuscript/manuscript.tex > manuscript/differences.tex
+    latexdiff manuscript-1st-submission.tex manuscript.tex > differences.tex
 
 
 Then I rendered the differences.tex file from terminal with R:
 
-    R -e 'tools::texi2pdf(file = "manuscript/differences.tex", clean=TRUE)'
+    R -e 'tools::texi2pdf(file = "differences.tex", clean=TRUE)'
 
 And moved it to the folder I want it to be in:
 
-    mv differences.pdf manuscript/submission-sysbio-reviews.pdf
+    mv differences.pdf submission-sysbio-reviews.pdf
