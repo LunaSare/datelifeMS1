@@ -141,7 +141,7 @@ DateLife's core software application is available as an R package [@datelifeR], 
 
 # Description
 
-DateLife's core software application consists of the R package `datelife`. Its current stable version -- v`r packageVersion("datelife")`, is available from the The Comprehensive R Archive Network (CRAN) repository [@datelifeR], and relies on functionalities from various biological R packages:
+DateLife's core software application consists of the R package `datelife`. Its current stable version -- v`r packageVersion("datelife")`, is available from The Comprehensive R Archive Network (CRAN) repository [@datelifeR], and relies on functionalities from various biological R packages:
 ape [@paradis2004],
 bold [@Chamberlain2018],
 geiger [@pennell2014geiger],
@@ -205,7 +205,7 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 
 _**Choosing a topology.--**_
 DateLife requires a tree topology to summarize age data upon.
-We recommend that users provide a tree topology as input from the literature, or one of their own making. If no topology is provided, DateLife automatically extracts one from the OpenTree synthetic tree, a phylogeny encompassing 2.3 million taxa across all life, assembled from 1, 239 published phylogenetic trees and OpenTree's unified Taxonomy, OTT  [@opentreeoflife2019synth].
+We recommend that users provide as input a tree topology from the literature, or one of their own making. If no topology is provided, DateLife automatically extracts one from the OpenTree synthetic tree, a phylogeny encompassing 2.3 million taxa across all life, assembled from 1, 239 published phylogenetic trees and OpenTree's unified Taxonomy, OTT  [@opentreeoflife2019synth].
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach.
 To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife workflow identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reconstruction will fail.

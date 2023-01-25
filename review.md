@@ -100,10 +100,10 @@ Thanks for your reviews and comments! They were most helpful. We carefully revis
 > 1. how and why is a parsimony method used to estimate branch lengths and how is this used in combination with a likelihood method (line 174)?
 
 The parsimony algorithm ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (agnarsson2008acctran). 
-This allows us to obtain an initial branch length estimation from any sequence alignment fast. 
-This was implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.
+This allows us to obtain an initial branch length estimation fast. The parsimony branch lengths become parameters that are then optimized using Maximum Likelihood, given the alignment, the topology and a simple JC model.
+This has been implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.
 
-The parsimony branch lengths become parameters that are then optimized using Maximum Likelihood, given the alignment, the topology and a simple JC model.
+
 
 We added a vignette in which we showcase the process of branch length optimization from parsimony to ML.
 We chose this methodology because it allows fast return of phylogenetic trees with ML branch lengths.
@@ -112,16 +112,17 @@ We chose this methodology because it allows fast return of phylogenetic trees wi
 ---
 > 2. Why are the node ages evenly distributed between calibrations? I would expect an exponential distribution of node ages under a standard birth-death process.
 
-In the absence of genetic data from an alignment, nodes that have no age data from studies in the chronogram database are assigned an age based solely on other nodes that do have age data from published studies.
+Thanks for pointing this out. We elaborate on this on the "Description" section, at the end of the "Summarizing search results" subsection, "Dating a tree topology", L 224-230
+(Note that we expanded the subsection "Dating a tree topology" into three sections: "Applying secondary calibrations", "Dating a tree topology" and "Dating a tree with branch lengths").
 
-DateLife does have a function in which you can use MrBayes and a birth-death strict clock model to sample branch lengths in the absence of genetic data. In this case, the user needs to provide parameter values for birth and death rates, which certainly determines the "shape" of the resulting summary chronogram in terms of branch length distribution.
-There is evidence and concern regarding the effects of using a chronogram produced under a certain diversification model on downstream analyses, especially for analyses that involve estimating a diversification rate.
+Briefly, in the absence of genetic data from an alignment, nodes that have no age data from studies in the chronogram database are assigned an age based solely on other nodes that do have age data from published studies.
 
-MrBayes could allow us to generate a cloud of trees produced with different birth-death rates that could be used for downstream analyses. However, the main goal of the summarizing step in DateLife is to provide a single chronogram that can quickly show in one glance the distribution of node ages based on published data, in the most agnostic way possible.
+DateLife has a function in which you can use MrBayes and a birth-death strict clock model to sample branch lengths in the absence of genetic data. In this case, the user needs to provide parameter values for birth and death rates, which certainly determines the "shape" of the resulting summary chronogram in terms of branch length distribution.
+There is evidence and some concerns have been raised regarding the effects of using a chronogram produced under a certain diversification model on downstream analyses, especially for analyses that require estimating a diversification rate, which might generate some circularity.
 
-This is why we chose as default the Branch Length Adjuster (BLADJ) algorithm, which distributes node ages evenly between calibrations and does not require any assumptions on any underlying model of branch length distribution.
+MrBayes also allow us to generate a cloud of trees produced with different birth-death rates that could be used for downstream analyses. However, the main goal of the summarizing step in DateLife is to provide a single chronogram that can quickly show in one glance the distribution of node ages based on published data, in the most agnostic way possible.
 
-We elaborate a bit about this on section X, L
+This is why we chose an algorithm that distributes node ages evenly between calibrations and does not require any assumptions on the underlying model of branch length distribution. The Branch Length Adjuster (BLADJ) algorithm allows this and is the one set as default for the summarizing step. However, users that wish to use MrBayes instead con do so with the "make_mrbayes_tree" function. 
 
 ---
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
@@ -164,7 +165,9 @@ Yes, thanks!
 > * Title and Rabosky MEE 2019
 > * Sun et al AJB 2020
 
-Thanks for the suggestion. We agree and we elaborated on this more thoroughly by adding results from these studies to the corresponding discussion section, as well as changed the wording from "making up" to "simulating following a birth-death process".
+Good point. We elaborated on this more thoroughly by adding results from these studies to the corresponding discussion section, as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process".
+
+
 
 
 ---
