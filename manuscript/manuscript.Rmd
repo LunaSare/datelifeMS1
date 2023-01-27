@@ -468,28 +468,46 @@ Choosing source chronograms that we are going to keep and the ones that we are g
 
 The study of phenomena dependent on the timing of species diversification events, such as macroevolutionary processes, is affected by the usage of alternative chronograms that vary in topology [@rabosky2015no; @title2016macrophylogenies].
 <!-- There is evidence that different chronograms will result in very different macroevolutionary histories inferred from them [@title2016macrophylogenies]. However, it is unknown how using very different age data could affect hypothesis testing in other areas of research and more effort is needed in that direction -->
+Diversification analysis of simulated and empirical phylogenies show that using a more complete phylogeny is always better than using an incompletely sampled phylogeny [@cusimano2012new; @chang2020estimating; @sun2020estimating]. Ideally phylogenies should be completed using genetic data, but this is a very hard task to complete for many taxa.
+Completing a phylogeny using birth-death politomy resolvers and a backbone taxonomy seem to provide less biased estimates in some cases [@chang2020estimating], but can also introduce spurious patterns. 
 
 On the other hand, incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance in ecological and conservation biology studies [@Webb2008].
 Hence, DateLife's workflow features different ways of generating node ages in the absence of calibration and branch length information for certain taxa.
 
 Adding branch lengths sampled from a birth-death model in the absence of genetic data
-has been found to improve insight in phylogeny-based analyses.
+has been found to improve insight for phylogeny-based analyses of diversification rates [@chang2020estimating].
+@chang2020estimating "demonstrate theoretical concerns with the widespread use of analytical sampling corrections for sparsely sampled phylogenies of higher taxonomic groups. In particular, corrections based on “sampling fractions” can lead to low statistical power to infer rate variation when it is present, depending on the likelihood function used for inference. In the extreme, the sampling fraction correction can lead to spurious patterns of diversification that are driven solely by unbalanced sampling across the tree in concert with low overall power to infer shifts."
 
+"birth–death polytomy resolver is a method of accounting for phylogenetic uncertainty that places missing (unsampled) taxa onto phylogenetic trees, using taxonomic information alone"
 
 is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data.
 
-Simulating branch lengths following a birth-death species diversification model for missing taxa in chronograms with non random sampling, lowers type I error (false positive, incorrectly accepting the null hypothesis of a constant-rate or temporally varying rate birth-death model) when analyzing changes in diversification rate using the gamma statistic [@cusimano2012new].
+Simulating branch lengths following a birth-death species diversification model for missing taxa to chronograms with non random sampling, lowers type I error (false positive, incorrectly accepting the null hypothesis of a constant-rate or temporally varying rate birth-death model) when analyzing changes in diversification rate using the gamma statistic [@cusimano2012new].
 
 @thomas2013pastis hypothesize that results of diversification analyses will be biased towards the birth-death model used to simulate branch lengths;
 and note that "the effects of missing species placement or polytomy resolution are less clear for other phylogeny-based analyses (e.g. correlates of diversification, modelling trait evolution, community phylogenetics), and future work should test how the treatment of missing species influences both parameter estimation and type I and II errors"
+
+@rabosky2015no shows that randomly resolved phylogenies are inappropriate to study trait evolution, because unresolved lineages are placed on the phylogeny at random relative to the trait values. At best, these phylogenies could serve as a null hypothesis of randomness in trait evolution.
+
+@chang2020estimating state that stochastic politomy resolution alleviate low statistical power to identify shifts in diversification rate with methods that account for sampling fractions.
+
+@title2019tip test that estimating species diversification rates with model free methods and BAMM is good for speciation rate, but less good for net diversification rate, and bad for extinction rates. They test this in complete phylogenies. They do not test possible estimate biases using phylogenies with randomly resolved politomies.
+
+@sun2020estimating used a 50% species level sampled phylogeny of the family Cucurbitaceae to estimate speciation rates with two parametric methods (RPANDA and BAMM) and one semi-parametric method (DR) and test the effect of using incompletely sampled phylogenies on one hand, and incomplete phylogenies that have been made near complete, using a stochastic politomy resolver based on taxonomy on the other hand (with two different methods: 1) adding species that were removed at random following a backbone taxonomy, and 2) adding missing species to a genus level taxonomy based on a taxonomy resolver only). When using incomplete phylogenies, parametric methods tend to overestimate speciation rate as sampling gets worse (less complete), while semi-parametric methods tend to underestimate speciation rate as sampling gets worse. When using taxonomically resolved complete phylogenies, only one parametric method overestimates speciation rate the more incomplete original sampling was. RPANDA, BAMM tip rates and DR all underestimate speciation rates as original sampling was more incomplete.
+"Adding backbone taxa tends to result in the inference of spurious early bursts of diversification", bias in sampling ancestral nodes, failure to sample recent divergences or pushing them back in relative time (making recent divergences older than expected)
+"failure to detect recent bursts of speciation and instead inferring higher rates of evolution at earlier time intervals
+
 
 
 Notably, risks come with this practice.
 
 Taken to the extreme, one could generate a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration, using polytomy resolution and branch length simulation methods.
-There has yet to be a thorough analysis of what can go wrong when one extends inferences beyond the data in this way, so we urge caution; we also urge readers to follow the example of the large tree papers cited above, by carefully considering the statistical assumptions being made, and assessing the consistency of the results with prior work.
+
+We urge readers to follow the example of the large tree papers cited above, by carefully considering the statistical assumptions being made, and assessing the consistency of the results with prior work.
 
 
+However, analysis of empirical phylogenies suggest that introducing stochastically resolved divergence times creates a spurious pattern of early burst of diversification.
+Similarly there are worries that patterns of morphological evolution cannot be accurately inferred with these types of phylogenies, as any patterns would be erased by randomization. We note that the same could apply for geographical and morphological dependent diversification analysis. Hence, we suggest that these types of randomly resolved phylogenies can work as null or neutral models, representing the case of diversification independent of traits and geographical scenario.
 
 # Conclusions
 

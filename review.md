@@ -165,7 +165,15 @@ Yes, thanks!
 > * Title and Rabosky MEE 2019
 > * Sun et al AJB 2020
 
-Good point. We elaborated on this more thoroughly by adding results from these studies to the corresponding discussion section, as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process".
+Good point. We elaborated on this more thoroughly by adding results from these studies to the corresponding discussion section (LXXX), as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process".
+
+We added the following findings from the suggested papers:
+
+
+
+
+
+
 
 
 
@@ -208,6 +216,7 @@ As you pointed out, when the root age is absent, it is not possible to return an
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
 
 Thanks for pointing that out. We added that topic and a couple of references to the intro.
+L
 
 ---
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
