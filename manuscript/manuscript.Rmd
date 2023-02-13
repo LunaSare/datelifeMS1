@@ -139,7 +139,7 @@ it also generally requires specialized biological training, taxonomic domain kno
 
 Here we present the DateLife project which has the main goal of capturing age data from published chronograms, and making these data readily accessible to the community for reuse and reanalysis, for research, teaching, and science communication and policy.
   <!--  R has become mainstream in the biological-data analyst toolkit. Hence, to improve accessibility of time of evolutionary origin data we developed an R package that facilitates interaction, reanalysis and reuse of it, as well as incorporation of these data into the evolutionary analysis workflow. -->
-DateLife's core software application is available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database [@mctavish2015phylesystem] that stores data in a computer-readable format [@vos2012nexml]; automated and programmatic ways of accessing and downloading the data in a compuer-redable format also [@Stoltzfus2013]; and methods to summarize and compare the data.
+DateLife's core software application is available as an R package [@datelifeR], and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a versioned, open and fully public source database [@mctavish2015phylesystem] that stores data in a computer-readable format [@vos2012nexml]; automated and programmatic ways of accessing and downloading the data in a computer-readable format also [@Stoltzfus2013]; and methods to summarize and compare the data.
 
 
 # Description
@@ -210,7 +210,7 @@ _**Choosing a topology.--**_
 DateLife requires a tree topology to summarize age data upon.
 We recommend that users provide as input a tree topology from the literature, or one of their own making. If no topology is provided, DateLife automatically extracts one from the OpenTree synthetic tree, a phylogeny currently encompassing 2.3 million taxa across all life, assembled from 1, 239 published phylogenetic trees and OpenTree's unified Taxonomy, OTT [@opentreeoflife2019synth].
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach [@Criscuolo2006].
-To do this DateLife first identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves].
+To do this, DateLife first identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves].
 If the source chronograms do not form a grove, the supertree reconstruction will fail.
 In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 The result is a single summary (or supertree) topology, that combines topologies from source chronograms in a grove.
@@ -365,7 +365,7 @@ Once identified, DateLife pruned these matching chronograms to remove tips that 
 
 The final step entailed congruifying and summarizing the age data available for the Fringillidae species into two single summary chronograms, using two different types of summary ages, median and SDM.
 As explained in the "Description" section, a tree topology to summarize age data upon is required.
-By default, to do this, DateLife uses the topology from OpenTree's synthetic tree that contains all taxa from the search query.
+By default, DateLife uses the topology from OpenTree's synthetic tree that contains all taxa from the search query.
 According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}). Hence, a topology containing only the 289 species from the original query was extracted from Open Tree of Life’s synthetic tree v12.3 [@opentreeoflife2019synth].
 
 \vspace{50mm}
@@ -412,7 +412,7 @@ A total of `r format(length(unique(unname(unlist(lapply(opentree_chronograms$tre
 Incorporation of more chronograms into the database will continue to improve DateLife's services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository.  Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
 We would like to emphasize on the importance of sharing chronogram data, including systematically curated metadata, into open repositories, such as OpenTree's Phylesystem [@mctavish2015phylesystem] for the benefit of the scientific community as a whole.
 
-While it is known that incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance in ecological and conservation biology studies [@Webb2008] and diversiifcation [@], it is important to note possible sources of problems when reusing chronogram data the way DateLife does.
+While it is known that incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance in ecological and conservation biology studies [@Webb2008]. Next, we discuss some particularities of using summarized node age data from a DateLife analysis that users should be aware of.
 
 ## Age variation in source chronograms
 
@@ -468,20 +468,19 @@ Choosing source chronograms that we are going to keep and the ones that we are g
 ## Effects of phylogenetic sampling on downstream analyses
 
 Analysis of species diversification using simulated and empirical phylogenies suggest that using a more completely sampled phylogeny provides estimates that are closer to the true diversification history than when analysing incompletely sampled phylogenies [@cusimano2012new; @chang2020estimating; @sun2020estimating]. 
-Ideally phylogenies should be completed using genetic data, but this is a very hard task to achieve for many taxa.
-Hence, DateLife's workflow features different ways of generating node ages in the absence of calibration and branch length information for certain taxa.
-Completing a phylogeny using birth-death politomy resolvers and a backbone taxonomy is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data. These phylogenies provide less biased diversification rates estimated with methods that account for sampling fractions [@chang2020estimating; @cusimano2012new], but can also introduce spurious patterns [@]. 
-Analysis of empirical phylogenies suggest that introducing stochastically resolved divergence times creates a spurious pattern of early burst of diversification.
+Ideally phylogenies should be completed using genetic data, but this is a very hard task to achieve for many biological groups.
+Hence, DateLife's workflow features different ways of assigning node ages in the absence of calibrations and branch length information for certain taxa.
+Completing a phylogeny using a stochastic birth-death politomy resolver and a backbone taxonomy is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data. These stochastically resolved chronograms provide less biased diversification rates estimated with methods that account for sampling fractions [@chang2020estimating; @cusimano2012new], but can also introduce spurious patterns of early bursts of diversification [@cusimano2010slowdowns; @sun2020estimating]. 
 
 Taxonomy based politomy resolvers also introduce topological differences.
 The study of macroevolutionary processes largely depends on an understanding of the timing of species diversification events, and different phylogenetic and chronogram hypothesis can provide very different overviews of the macroeovlutionary history of a biological group. 
 For example, alternative topologies in chronograms from the same biological group can infer very different species diversification patterns [@rabosky2015no; @title2016macrophylogenies].
 <!-- There is evidence that different chronograms will result in very different macroevolutionary histories inferred from them [@title2016macrophylogenies]. However, it is unknown how using very different age data could affect hypothesis testing in other areas of research and more effort is needed in that direction -->
-Similarly there are worries that patterns of morphological evolution cannot be accurately inferred with these types of phylogenies, as any patterns would be erased by randomization. We note that the same could apply for geographical and morphological dependent diversification analysis. Hence, we suggest that these types of randomly resolved phylogenies can work as null or neutral models, representing the case of diversification independent of traits and geographical scenario.
+Similarly there are worries that patterns of morphological evolution cannot be accurately inferred with these types of phylogenies, as any patterns would be erased by randomization [@rabosky2015no]. We note that the same applies for geographical and morphological dependent diversification analysis. Hence, we suggest that these types of randomly resolved phylogenies can be used as null or neutral models, representing the case of diversification independent of traits and geographical scenario.
 
-Notably, risks come with the practice of resolving politomies, even if using a tested model of diversification.
-Taken to the extreme, one could generate a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration, using polytomy resolution and branch length simulation methods. 
-We urge DateLife users to follow the example of the large tree papers cited above, by carefully considering the statistical assumptions being made, and assessing the consistency of the results with prior work.
+While stochastic politomy resolvers have been useful to advance research, notably, risks come with this practice.
+Taken to the extreme, one could generate a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy, a single calibration, and assigning branch lengths following a birth-death diversification model. Clearly, this can lead to a misrepresentation of the true evolutionary history.
+We urge DateLife users to follow the example of the large tree papers cited above, by carefully considering the statistical assumptions being made, potential biases, and assessing the consistency of the results with prior work.
 
 
 # Conclusions
