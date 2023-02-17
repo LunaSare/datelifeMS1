@@ -1,0 +1,33 @@
+---
+title: "figures"
+output: pdf_document
+date: "2023-02-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+embed_figure <- TRUE
+```
+
+
+```{r fig1, child= if (embed_figure) "fig-workflow.Rmd"}
+```
+
+```{r fig2, child= if (embed_figure) "fig-benchmark.Rmd"}
+```
+
+```{r fig-small-example, child= if (embed_figure) "fig-small-example.Rmd"}
+```
+
+```{r table1, child= if (embed_figure) "table1.Rmd"}
+```
+
+```{r table2, child= if (embed_figure) "table2.Rmd"}
+```
+
+```{r fig4, child= if (embed_figure) "fig-topologies.Rmd"}
+```
+
+```{r fig6, child= if (embed_figure) "fig-cross-validation.Rmd"}
+```
+

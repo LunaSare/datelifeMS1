@@ -112,7 +112,7 @@ nocite: |
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("paper_references.bib")
-embed_figure <- TRUE
+embed_figure <- FALSE
 ```
 
 ```{r analysis-preferences}
@@ -203,14 +203,14 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 6. Various single summary chronograms resulting from summarizing age data, generated using the methodology described next.
 
 
-_**Choosing a topology.--**_
+## Choosing a topology
 DateLife requires a tree topology to summarize age data upon.
 We recommend that users provide as input a tree topology from the literature, or one of their own making. If no topology is provided, DateLife automatically extracts one from the OpenTree synthetic tree, a phylogeny encompassing 2.3 million taxa across all life, assembled from 1, 239 published phylogenetic trees and OpenTree's unified Taxonomy, OTT  [@opentreeoflife2019synth].
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach.
 To combine topologies from source chronograms into a single summary (or supertree) topology, the DateLife workflow identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. [-@ane2009groves]. In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the "criterion = trees" flag allows the user to choose the grove with the most trees instead.
 If source chronograms do not form a grove, the supertree reconstruction will fail.
 
-_**Dating the topology.--**_
+## Dating the topology
 Input topologies from OpenTree or the supertree approach described above do not include branch length estimates of any kind.
 Optionally, to estimate branch lengths proportional to substitution rates on these topologies, DateLife can mine the Barcode of Life Data System, BOLD [@ratnasingham2007bold] to obtain genetic markers for the input taxa.
 These markers are aligned with MUSCLE [@edgar2004muscle] (by default) or MAFFT [@katoh2009multiple].
@@ -236,7 +236,7 @@ PATHd8 is a non-clock, rate-smoothing method [@Britton2007] to date trees.
 treePL [@Smith2012], is a semi-parametric, rate-smoothing, penalized likelihood dating method [@sanderson2002].
 The MrBayes  [@Huelsenbeck2001; @Ronquist2003] approach in DateLife uses the calibrations as priors on node ages.
 
-_**Visualizing results.--**_
+## Visualizing results
 Finally, users can save all source and summary chronograms in formats that permit reuse and reanalyses (newick and R "phylo" format), as well as visualize and compare results graphically, or construct their own graphs using DateLife's chronogram plot generation functions available from the R package `datelifeplot` [@datelifeplot].
 
 <!-- TODO ADD FIGURE: mock example explaining difference between using summary ages and raw ages to calibrate a topology. Then show it in the biological example. This will show what happens if a tree (phylogenetic conflict) or node (age) do not agree.-->
@@ -405,7 +405,7 @@ For example, two independent researchers working on the same clade should both c
 Yet, if one researcher concludes that a fossil should calibrate the ingroup of a clade, while another researcher concludes that the same fossil should calibrate the outgroup of the clade, the resulting age estimates will differ, as the placement of calibrations as stem or crown group has been proven to significantly affect time of lineage divergence estimates [@sauquet2013practical].
 
 
-### Primary vs Secondary calibrations
+## Primary vs Secondary calibrations
 
 While most chronograms in DateLife's database are constructed using primary calibrations (molecular substitution rates or ages obtained from the fossil record or geological events), DateLife summarizes chronograms using secondary calibrations (ages coming from other chronograms).
 @graur2004reading cautioned on the increased error and uncertainty in estimated ages when using secondary calibrations in dating analyses.

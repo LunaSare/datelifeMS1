@@ -69,7 +69,7 @@ treatment of missing species influences both parameter estimation and type I and
 
 @rabosky2015no shows that randomly resolved phylogenies are inappropriate to study trait evolution,
 because unresolved lineages are placed on the phylogeny at random relative to the trait values.
-At best, these phylogenies could serve as a null hypothesis of randomness in trait evolution.
+At best, LLSR believe these phylogenies could serve as a null hypothesis of randomness in trait evolution.
 
 "birth–death polytomy resolver is a method of accounting for phylogenetic uncertainty that places
 missing (unsampled) taxa onto phylogenetic trees, using taxonomic information alone"

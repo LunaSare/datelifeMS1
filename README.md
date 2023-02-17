@@ -32,3 +32,11 @@ Then I rendered the differences.tex file from terminal with R:
 And moved it to the folder I want it to be in:
 
     mv differences.pdf submission-sysbio-reviews.pdf
+
+---
+
+To render reviews:
+
+```
+R -e 'rmarkdown::render("review.Rmd", "all")'
+```
