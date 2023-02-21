@@ -1,3 +1,6 @@
+## Datelife ms submission
+## Response to reviews
+
 > 19-Oct-2022
 
 > Dear Dr Sanchez Reyes:
@@ -52,19 +55,23 @@ Then, in a separate section after the main text, include a statement such as:
 > SUPPLEMENTARY MATERIAL
 > Supplementary material, including data files and/or online-only appendices, can be found in the Dryad data repository (put your Dryad doi in parentheses here).
 
-Added on page 29, L498
+We added DOIs for Dryad package with Supplementary Material, L551.
 
 > Make sure all section headings conform to Systematic Biology style for first, second and third levels. Use of incorrect styles is potentially confusing and, in any case, is likely to delay processing of the manuscript.
 
-Checked.
+Noted and checked.
 
 > Tables should have a single-sentence informative title above the table, with any other descriptive information located below the table in the form of notes and/or specific footnotes.
 
+Noted and checked.
+
 > When references are grouped together in parentheses in the text, they should be listed in ascending chronological order. Multiple references in a single year should be alphabetized.
+
+Noted and checked.
 
 > All funding used for this work should be listed in a "Funding" section preceding the Acknowledgements. Please give the full official name of each funding body.
 
-Done on page XX, LXX
+Done on L556-558.
 
 > Our accepted abbreviation for millions of years ago is Ma. The abbreviation for millions of years duration is myr.
 
@@ -99,26 +106,24 @@ Thanks for your reviews and comments! They were most helpful. We carefully revis
 
 > 1. how and why is a parsimony method used to estimate branch lengths and how is this used in combination with a likelihood method (line 174)?
 
-The parsimony algorithm ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (agnarsson2008acctran). 
-This allows us to obtain an initial branch length estimation fast. The parsimony branch lengths become parameters that are then optimized using Maximum Likelihood, given the alignment, the topology and a simple JC model.
-This has been implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.
-
-
-
-We added a vignette in which we showcase the process of branch length optimization from parsimony to ML.
-We chose this methodology because it allows fast return of phylogenetic trees with ML branch lengths.
-
+Thanks for this question. We elaborate on this on the Description section, subsection "Dating a tree with branch lengths" L221-228. 
+Briefly, we implement the parsimony algorithm ACCTRAN using functions from th R package phangorn. We chose this algorithm as a quick way to obtaining initial branch lengths that can be optimized under ML. ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (agnarsson2008acctran), so this works well with the type of matrices generated with BOLD data. 
+Once estimated, the parsimony branch lengths become parameters that are then optimized using Maximum Likelihood, given the alignment, the topology and a simple JC model.
+<!--ACCTRAN has been implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.-->
+We also add a vignette to the R package in which we showcase the whole workflow of branch length optimization, from parsimony to ML.
 
 ---
 > 2. Why are the node ages evenly distributed between calibrations? I would expect an exponential distribution of node ages under a standard birth-death process.
 
-Thanks for pointing this out. We elaborate on this on the "Description" section, at the end of the "Summarizing search results" subsection, "Dating a tree topology", L 224-230
+Thanks for pointing this out. We elaborate on this on the "Description" section, at the end of subsection "Dating a tree topology with no branch lengths", L 202-210
 (Note that we expanded the subsection "Dating a tree topology" into three sections: "Applying secondary calibrations", "Dating a tree topology" and "Dating a tree with branch lengths").
 
-Briefly, in the absence of genetic data from an alignment, nodes that have no age data from studies in the chronogram database are assigned an age based solely on other nodes that do have age data from published studies.
+Briefly, in the absence of genetic data from an alignment, nodes that have no age data from published studies in the chronogram database are assigned an age based solely on other nodes that do have age data from published studies.
+MrBayes has an option in which you can use a birth-death strict-clock model to sample branch lengths in the absence of genetic data. 
+We have implemented a DateLife function called "make_mrbayes_tree", that wraps this MrBayes service.
+Inherited from MrBayes implementation, the function requires setting parameter values for birth and death rates. If the amount of missing data is large, the chosen parameters can determine the "shape" of the resulting summary chronogram in terms of branch length distribution.
 
-DateLife has a function in which you can use MrBayes and a birth-death strict clock model to sample branch lengths in the absence of genetic data. In this case, the user needs to provide parameter values for birth and death rates, which certainly determines the "shape" of the resulting summary chronogram in terms of branch length distribution.
-There is evidence and some concerns have been raised regarding the effects of using a chronogram produced under a certain diversification model on downstream analyses, especially for analyses that require estimating a diversification rate, which might generate some circularity.
+We added a discussion section, "Effects of phylogenetic sampling on downstream analyses" (L445 of manuscript without differences; L527 of manuscript with differences), in which we discuss the effects of chronograms with missing data that have been completed under a certain diversification model, especially when used for analyses that require estimating a diversification rate, which might introduce circularity (Rabosky, 2015. Evolution doi.org/10.1111/evo.12817).
 
 MrBayes also allow us to generate a cloud of trees produced with different birth-death rates that could be used for downstream analyses. However, the main goal of the summarizing step in DateLife is to provide a single chronogram that can quickly show in one glance the distribution of node ages based on published data, in the most agnostic way possible.
 
@@ -127,9 +132,9 @@ This is why we chose an algorithm that distributes node ages evenly between cali
 ---
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
 
-We agree, and we changed the behaviour of the code to fix this.
+We agree, we changed the behaviour of the code to fix this, and adjusted the ms accordingly (L196-201).
 
-It now stops with an informative message on how users can provide an age for the root. Making the users aware that there is no age data available for that root!
+It now stops with an informative message on how users can provide an age for the root. The goal is to make sure that users are aware that there is no age data available for that root!
 
 ---
 > Please make sure to carefully revise the text to remove typos. 
@@ -139,7 +144,7 @@ We revised the text throughout to remove all typos we could detect.
 ---
 > As one of the reviewers pointed out, it is good to provide links to permanent repositories for your code. I see that DateLife actually is already hosted in a Zenodo repository, so maybe you can add the link to your Availability section to make it more visible.
 
-Right! We added Zenodo links for our code and other materials used for this research in the Availability section.
+Right! We added Zenodo links for our code and other materials used for this research in the Availability section (L505) and Supplementary Material (L518-520).
 
 ---
 > I hope you will be willing to revise and resubmit your paper and that you’ll find these and the Reviewers’ comments useful.
@@ -165,18 +170,7 @@ Yes, thanks!
 > * Title and Rabosky MEE 2019
 > * Sun et al AJB 2020
 
-Good point. We elaborated on this more thoroughly by adding results from these studies to the corresponding discussion section (LXXX), as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process".
-
-We added the following findings from the suggested papers:
-
-
-
-
-
-
-
-
-
+Thanks for pointing us to these references. We elaborated on this subject more thoroughly by adding results from these studies to the corresponding section on the Discussion, "Effects of phylogenetic sampling on downstream analyses" (L481 of manuscript without differences; L527 of manuscript with differences), as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process" (L489; L540).
 
 ---
 > There were many typographical errors in the manuscript which should be corrected prior to publication.
@@ -191,7 +185,7 @@ We corrected typos across the text.
 
 > DL synthesizes results from previous research. On the one hand that's great, but on the other, it invites the 'garbage in - garbage out' problem. Although OTOL has its own curation and QC facilities, the fact that users can provide their own garbage trees makes it so that the service might end up decorating nonsensical data, tainting its own reputation in the process. It would be good if the authors could emphasize this a bit more.
 
-Indeed, we emphasized this in abstract, intro and discussion.
+This is a good point. We would not like for this to become a common use for the software. We mention this in the abstract, introduction and discussion.
 
 ---
 > A separate but related point that I would also like to see discussed is that synthesizing services such as DL and OTOL seem capable of ending up in loops where bad trees with bad calibration points provide the skeleton for further bad trees based on the former - with their own seemingly well-supported but in fact dodgy secondary calibrations. Is that a risk? What can be done about it?
@@ -201,7 +195,8 @@ It is a risk that we are aware of, but it is possible to avoid it. We explain ho
 ---
 > Also related: will we gradually start developing a body of literature with trees where the root always just happens to be ±10% older than the oldest nodes? Might that be bad?
 
-Good point. It would certainly be a bad thing. The reason we implemented this initially is because of the goal of DL: quickly providing trees with age data.
+Good point. It would certainly be a bad thing. The reason we implemented this initially is because we wanted DateLife to be able to provide a summary chronogram even if tehre is just one point of age data available.
+
 As you pointed out, when the root age is absent, it is not possible to return any dated tree.
 
 
@@ -210,13 +205,12 @@ As you pointed out, when the root age is absent, it is not possible to return an
 
 > - The Abstract looks like an extreme afterthought. I understand how that works, but please have another look. I see verb disagreement on line 21 and on line 23. Probably needs a comma after databases on line 25. On the same line, 'timeframe' is spelt as one word (fine by me), but elsewhere it's two words. Line 27: 'incetivizited' is not a thing. Line 29, 'finding' scans weird, maybe use 'discovery'? Line 36 probably needs 'use' instead of 'using' but the sentence is hard to parse. Line 38, 'awereness' is wrong. In this way, the Abstract is quite different from the rest of the MS, which is otherwise well written.
 
-
+Thanks for your comment, the abstract was indeed slightly forsaken on the previous version of the ms. We rewrote most of the abstract and checked for spelling, adding more detail about the findings.
 
 ---
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
 
-Thanks for pointing that out. We added that topic and a couple of references to the intro.
-L
+Thanks for pointing that out. We added that topic to the intro along with a couple of references, L48-49.
 
 ---
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
@@ -234,19 +228,21 @@ Yeah! this is a pretty cool quality of TNRS that we implement in datelife. It is
 Moreover, homonyms in the Open Tree taxonomy specify the group they belong too, so users can easily identify if the numeric identifier they obtained from TNRS processing belongs to the group they wanted or not. For example _Aotus_ the legume is referred to as "Aotus (genus in kingdom Archaeplastida)" and the monkey as "Aotus (genus in Opisthokonta)".
 
 We added examples for the two points above in a new vignette for the package, available at http://phylotastic.org/datelife/articles/make_datelife_query.html
+
 ---
 
 > - On page 8, fourth paragraph, it's not quite clear whether DL's database syncs automatically with Phylesystem or whether you have volunteered yourself for this task. Which would be noble, but hard to sustain.
 
-It is indeed currently synced "manually". However we are working to have the syncs done automatically.
-We comment this in the discussion and clarified that it is currently a manual sync on page 8.
+It is indeed currently synced "manually". We specify this in the Description, L125.
+We comment in the discussion the benefits of having syncs done automatically, and ways to do so.
 
 ---
 > - On page 10, second paragraph: mining BOLD and aligning the sequences automatically is very cool functionality but I did not see it exposed on the website at all. How can users get at those alignments? Also, might there be performance issues? MAFFT can be quite greedy with larger data sets.
 
-Ah, yes, that is not a functionality currently available from the website, mainly because it takes considerable time, which the server can't really afford. These functions are available by using the R package locally. 
+Ah, yes, thanks! Well, the BOLD workflow is faster than a classic workflow, but it still takes considerable time, specifically computational time required for the database search, which the server can't afford yet. The functions are currently only available on DateLife's R package and not on the web application, and we think it would be good to make them available there in the future.
+Regarding possible performance issues, the alignments from BOLD data are not very long, so we expect both MUSCLE and MAFFT to perform approximately the same. We chose MUSCLE as the default aligner.
 
-DNA sequences obtained from BOLD are short (between 500-500 bp) and display little variation. 
+We comment on this on L231-232. 
 
 ---
 > - On page 25 you mention the fossilcalibrations.org initiative. Maybe that's a good opportunity to go a bit into what we need as a community. I suspect that, in general, most people in this field think that doing it by themself is 'better', i.e. do a bunch of sequencing (hybseq right now, I guess?) and then get good primary calibration points. Natural history collections must have many more of those, both as fossils but also from geology (i.e. vicariant events having to do with tectonics, orogeny, etc.). Shouldn't we want *that*?
@@ -276,4 +272,4 @@ Went for "publicly funded", thanks!
 ---
 > - Page 29, Supplementary Material: it's probably better to sync the repos with Zenodo and cite the DOI, just so that it's guaranteed unchanging.
 
-Thanks for the suggestion! We created stable versions for all three repositories on Zenodo, and refer the doi instead of the GitHub address for the repos.
+Thanks for the suggestion! We created stable versions for all three repositories on Zenodo, and refer the doi in addition to the GitHub addresses, L522-525
