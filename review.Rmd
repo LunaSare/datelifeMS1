@@ -212,10 +212,12 @@ As you pointed out, when the root age is absent, it is not possible to return an
 
 > - The Abstract looks like an extreme afterthought. I understand how that works, but please have another look. I see verb disagreement on line 21 and on line 23. Probably needs a comma after databases on line 25. On the same line, 'timeframe' is spelt as one word (fine by me), but elsewhere it's two words. Line 27: 'incetivizited' is not a thing. Line 29, 'finding' scans weird, maybe use 'discovery'? Line 36 probably needs 'use' instead of 'using' but the sentence is hard to parse. Line 38, 'awereness' is wrong. In this way, the Abstract is quite different from the rest of the MS, which is otherwise well written.
 
+Thanks for your comment, the abstract was indeed slightly forsaken on the previous version of the ms. We rewrote most of the abstract and checked for spelling. We hope you find it a good improvement from the original.
+
 ---
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
 
-Thanks for pointing that out. We added that topic and a couple of references to the intro, L48-49.
+Thanks for pointing that out. We added that topic to the intro along with a couple of references, L48-49.
 
 ---
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
