@@ -107,8 +107,9 @@ Thanks for your reviews and comments! They were most helpful. We carefully revis
 > 1. how and why is a parsimony method used to estimate branch lengths and how is this used in combination with a likelihood method (line 174)?
 
 Thanks for this question. We elaborate on this on the Description section, subsection "Dating a tree with branch lengths" L221-228. 
-Briefly, we implement the parsimony algorithm ACCTRAN using functions from th R package phangorn. We chose this algorithm as a quick way to obtaining initial branch lengths that can be optimized under ML. ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (agnarsson2008acctran), so this works well with the type of matrices generated with BOLD data. 
-Once estimated, the parsimony branch lengths become parameters that are then optimized using Maximum Likelihood, given the alignment, the topology and a simple JC model.
+Briefly, we implement the parsimony algorithm ACCTRAN using functions from the R package phangorn. We chose this algorithm as a quick way to obtain initial branch lengths that can be optimized under ML. ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (Agnarsson & Miller, 2008, doi:10.1111/j.1096-0031.2008.00229.x), so this works well with the type of matrices generated with Barcode of Life Databse (BOLD) data, whoch are short. 
+Once estimated, the parsimony branch lengths become parameters that are then optimized using Maximum Likelihood (ML), given the alignment, the topology and a simple JC model.
+In effect, the branches that are returned are ML branches.
 <!--ACCTRAN has been implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.-->
 We also add a vignette to the R package in which we showcase the whole workflow of branch length optimization, from parsimony to ML.
 
@@ -119,22 +120,25 @@ Thanks for pointing this out. We elaborate on this on the "Description" section,
 (Note that we expanded the subsection "Dating a tree topology" into three sections: "Applying secondary calibrations", "Dating a tree topology" and "Dating a tree with branch lengths").
 
 Briefly, in the absence of genetic data from an alignment, nodes that have no age data from published studies in the chronogram database are assigned an age based solely on other nodes that do have age data from published studies.
-MrBayes has an option in which you can use a birth-death strict-clock model to sample branch lengths in the absence of genetic data. 
+The program MrBayes has an option in which you can use a birth-death strict-clock model to sample branch lengths in the absence of genetic data. 
 We have implemented a DateLife function called "make_mrbayes_tree", that wraps this MrBayes service.
-Inherited from MrBayes implementation, the function requires setting parameter values for birth and death rates. If the amount of missing data is large, the chosen parameters can determine the "shape" of the resulting summary chronogram in terms of branch length distribution.
+Inherited from MrBayes implementation, the function requires setting parameter values for birth and death rates. If the amount of missing genetic data is large, the diversification rate values chosen can determine the "shape" of the resulting summary chronogram in terms of branch length distribution (Rabosky 2015, doi:10.1111/evo.12817).
 
-We added a discussion section, "Effects of phylogenetic sampling on downstream analyses" (L445 of manuscript without differences; L527 of manuscript with differences), in which we discuss the effects of chronograms with missing data that have been completed under a certain diversification model, especially when used for analyses that require estimating a diversification rate, which might introduce circularity (Rabosky, 2015. Evolution doi.org/10.1111/evo.12817).
+We added a discussion section, "Effects of phylogenetic sampling on downstream analyses" (L445 of manuscript without differences; L527 of manuscript with differences), in which we discuss the use of chronograms with missing data that have been completed at random following a certain diversification model, especially when used for analyses that require estimating a diversification rate, which might introduce circularity (Rabosky, 2015. Evolution doi:10.1111/evo.12817).
 
-MrBayes also allow us to generate a cloud of trees produced with different birth-death rates that could be used for downstream analyses. However, the main goal of the summarizing step in DateLife is to provide a single chronogram that can quickly show in one glance the distribution of node ages based on published data, in the most agnostic way possible.
+<!--MrBayes also allow us to generate a cloud of trees produced with different birth-death rates that could be used for downstream analyses. 
+-->
+We want to highlight that the main goal of the summarizing step in DateLife is to provide a single chronogram that can quickly show at a glance the distribution of node ages based on published data, in the most agnostic way possible. Using a birth-death politomy resolver begs the making additional assumptions about the underlying evolutionary model.
 
 This is why we chose an algorithm that distributes node ages evenly between calibrations and does not require any assumptions on the underlying model of branch length distribution. The Branch Length Adjuster (BLADJ) algorithm allows this and is the one set as default for the summarizing step. However, users that wish to use MrBayes instead con do so with the "make_mrbayes_tree" function. 
 
 ---
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
 
-We agree, we changed the behaviour of the code to fix this, and adjusted the ms accordingly (L196-201).
+Thanks for raising this point. We agree that this practice could be dangerous if a user is not aware that the age of the root was set in an arbitrary way. We changed the behaviour of the code to return a very conspicuous warning message when the root is arbitrary to make sure that users are aware of the fact (L196-201).
+In line with our thoughts on the previous point, we want our program to be able to return a chronogram if there is at least one age data point available from the literature. Unfortunately, it is impossible to return a chronogram if there is no age for the root, so in the absence of that information, and to be able to automatize the algorithm, the only option available to us is to randomly chose an age that will allow to generate a chronogram using the real data that is available. We agree that choosing the 10% is probably too arbitrary, so the function now adds one standard deviation unit of the mean of ages available to the max age value, if there is more than one age data point, and uses that as the root age.
 
-It now stops with an informative message on how users can provide an age for the root. The goal is to make sure that users are aware that there is no age data available for that root!
+The warning message that we implemented for this version of datelife now suggests ways on how users can provide an age for the root that is informed in the literature. The main goal of the message is to make sure that users are aware that there is no age data available for that root in the datelife database.
 
 ---
 > Please make sure to carefully revise the text to remove typos. 
@@ -185,27 +189,35 @@ We corrected typos across the text.
 
 > DL synthesizes results from previous research. On the one hand that's great, but on the other, it invites the 'garbage in - garbage out' problem. Although OTOL has its own curation and QC facilities, the fact that users can provide their own garbage trees makes it so that the service might end up decorating nonsensical data, tainting its own reputation in the process. It would be good if the authors could emphasize this a bit more.
 
-This is a good point. We would not like for this to become a common use for the software. We mention this in the abstract, introduction and discussion.
+This is a good point. We are aware of the possibility of this problem potentially becoming an issue, however we do think that any biological software is subject to this problem. For example, if someone generates bad DNA sequences, no matter how good the aligner software they use is, they will end up with a really bad alignment and subsequently a very bad phylogeny. 
+
+We agree that users of all biological software should keep in mind that the results they get are only as good as the data they provide, and that they should implement some quality control.
+We mention it in the abstract, introduction and discussion.
 
 ---
 > A separate but related point that I would also like to see discussed is that synthesizing services such as DL and OTOL seem capable of ending up in loops where bad trees with bad calibration points provide the skeleton for further bad trees based on the former - with their own seemingly well-supported but in fact dodgy secondary calibrations. Is that a risk? What can be done about it?
 
-It is a risk that we are aware of, but it is possible to avoid it. We explain how in the text.
+Thanks for mentioning this. We think DateLife actually helps preventing this issue. As shown in Figure 5, DateLife allows to compare all age data available for a group, and users can immediately identify chronograms that are outliers, and explore whether it is related to an artifact of the chronogram or something else about the data or methodology used to generate that chronogram. Users can then choose to drop those calibrations from the final analysis.
+We agree that it is a responsibility of the users to check the trees and chonograms before using them as secondary calibrations, in the same way researchers curate fossils to use as primary calibration points.
+
 
 ---
 > Also related: will we gradually start developing a body of literature with trees where the root always just happens to be ±10% older than the oldest nodes? Might that be bad?
 
-Good point. It would certainly be a bad thing. The reason we implemented this initially is because we wanted DateLife to be able to provide a summary chronogram even if tehre is just one point of age data available.
+Thanks for raising this point. The editor also mentioned this, and we agree that this feature of DateLife is not ideal, so we address it in the code and in the manuscript. Briefly, 
+we changed the behaviour of the code to return a very conspicuous warning message when the root is arbitrary to make sure that users are aware of the fact (L196-201).
+We want to highlight that the main goal of DateLife is to provide a single chronogram that can quickly show at a glance the distribution of node ages based on published data, so we want our program to be able to return a chronogram if there is at least one age data point available from the literature. Unfortunately, 
+as you pointed out, when the root age is absent, it is not possible to return any dated tree.
+In the absence of that information, and to be able to automatize the algorithm, the only option available to us is to randomly chose an age that will allow to generate a chronogram using the real data that is available. We agree that choosing the 10% is probably too arbitrary, so the function now instead adds one standard deviation unit of the mean of ages available to the max age value, if there is more than one age data point, and uses that as the root age.
 
-As you pointed out, when the root age is absent, it is not possible to return any dated tree.
-
+The warning message that we implemented now suggests ways on how users can provide an age for the root that is informed in the literature. The main goal of the message is to make sure that users are aware that there is no age data available for that root in the datelife database and that the one used for the chronogram is arbitrary.
 
 ---
 > Apart from these general points that might be touched upon a bit more in the Discussion, here now some specifics about the manuscript:
 
 > - The Abstract looks like an extreme afterthought. I understand how that works, but please have another look. I see verb disagreement on line 21 and on line 23. Probably needs a comma after databases on line 25. On the same line, 'timeframe' is spelt as one word (fine by me), but elsewhere it's two words. Line 27: 'incetivizited' is not a thing. Line 29, 'finding' scans weird, maybe use 'discovery'? Line 36 probably needs 'use' instead of 'using' but the sentence is hard to parse. Line 38, 'awereness' is wrong. In this way, the Abstract is quite different from the rest of the MS, which is otherwise well written.
 
-Thanks for your comment, the abstract was indeed slightly forsaken on the previous version of the ms. We rewrote most of the abstract and checked for spelling, adding more detail about the findings.
+Thanks for your comment, the abstract was indeed a bit forsaken on the version of the ms that you revised. We rewrote most of the abstract and checked for spelling, adding more detail about the findings.
 
 ---
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
@@ -216,9 +228,9 @@ Thanks for pointing that out. We added that topic to the intro along with a coup
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
 
 Thanks for pointing this out. We actually only ignore subspecies when retrieving data from a more inclusive taxonomic group. When provided by the user, subspecific taxa are processed and searched as regular species.
-We clarify this in paragraph X, page 7
+We clarify this in section X.
 
-It would be possible to drop the subspecific epithet and perform a more general search. We added this functionality to our software development plan, so that it can be soon implemented in a future iteration of the software. 
+It would be possible to drop the subspecific epithet and perform a more general search, so, we added this possibility to our software development plan, so that it can be implemented in a future iteration of the software. 
 
 ---
 > - On page 7, third paragraph: how does the TNRS deal with homonyms? Given that we are in the tree realm it should be possible to infer intelligently whether some label is zoological or botanical code. Or is Aotus simply always the monkey, which is much cooler than that Australian legume genus?
@@ -247,7 +259,7 @@ We comment on this on L231-232.
 ---
 > - On page 25 you mention the fossilcalibrations.org initiative. Maybe that's a good opportunity to go a bit into what we need as a community. I suspect that, in general, most people in this field think that doing it by themself is 'better', i.e. do a bunch of sequencing (hybseq right now, I guess?) and then get good primary calibration points. Natural history collections must have many more of those, both as fossils but also from geology (i.e. vicariant events having to do with tectonics, orogeny, etc.). Shouldn't we want *that*?
 
-
+Indeed! We adressed that in the discussion, section XXX.
 
 ---
 > - Page 26, line 416 has some typos.
