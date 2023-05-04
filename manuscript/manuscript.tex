@@ -1,40 +1,39 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[english,man]{apa6}
+\documentclass[
+  man]{apa6}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life},
-            pdfauthor={Luna L. Sánchez Reyes1,2, Emily Jane McTavish1, \& Brian O'Meara2},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{graphicx,grffile}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -43,16 +42,55 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{english}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 \DeclareUnicodeCharacter{0301}{*************************************}
 
 % leave the figure captions outside\ caption{} if you want them
@@ -71,6 +109,7 @@
 \captionsetup[figure]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Figure}}
 
 \captionsetup[table]{font+=linenumbers, labelfont={sc}, labelformat={default}, labelsep=period, name={Table}}
+
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -145,13 +184,16 @@
 
 \linenumbers
 \usepackage{csquotes}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=english]{babel}
-\else
-  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
-\fi
+
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life},
+  pdfauthor={Luna L. Sánchez Reyes1,2, Emily Jane McTavish1, \& Brian O'Meara2},
+  pdflang={en-EN},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \title{DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life}
 \author{Luna L. Sánchez Reyes\textsuperscript{1,2}, Emily Jane McTavish\textsuperscript{1}, \& Brian O'Meara\textsuperscript{2}}
@@ -181,36 +223,38 @@ Correspondence concerning this article should be addressed to Luna L. Sánchez R
 Abstract
 \end{center}
 
-Chronograms --phylogenies with branch lengths proportional to time-- represent key data on evolutionary time frame for the study of natural processes in many areas of biological research.
-Chronograms also provide valuable information that can be used for education, science communication, and policy decisions.
+Chronograms --phylogenies with branch lengths proportional to time-- represent key data on timing of evolutionary events for the study of natural processes in many areas of biological research.
+Chronograms also provide valuable information that can be used for education, science communication, and conservation policy decisions.
 Yet, achieving a high-quality reconstruction of a chronogram is a difficult and resource-consuming task.
 Here we present DateLife, a service implemented as an R package and an R Shiny web application available at www.datelife.org, that provides services for efficient and easy discovery, summary, reuse, and reanalysis of node age data mined from a curated database of expert, peer-reviewed, and openly available chronograms.
-The main DateLife workflow starts with one or more scientific taxon names provided by a user. Names are processed and standardized to a unified taxonomy. Then, DateLife runs a name match across its local chronogram database that is curated from Open Tree of Life's phylogenetic repository, and extracts all chronograms that contain at least two queried taxon names, along with their metadata.
-Finally, node ages from matching chronograms are mapped upon a chosen tree topology using the congruification algorithm. Congruified node ages are used as secondary calibrations to date the chosen topology, with or without initial branch lengths, using different phylogenetic dating methods such as BLADJ, treePL, PATHd8 and MrBayes.
-We performed a cross-validation test to compare node ages resulting from a DateLife analysis (i.e, phylogenetic dating using secondary calibrations) to those from the original chronograms (i.e, obtained with primary calibrations), and found that DateLife's node age estimates appear generally correlated to those from the original chronograms, with the largest variation in ages occurring around topologically deeper nodes.
-Software such as DateLife can help increase awareness of the existing variation in alternative hypothesis of evolutionary time frame for the same organisms, and can support exploration of the effect of alternative chronogram hypotheses on downstream analyses, providing a framework for a more informed interpretation of evolutionary results.
+The main DateLife workflow starts with one or more scientific taxon names provided by a user. Names are processed and standardized to a unified taxonomy, allowing DateLife to run a name match across its local chronogram database that is curated from Open Tree of Life's phylogenetic repository, and extract all chronograms that contain at least two queried taxon names, along with their metadata.
+Finally, node ages from matching chronograms are mapped to corresponding nodes from a chosen tree topology using the congruification algorithm. Congruified node ages are used as secondary calibrations to date the chosen topology, with or without initial branch lengths, using different phylogenetic dating methods such as BLADJ, treePL, PATHd8 and MrBayes.
+We performed a cross-validation test to compare node ages resulting from a DateLife analysis (i.e, phylogenetic dating using secondary calibrations) to those from the original chronograms (i.e, obtained with primary calibrations), and found that DateLife's node age estimates are consistent with the age estimates from the original chronograms, with the largest variation in ages occurring around topologically deeper nodes.
+Results from any software for scientific analysis can only be as good as the data used as input, we highlight the importance of considering the results of a DateLife analysis in the context of the input chronograms.
+We encourage the use of DateLife to help increase awareness of the existing disparities among alternative hypotheses of dates for the same diversification events, and to support exploration of the effect of alternative chronogram hypotheses on downstream analyses, providing a framework for a more informed interpretation of evolutionary results.
 
 \emph{Keywords}: Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations.
 
-Word count: 6111
+Word count: 6380
 
 \newpage
 
-Chronograms --phylogenies with branch lengths proportional to time-- provide key data on evolutionary time frame for the study of natural processes in many areas of biological research, such as comparative analysis (Freckleton, Harvey, \& Pagel, 2002; Harvey, Pagel, \& others, 1991), developmental biology (Delsuc et al., 2018; Laubichler \& Maienschein, 2009), conservation biology and ecology (Felsenstein, 1985; Webb, 2000), historical biogeography (Posadas, Crisci, \& Katinas, 2006), and species diversification (Magallon \& Sanderson, 2001; Morlon, 2014).
+Chronograms --phylogenies with branch lengths proportional to time-- provide key data on evolutionary time frame for the study of natural processes in many areas of biological research, such as comparative analysis (Freckleton, Harvey, \& Pagel, 2002; Harvey, Pagel, et al., 1991), developmental biology (Delsuc et al., 2018; Laubichler \& Maienschein, 2009), conservation biology and ecology (Felsenstein, 1985; Webb, 2000), historical biogeography (Posadas, Crisci, \& Katinas, 2006), and species diversification (Magallon \& Sanderson, 2001; Morlon, 2014).
 
 Building a chronogram is not an easy task.
-It requires obtaining and curating a homology hypothesis to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring a full dated tree. All of this entails specialized biological training, taxonomic domain knowledge, and a non-negligible amount of research time, computational resources and funding.
+It requires obtaining and curating a homology hypothesis to construct a phylogeny, selecting and placing appropriate calibrations on the phylogeny using independent age data points from the fossil record or other dated events, and inferring a full dated tree. All of this entails specialized biological training, taxonomic domain knowledge, and a significant amount of research time, computational resources and funding.
 
-Here we present the DateLife project which has the main goal of extracting and exposing age data from published chronograms, making age data readily accessible to the wider community for reuse and reanalysis, research, teaching, and science communication and policy.
-DateLife's core software application is available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a curated, versioned, open and fully public chronogram database (McTavish et al., 2015) that stores data in a computer-readable format (Vos et al., 2012); automated and programmatic ways of accessing and downloading the data in a computer-readable format also (Stoltzfus et al., 2013); and methods to summarize and compare the data.
+Here we present the DateLife project which has the main goal of extracting and exposing age data from published chronograms, making age data readily accessible to the wider community for reuse and reanalysis in research, teaching, science communication and conservation policy.
+DateLife's core software application is available as an R package (Sanchez-Reyes et al., 2022), and as an online Rshiny interactive website at www.datelife.org. It features key elements for scientific reproducibility, such as a curated, versioned, open and fully public chronogram database (McTavish et al., 2015) that stores data in a computer-readable format (Vos et al., 2012); automated and programmatic ways of accessing and downloading the data, also in a computer-readable format (Stoltzfus et al., 2013); and methods to summarize and compare the data.
 
 \begin{center}
 \textsc{Description}
 \end{center}
 
-DateLife's core software applications are implemented in the R package \texttt{datelife}. Its current stable version -- v0.6.6, is available from The Comprehensive R Archive Network (CRAN) repository (Sanchez-Reyes et al., 2022), and relies on functionalities from other biological R packages:
+DateLife's core software applications are implemented in the R package \texttt{datelife},
+and relies on functionalities from other biological R packages:
 ape (Paradis, Claude, \& Strimmer, 2004),
-bold (Chamberlain, 2018),
+bold (Chamberlain et al., 2019),
 geiger (Pennell et al., 2014),
 msa (Bodenhofer, Bonatesta, Horejš-Kainrath, \& Hochreiter, 2015),
 paleotree (Bapst, 2012),
@@ -218,20 +262,20 @@ phyloch (Heibl, 2008),
 phylocomr (Ooms \& Chamberlain, 2018),
 phytools (Revell, 2012),
 rotl (Michonneau, Brown, \& Winter, 2016), and
-taxize (Chamberlain, 2018; Chamberlain \& Szöcs, 2013).
+taxize (Chamberlain \& Szöcs, 2013; Chamberlain et al., 2019).
 Figure \ref{fig:workflow} provides a graphical summary of the three main steps of the DateLife workflow: creating a search query, searching a database, and summarizing results from the search.
 
 \begin{center}
 \emph{Creating a Search Query}
 \end{center}
 
-DateLife starts by processing an input consisting of at least one taxon scientific name. Multiple input names can be provided as a comma separated character string or as tip labels on a tree.
-If the input is a tree, it can be provided as a classic newick character string (Archie et al., 1986), or as a \enquote{phylo} R object (Paradis et al., 2004).
+DateLife starts by processing an input consisting of the scientific name of at least one taxon. Multiple input names can be provided as a comma separated character string or as tip labels on a tree.
+If the input is a tree, it can be provided as a classic newick character string (Archie et al., 1986), or as a ``phylo'' R object (Paradis et al., 2004).
 The input tree is not required to have branch lengths, and its topology is used in the summary steps described in the next section.
 
-DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard (Boyle et al., 2013). TNRS also allows to correctly choose between homonyms, by considering other taxa provided as input to infer the taxonomic context of the homonym. DateLife implements TNRS using the Open Tree of Life (OpenTree) unified Taxonomy (OTT, Open Tree Of Life et al., 2016; Rees \& Cranston, 2017) as standard, storing taxonomic identification numbers (OTT ids) for further processing and analysis. Other taxonomies currently supported by DateLife are the National Center of Biotechnology Information (NCBI) taxonomic database (Schoch et al., 2020), the Global Biodiversity Information Facility (GBIF) taxonomic backbone (GBIF Secretariat, 2022), and the Interim Register of Marine and Non-marine Genera (IRMNG) database (Rees et al., 2017).
+DateLife processes input scientific names using a Taxonomic Name Resolution Service (TNRS), which increases the probability of correctly finding the queried taxon names in the chronogram database. TNRS detects, corrects and standardizes name misspellings and typos, variant spellings and authorities, and nomenclatural synonyms to a single taxonomic standard (Boyle et al., 2013). TNRS also allows to correctly choose between homonyms, by considering other taxa provided as input to infer the taxonomic context of the homonym. DateLife implements TNRS using the Open Tree of Life (OpenTree) unified Taxonomy (OTT, Open Tree Of Life et al., 2016; Rees \& Cranston, 2017) as standard, storing taxonomic identification numbers (OTT ids) for further processing and analysis. Other taxonomies currently supported by DateLife are the National Center of Biotechnology Information (NCBI) taxonomic database (Schoch et al., 2020), the Global Biodiversity Information Facility (GBIF) taxonomic backbone (GBIF Secretariat, 2022), and the Interim Register of Marine and Non-marine Genera (IRMNG) database (Rees, Vandepitte, Decock, \& Vanhoorne, 2017).
 
-Besides binomial species names, DateLife accepts scientific names from any inclusive taxonomic group (e.g., genus, family, tribe), as well as subspecific taxonomic variants (e.g., subspecies, variants, strains). If a taxon name belongs to an inclusive taxonomic group, DateLife has two alternative behaviors defined by the \enquote{get species from taxon} flag. If the flag is active, DateLife retrieves all species names within the taxonomic group from the standard taxonomy of choice, and adds them to the search query. In this case, subspecific variants are excluded.
+Besides binomial species names, DateLife accepts scientific names from any inclusive taxonomic group (e.g., genus, family, tribe), as well as subspecific taxonomic variants (e.g., subspecies, variants, strains). If a taxon name belongs to an inclusive taxonomic group, DateLife has two alternative behaviors defined by the ``get species from taxon'' flag. If the flag is active, DateLife retrieves all species names within the taxonomic group from the standard taxonomy of choice, and adds them to the search query. In this case, subspecific variants are excluded.
 If the flag is inactive, DateLife excludes any taxon names above the species level from the search query.
 Species and subspecific variant names are processed and searched as provided by the user.
 The processed taxon names are saved as an R object of a newly defined class, \texttt{datelifeQuery}, that is used in the following steps. This object contains the input names standardized to a taxonomy of choice (OTT by default), the corresponding OTT id numbers, and the topology of an input tree, if one was provided.
@@ -241,16 +285,16 @@ The processed taxon names are saved as an R object of a newly defined class, \te
 \end{center}
 
 At the time of writing of this manuscript
-(Feb 21, 2023),
+(May 04, 2023),
 DateLife's chronogram database latest version consist of 253 chronograms published in 187 different studies. It is curated from OpenTree's phylogenetic database, the Phylesystem, which constitutes an open source of expert and peer-reviewed phylogenetic knowledge with rich metadata (McTavish et al., 2015), which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the \texttt{datelife} R package.
 
 A unique feature of the Phylesystem is that any user can add new published, state-of-the-art chronograms any time, through their curator application (\url{https://tree.opentreeoflife.org/curator}). As chronograms are added to Phylesystem, they can be incorporated into the chronogram database of the \texttt{datelife} R package, which is currently manually updated as new chronogram data is added to Phylesystem. The updated database is assigned a new version number, followed by a package release on CRAN.
-Users can directly implement \texttt{datelife} functions to trigger an update of the local chronogram database, to incorporate any new chronograms to their DateLife analysis before an official database update is released on CRAN.
+Users can directly run \texttt{datelife} functions to trigger an update of their local chronogram database, to incorporate any new chronograms to their DateLife analysis before an official database update is released on CRAN.
 
 A DateLife search is implemented by matching processed taxon names provided by the user to tip labels in the chronogram database. Chronograms with at least two matching taxon names on their tip labels are identified and pruned down to preserve only the matched taxa.
 These matching pruned chronograms are referred to as source chronograms.
 Total distance (in units of millions of years) between taxon pairs within each source chronogram are stored as a patristic distance matrix (Figure \ref{fig:workflow}).
-The matrix format speeds up extraction of pairwise taxon ages of any queried taxa, as opposed to searching the ancestor node of a pair of taxa in a \enquote{phylo} object or newick string.
+The matrix format speeds up extraction of pairwise taxon ages of any queried taxa, as opposed to searching the ancestor node of a pair of taxa in a ``phylo'' object or newick string.
 Finally, the patristic matrices are associated to the study citation where the original chronogram was published, and stored as an R object of the newly defined class \texttt{datelifeResult}.
 
 \begin{center}
@@ -263,7 +307,7 @@ Summary information is extracted from the \texttt{datelifeResult} object to info
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  The matching pruned chronograms as newick strings or \enquote{phylo} objects.
+  The matching pruned chronograms as newick strings or ``phylo'' objects.
 \item
   The ages of the root of all source chronograms. These ages can correspond to the age of the most recent common ancestor (mrca) of the user's group of interest if the source chronograms have all taxa belonging to the group. If not, the root corresponds to the mrca of a subgroup withing the group of interest.
 \item
@@ -285,7 +329,7 @@ We recommend that users provide as input a tree topology from the literature, or
 Alternatively, DateLife can combine topologies from source chronograms using a supertree approach (Criscuolo, Berry, Douzery, \& Gascuel, 2006).
 To do this, DateLife first identifies the source chronograms that form a grove, roughly, a sufficiently overlapping set of taxa between trees, by implementing definition 2.8 for n-overlap from Ané et al. (2009).
 If the source chronograms do not form a grove, the supertree reconstruction will fail.
-In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the \enquote{criterion = trees} flag allows the user to choose the grove with the most trees instead.
+In rare cases, a group of trees can have multiple groves. By default, DateLife chooses the grove with the most taxa, however, the ``criterion = trees'' flag allows the user to choose the grove with the most trees instead.
 The result is a single summary (or supertree) topology, that combines topologies from source chronograms in a grove.
 
 \begin{center}
@@ -295,7 +339,7 @@ The result is a single summary (or supertree) topology, that combines topologies
 Once a topology is chosen, DateLife applies the congruification method (Eastman, Harmon, \& Tank, 2013) that find nodes belonging to the same clade across source chronograms, and then extracts the corresponding node ages from patristic distance matrices stored as a \texttt{datelifeResult} object. Note that by definition, these matrices store total distance (time from tip to tip), assuming that the terminal taxa are coeval and occur at the present. Hence, node ages correspond to half the values stored in the \texttt{datelifeResult} matrices.
 A table of congruified node ages that can be used as calibrations for a dating analysis is stored as a \texttt{congruifiedCalibrations} object.
 
-For each congruent node, the pairwise distances that traverse that node are summarized into a single summary matrix using classic summary statistics (i.e., mean, median, minimum and maximum ages), and the Supermatrix Distance Method (SDM; Criscuolo et al., 2006), which deforms patristic distance matrices by minimizing variance and then averaging them.
+For each congruent node, the pairwise distances that traverse that node are summarized into a single summary matrix using classic summary statistics (i.e., mean, median, minimum and maximum ages), and the Supermatrix Distance Method {[}SDM; Criscuolo et al. (2006){]}, which deforms patristic distance matrices by minimizing variance and then averaging them.
 These single summary taxon pair age matrices are stored as summarized calibrations that can be used as secondary calibrations to date a tree topology - with or without initial branch lengths, using phylogenetic dating methods currently supported within DateLife: BLADJ (Webb, Ackerly, \& Kembel, 2008; Webb \& Donoghue, 2005), MrBayes (Huelsenbeck \& Ronquist, 2001; Ronquist \& Huelsenbeck, 2003), PATHd8 (Britton, Anderson, Jacquet, Lundqvist, \& Bremer, 2007), and treePL (Smith \& O'Meara, 2012).
 
 \begin{center}
@@ -303,20 +347,21 @@ These single summary taxon pair age matrices are stored as summarized calibratio
 \end{center}
 
 \textbf{\emph{With no branch lengths.--}}
-When producing or obtaining a tree with branch lengths for a group of interest is not possible, DateLife can date a topology without branch lengths, obtained from OpenTree or by implementing the supertree approach described above, by implementing the Branch Length Adjuster (BLADJ; Webb et al., 2008; Webb \& Donoghue, 2005) algorithm, which requires no initial branch lengths.
-The algorithm starts by fixing ages for nodes with calibration data upon the given topology. Then, it distributes time for nodes with no data evenly between calibrated nodes, minimizing age variance in the resulting chronogram (Webb et al., 2008), which has proven useful for ecological analyses that require age data (Webb et al., 2008).
+When producing or obtaining a tree with branch lengths for a group of interest is not possible, DateLife can date a topology without branch lengths, obtained from OpenTree or by implementing the supertree approach described above, by applying the Branch Length Adjuster {[}BLADJ; Webb et al. (2008); Webb and Donoghue (2005){]} algorithm, which requires no initial branch lengths.
+The algorithm starts by fixing ages for nodes with calibration data upon the given topology. Then, it distributes time for nodes with no data evenly between calibrated nodes, minimizing age variance in the resulting chronogram (Webb et al., 2008).
+This approach has has proven useful for ecological analyses that require age data (Webb et al., 2008).
 When there is conflict between ages of calibrated nodes, BLADJ ignores node ages that are older than the age of a parent node.
 The BLADJ algorithm requires a root age estimate to run. If there is no information on the age of the root in the chronogram database, users can provide an estimate from the literature. If none is provided, DateLife will not return a dated topology and will provide a warning message along with suggestions on how the user can provide an age for the root so that a fully dated tree can be returned.
 
-In the absence of genetic data, we consider that BLADJ is the most agnostic way to assign ages to nodes with no available data, as it does not require any assumptions on the underlying model of branch length distribution. It is however common practice in the literature to use a birth-death model to assign ages to nodes with no genetic data (Jetz, Thomas, Joy, Hartmann, \& Mooers, 2012; Rabosky et al., 2018; Smith \& Brown, 2018). To do so, DateLife implements MrBayes (Huelsenbeck \& Ronquist, 2001; Ronquist \& Huelsenbeck, 2003), using nodes with published age data as calibration priors on a fixed topology, a simple birth-death model with parameters that can be determined by the user, and no genetic data.
+In the absence of genetic data, BLADJ is a very agnostic way to assign ages to nodes with no available data, as it does not require any assumptions on the underlying model of branch length distribution. It is however common practice in the literature to use a birth-death model to assign ages to nodes with no genetic data (Jetz, Thomas, Joy, Hartmann, \& Mooers, 2012; Rabosky et al., 2018; Smith \& Brown, 2018). To do so, DateLife implements MrBayes (Huelsenbeck \& Ronquist, 2001; Ronquist \& Huelsenbeck, 2003), using nodes with published age data as calibration priors on a fixed topology, a simple birth-death model with parameters that can be determined by the user, and no genetic data.
 
 \textbf{\emph{Dating a tree with branch lengths.--}}
-Relative branch lengths provide key information for phylogenetic dating, specifically for nodes without any calibration data available.
-While, using initial branch lengths data is the golden standard for phylogenetic dating analyses, producing such requires assembling and curating a homology hypothesis, and choosing and implementing a method for phylogenetic inference.
-DateLife implements a workflow to streamline this process by leveraging on genetic data from the Barcode of Life Data System, BOLD (Ratnasingham \& Hebert, 2007) to obtain markers for input taxa.
-By default, mined genetic sequences are aligned with MUSCLE (Edgar, 2004) using functions from the msa R package (Bodenhofer et al., 2015). Alternatively, sequences can be aligned with MAFFT (Katoh, Asimenos, \& Toh, 2009), using functions from the ape R package (Paradis et al., 2004).
+Relative branch lengths can provide key information for phylogenetic dating, specifically for nodes without any calibration data available.
+While, using initial branch lengths data is the golden standard for phylogenetic dating analyses, producing such trees requires assembling and curating a homology hypothesis, and choosing and implementing a method for phylogenetic inference.
+DateLife implements a workflow to streamline this process by applying open data from the Barcode of Life Data System, BOLD (Ratnasingham \& Hebert, 2007) to obtain genetic markers for input taxa.
+By default, BOLD genetic sequences are aligned with MUSCLE (Edgar, 2004) using functions from the msa R package (Bodenhofer et al., 2015). Alternatively, sequences can be aligned with MAFFT (Katoh, Asimenos, \& Toh, 2009), using functions from the ape R package (Paradis et al., 2004).
 The BOLD sequence alignment is then used to obtain initial branch lengths with the accelerated transformation (ACCTRAN) parsimony algorithm, which resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (Agnarsson \& Miller, 2008), resulting in older nodes (Forest et al., 2005). The parsimony branch lengths are then optimized using Maximum Likelihood, given the alignment, the topology and a simple Jukes-Cantor model, producing a BOLD tree with branch lengths proportional to expected number of substitutions per site. Both parsimony and ML optimizations are done with functions from the \texttt{phangorn} package (Schliep, 2011).
-The BOLD workflow is currently only available on DateLife's R package and not on the web application.
+Due to the computing load it requires, the BOLD workflow is currently only supported through DateLife's R package. It is not yet available through the web application.
 
 Phylogenetic dating methods supported in DateLife that incorporate branch length information from the input topology in combination with the secondary calibrations include:
 PATHd8, a non-clock, rate-smoothing method to date trees (Britton et al., 2007);
@@ -327,7 +372,7 @@ and MrBayes (Huelsenbeck \& Ronquist, 2001; Ronquist \& Huelsenbeck, 2003), a Ba
 \emph{Visualizing Results}
 \end{center}
 
-Finally, users can save all source and summary chronograms in formats allowing for reuse and reanalysis, such as newick and the R \enquote{phylo} format. Input and summary chronograms can be visualized and compared graphically, and users can construct their own graphs using DateLife's chronogram plot generation functions available from the R package \texttt{datelifeplot} (Sanchez-Reyes \& O'Meara, 2022).
+Finally, users can save all source and summary chronograms in formats allowing for reuse and reanalysis, such as newick and the R ``phylo'' format. Input and summary chronograms can be visualized and compared graphically, and users can construct their own graphs using DateLife's chronogram plot generation functions available from the R package \texttt{datelifeplot} (Sanchez-Reyes \& O'Meara, 2022).
 
 \begin{center}
 \textsc{Benchmark}
@@ -375,10 +420,10 @@ DateLife used the processed input names to search the local chronogram database 
 
 \textbf{\emph{Summarizing search results.--}}
 DateLife obtained OpenTree's synthetic tree topology for these taxa (Fig. \ref{fig:figure2}C), and congruified and mapped age data to nodes in this chosen topology (Table \ref{tbl:table1}).
-The name processing step allowed including five data points for node \enquote{n4} (parent of \emph{Schoeniclus elegans}; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
+The name processing step allowed including five data points for node ``n4'' (parent of \emph{Schoeniclus elegans}; Fig. \ref{fig:figure2}A) that would not have had any data otherwise due to name mismatch.
 Age summary statistics per node were calculated (Table \ref{tbl:table2}) and used as calibrations to date the tree topology using the BLADJ algorithm.
-As expected, more inclusive nodes (e.g., node \enquote{n1}) have more variance in age data than less inclusive nodes (e.g., node \enquote{n5}).
-Summary age data for node \enquote{n2} were excluded as final calibration because they are older than age data of the more inclusive node, \enquote{n1} (Fig. \ref{fig:figure2}C4).
+As expected, more inclusive nodes (e.g., node ``n1'') have more variance in age data than less inclusive nodes (e.g., node ``n5'').
+Summary age data for node ``n2'' were excluded as final calibration because they are older than age data of the more inclusive node, ``n1'' (Fig. \ref{fig:figure2}C4).
 
 \newpage
 
@@ -387,7 +432,7 @@ Summary age data for node \enquote{n2} were excluded as final calibration becaus
 \end{center}
 
 \textbf{\emph{Creating a query.--}}
-To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the \enquote{get species from taxon} flag,
+To obtain ages for all species within the family of true finches, Fringillidae, we ran a DateLife query using the ``get species from taxon'' flag,
 which gets all recognized species names within a named group from a taxonomy of choice.
 Following the NCBI taxonomy, our DateLife query has 289 Fringillidae species names.
 This taxon-constrained approach implies that the full DateLife analysis will be performed using a tree topology and ages available for species names from a given taxonomic group, which do not necessarily correspond to a monophyletic group. Users can change this behavior by providing all species names corresponding to a monophyletic group as input for a DateLife search, or a monophyletic tree to construct a DateLife summary.
@@ -399,7 +444,7 @@ Once identified, DateLife pruned these matching chronograms to remove tips that 
 
 \textbf{\emph{Summarizing search results.--}}
 The final step entailed congruifying and summarizing the age data available for the Fringillidae species into two single summary chronograms, using two different types of summary ages, median and SDM.
-As explained in the \enquote{Description} section, a tree topology to summarize age data upon is required.
+As explained in the ``Description'' section, a tree topology to summarize age data upon is required.
 By default, DateLife uses the topology from OpenTree's synthetic tree that contains all taxa from the search query.
 According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (Fig. \ref{fig:fringillidae-topologies}). Hence, a topology containing only the 289 species from the original query was extracted from Open Tree of Life's synthetic tree v12.3 (Open Tree Of Life et al., 2019).
 
@@ -411,34 +456,37 @@ Age data from source chronograms was congruified to OpenTree's topology (Fig. \r
 
 We performed a cross validation test of a DateLife analysis using the Fringillidae source chronograms obtained above (Supplementary Figs. S2-S20).
 We used as inputs for a DateLife analysis all individual tree topologies from each of the 19 source chronograms from 13 studies, treating their node ages as unknown.
-We congruified node ages extracted from chronograms from all other studies upon the individual topologies, effectively excluding original ages from each topology. Average node ages per node were applied as secondary calibrations, smoothed with the BLADJ algorithm.
+We congruified node ages extracted from chronograms from all other studies upon the individual topologies, effectively excluding original ages from each topology. Finally, average node ages per node were applied as secondary calibrations and smoothed with the BLADJ algorithm.
 We found that node ages from the original studies, and ages estimated using all other age data available are largely correlated (Fig. \ref{fig:cvXY}).
-For five studies, DateLife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka \enquote{closer to the root}) relative to the original estimate, and overestimate ages for nodes closer to the tips. Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. S1).
+For five studies, DateLife tended to underestimate ages for topologically deeper nodes (those with many descendant taxa, aka `closer to the root') relative to the original estimate, and overestimate ages for nodes closer to the tips. Accordingly, root ages are generally older in the original study than estimated using cross-validated ages (Supplementary Fig. S1).
 In general, topologically deeper nodes display the largest age variation between node ages from the original chronograms and ages summarized with DateLife.
 
 \begin{center}
 \textsc{Discussion}
 \end{center}
 
-DateLife makes state-of-the-art data on evolutionary time frame easily accessible for comparison, reuse, and reanalysis, to researchers in all areas of science and with all levels of expertise in the matter. It is an open service that does not require any expert biological knowledge from users --besides the names of the species or group they want to work with, for any of its functionality.
+DateLife's goal is to improve availability and accessibility of state-of-the-art data on evolutionary time frame of organisms, to allow users from all areas of science and with all levels of expertise to compare, reuse, and reanalyse expert age data for their own applications. As such, it is designed as an open service that does not require any expert biological knowledge --besides the scientific names of the species or group users want to work with, to use any of its functionalities.
 
 A total of 99,474 unique terminal taxa are represented in DateLife's database.
 Incorporation of more chronograms into the database will continue to improve DateLife's services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository. Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
 We would like to emphasize on the importance of sharing chronogram data, including systematically curated metadata, into open repositories, such as OpenTree's Phylesystem (McTavish et al., 2015) for the benefit of the scientific community as a whole.
 
-While it is known that incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance in ecological and conservation biology studies (Webb et al., 2008). Next, we discuss some particularities of using summarized node age data from a DateLife analysis that users should be aware of.
+While we envision that DateLife will have many interesting applications in research and beyond, we recognise that as
+any other automated tool for biological data analysis, DateLife's results can only be as good as the input data, and as give as good as how we decide to apply them for research.\\
+We recognise that this might be a problem in some research areas, but it might not be the case for all. For example, in ecological and conservation biology studies, it has been seen that incorporating some age data provides better results than when not using any age data at all, even if the age data is not accurate (Webb et al., 2008). In the following sections we discuss the particularities of divergence times resulting from a DateLife analysis for consideration of the readers and users in different research areas.
 
 \begin{center}
 \emph{Age Variation in Source Chronograms}
 \end{center}
 
 Conflict in estimated ages among alternative studies is common in the literature. See, for example, the robust ongoing debate about crown group age of angiosperms (Barba-Montoya, Reis, Schneider, Donoghue, \& Yang, 2018; Magallón, Gómez-Acevedo, Sánchez-Reyes, \& Hernández-Hernández, 2015; Ramshaw et al., 1972; Sanderson \& Doyle, 2001; Sauquet, Ramírez-Barahona, \& Magallón, 2021).
-Source chronograms available for the same organisms have potentially been estimated implementing calibrations very differently.
+Alternative source chronograms available for the same taxa have potentially been estimated implementing calibrations very differently.
 In the Fringillidae example above, the chronograms from Burns et al. (2014) were inferred using molecular substitution rate estimates across birds (Weir \& Schluter, 2008), and have much older age estimates for the same nodes than chronograms that were inferred using fossils as calibrations (Figs. \ref{fig:fringillidages}, \ref{fig:cvXY}; Supplementary Figs. S1, S5).
 
 Different calibration implementations might also imply fundamentally distinct evolutionary hypotheses (Antonelli et al., 2017).
 For example, two independent researchers working on the same clade should both carefully select and justify their choices of fossil calibration placement.
 Yet, if one researcher concludes that a fossil should calibrate the ingroup of a clade, while another researcher concludes that the same fossil should calibrate the outgroup of the clade, the resulting age estimates will differ, as the placement of calibrations as stem or crown group has been proven to significantly affect time of lineage divergence estimates (Sauquet, 2013).
+In addition, nodes that are sandwiched between a calibrated node and a calibrated root have less freedom of movement and hence narrower confidence intervals (Vos \& Mooers, 2004), this inflates precision for nodes without calibrations but does not necessarily improve accuracy of the estimated ages.
 
 \begin{center}
 \emph{Primary vs Secondary Calibrations}
@@ -448,7 +496,10 @@ While most chronograms in DateLife's database are constructed using primary cali
 Graur and Martin (2004) cautioned on the increased error and uncertainty in estimated ages when using secondary calibrations in dating analyses.
 Schenk (2016) showed that, in simulations, divergence times inferred using secondary calibrations are significantly younger than those inferred with primary calibrations, when obtained with Bayesian inference methods, and when priors are implemented in similar ways in both analyses.
 Accordingly, the scientific community seems to have more confidence in chronograms obtained from a single analysis, using fossil data as primary sources of calibrations (Schenk, 2016), and using fossils that have been widely discussed and curated as calibrations to date other trees, making sure that all data reflect a coherent evolutionary history (Sauquet, 2013), as for example done by Antonelli et al. (2017).
-There have been attempts to create fossil calibration databases (Ksepka et al., 2015), though these still have room to grow.
+
+The Fossil Calibration Database provides availability of 220 primary calibration points encompassing flowering plants and metazoans, that have been curated by experts and used in peer-reviewd publications (Ksepka et al., 2015). The database facilitates the use of expert primary fossil calibrations in new phylogenetic dating analysis.
+Despite the wealth of information displayed in the database, users still need the expertise to locate the equivalent node in their phylogenies to be dated.
+Open databases for reuse of fossil calibration data still have room to grow and should be a great addition to the phylogenetics tool set.
 
 It seems that using several (as opposed to just a few) secondary calibrations can provide sufficient information to alleviate or even neutralize potential biases (Sauquet, 2013).
 Certainly, further studies are required to fully understand the effect of secondary calibrations on outputs from different tree dating methods, and on downstream analyses. It is possible that secondary calibrations can be safely used with dating methods that do not require setting priors, such as penalized likelihood (Sanderson, 2003), with methods that do not make any assumptions on the ages and fix them to a node on a tree topology, such as BLADJ (Webb et al., 2008; Webb \& Donoghue, 2005), or methods that summarize age data unto a tree topology.
@@ -474,20 +525,20 @@ The largest, and taxonomically broadest chronogram currently available from Open
 A summarizing exercise may also amplify the effect of uncertainty and errors in source data, and blur parts of the evolutionary history of a lineage that might only be reflected in source chronograms and lost on the summary chronogram (Sauquet et al., 2021).
 
 \begin{center}
-\emph{Effects of Phylogenetic Sampling on Downstream Analyses}
+\emph{Effects of Taxon Sampling on Downstream Analyses}
 \end{center}
 
 Analysis of species diversification using simulated and empirical phylogenies suggest that using a more completely sampled phylogeny provides estimates that are closer to the true diversification history than when analysing incompletely sampled phylogenies (Chang, Rabosky, \& Alfaro, 2020; Cusimano, Stadler, \& Renner, 2012; Sun et al., 2020).
 Ideally, phylogenies should be completed using genetic data, but this is a difficult task to achieve for many biological groups.
 Hence, DateLife's workflow features different ways of assigning node ages in the absence of calibrations and branch length information for certain taxa.
-Completing a phylogeny using a stochastic birth-death politomy resolver and a backbone taxonomy is a common practice in scientific publications: Jetz et al. (2012), created a chronogram of all 9, 993 bird species, where 67\% had molecular data and the rest was simulated; Rabosky et al. (2018) created a chronogram of 31, 536 ray-finned fishes, of which only 37\% had molecular data; Smith and Brown (2018) constructed a chronogram of 353, 185 seed plants where only 23\% had molecular data. These stochastically resolved chronograms provide less biased diversification rates estimated with methods that account for sampling fractions (Chang et al., 2020; Cusimano et al., 2012), but can also introduce spurious patterns of early bursts of diversification (Cusimano \& Renner, 2010; Sun et al., 2020).
+Completing a phylogeny using a stochastic birth-death polytomy resolver and a backbone taxonomy is a common practice in scientific publications: Jetz et al. (2012), created a chronogram of all 9, 993 bird species, where 67\% had molecular data and the rest was simulated; Rabosky et al. (2018) created a chronogram of 31, 536 ray-finned fishes, of which only 37\% had molecular data; Smith and Brown (2018) constructed a chronogram of 353, 185 seed plants where only 23\% had molecular data. These stochastically resolved chronograms provide less biased diversification rates estimated with methods that account for sampling fractions (Chang et al., 2020; Cusimano et al., 2012), but can also introduce spurious patterns of early bursts of diversification (Cusimano \& Renner, 2010; Sun et al., 2020).
 
-Taxonomy based politomy resolvers also introduce topological differences.
+Taxonomy based polytomy resolvers also introduce topological differences.
 The study of macroevolutionary processes largely depends on an understanding of the timing of species diversification events, and different phylogenetic and chronogram hypothesis can provide very different overviews of the macroevolutionary history of a biological group.
 For example, alternative topologies in chronograms from the same biological group can infer very different species diversification patterns (Rabosky, 2015; Title \& Rabosky, 2016).
 Similarly there are worries that patterns of morphological evolution cannot be accurately inferred with these types of phylogenies, as any patterns would be erased by randomization (Rabosky, 2015). We note that the same applies for geographical and morphological dependent diversification analysis. Hence, we suggest that these types of randomly resolved phylogenies can be used as null or neutral models, representing the case of diversification independent of traits and geographical scenario.
 
-While stochastic politomy resolvers have been useful to advance research, notably, risks come with this practice.
+While stochastic polytomy resolvers have been useful to advance research, notably, risks come with this practice.
 Taken to the extreme, one could generate a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy, a single calibration, and assigning branch lengths following a birth-death diversification model. Clearly, this can lead to a misrepresentation of the true evolutionary history.
 We urge DateLife users to follow the example of the large tree papers cited above, by carefully considering the statistical assumptions being made, potential biases, and assessing the consistency of the results with prior work.
 
@@ -495,27 +546,27 @@ We urge DateLife users to follow the example of the large tree papers cited abov
 \textsc{Conclusions}
 \end{center}
 
-Knowledge of the evolutionary time frame of organisms is key to many research areas: trait evolution, species diversification, biogeography, macroecology and more. It is also crucial for education, science communication and policy, but generating chronograms is difficult, especially for those who want to use phylogenies but who are not systematists, or do not have the time to acquire and develop the necessary knowledge and skills to construct them on their own. Importantly, years of primarily publicly funded research have resulted in vast amounts of chronograms that are already available on scientific publications, but hidden to the public and scientific community for reuse.
+Knowledge of the evolutionary time frame of organisms is key to many research areas: trait evolution, species diversification, biogeography, macroecology and more. It is also crucial for education, science communication and policy, but generating chronograms is difficult, especially for those who want to use phylogenies but who are not systematists, or do not have the time to acquire and develop the necessary knowledge and skills to construct them on their own. Importantly, years of primarily publicly funded research have resulted in vast amounts of chronograms that are already available in scientific publications, but functionally hidden from the public and scientific community for reuse.
 
-The DateLife project allows for easy and fast summary of public and state-of-the-art data on time of lineage divergence.
+The DateLife project allows for easy and fast summarization of public and state-of-the-art data on time of lineage divergence.
 It provides a straightforward way to get an informed idea on the state of knowledge of the time frame of evolution of different regions of the tree of life, and allows identifying regions that require more research, or that have conflicting information.
-It is available as an R package, and as a web-based R shiny application at www.datelife.org
-Both summary and newly generated trees are useful to evaluate evolutionary hypotheses in different areas of research. The DateLife project should improve awareness of the existing variation in expert time of divergence data, and foster exploration of the effect of alternative divergence time hypothesis on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
+It is available as an R package, and as a web-based R shiny application at www.datelife.org.
+Both summary and newly generated trees are useful to evaluate evolutionary hypotheses in different areas of research. The DateLife project will improve awareness of the existing variation in expert estimations time of divergence data, and foster exploration of the effect of alternative divergence time hypotheses on the results of analyses, nurturing a culture of more cautious interpretation of evolutionary results.
 
 \begin{center}
 \textsc{Availability}
 \end{center}
 
-The DateLife software is free and open source. It can be used online through its R shiny web application hosted at \url{http://www.datelife.org}, and locally through the \texttt{datelife} R package, downloadable from Zenodo (\url{https://doi.org/10.5281/zenodo.593938}) and the CRAN repository (Sanchez-Reyes et al., 2022).
-DateLife's web application is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker and OpenTree's infrastructure (dates.opentreeoflife.org/datelife).
-\texttt{datelife}'s stable version is available for installation from CRAN repository using the command \texttt{install.packages(pkgs\ =\ "datelife")} from within R.
+The DateLife software is free and open source. It can be used online through its R shiny web application hosted at \url{http://www.datelife.org}, and locally through the \texttt{datelife} R package, available from Zenodo (\url{https://doi.org/10.5281/zenodo.593938} and the CRAN repository (Sanchez-Reyes et al., 2022).
+DateLife's web application is maintained using RStudio's shiny server and the shiny package open infrastructure, as well as Docker and OpenTree's infrastructure (datelife.opentreeoflife.org).
+\texttt{datelife}'s stable version can be installed from the CRAN repository using the command \texttt{install.packages(pkgs\ =\ "datelife")} from within R.
 Development versions are available from DateLife's GitHub repository (\url{https://github.com/phylotastic/datelife}) and can be installed using the command \texttt{devtools::install\_github("phylotastic/datelife")}.
 
 \begin{center}
 \textsc{Supplementary Material}
 \end{center}
 
-Supplementary material, including code, biological examples, benchmark results, data files and online-only appendices, can be found in the Dryad data repository (\url{https://doi.org/10.5061/dryad.cnp5hqc6w}), as well as in the Zenodo stable repositories that host the reproducible manuscript (\url{https://doi.org/10.5281/zenodo.7435094}), the biological examples (\url{https://doi.org/10.5281/zenodo.7435101}), and the software benchmark (\url{https://doi.org/10.5281/zenodo.7435106}). The corresponding development versions hosted on GitHub can be found at \url{https://github.com/LunaSare/datelifeMS1\#readme}, \url{https://github.com/LunaSare/datelife_examples\#readme}, and \url{https://github.com/LunaSare/datelife_benchmark\#readme}.
+Supplementary material, including code, biological examples, benchmark results, data files and online-only appendices, can be found in the Dryad data repository (\url{https://doi.org/10.5061/dryad.cnp5hqc6w}), as well as in the Zenodo stable repositories that host the reproducible manuscript (\url{https://doi.org/10.5281/zenodo.7435094}), the biological examples (\url{https://doi.org/10.5281/zenodo.7435101}), and the software benchmark (\url{https://doi.org/10.5281/zenodo.7435106}). The corresponding development versions hosted on GitHub can be found at \url{https://github.com/LunaSare/datelifeMS1}, \url{https://github.com/LunaSare/datelife_examples}, and \url{https://github.com/LunaSare/datelife_benchmark}.
 
 \begin{center}
 \textsc{Funding}
@@ -547,425 +598,340 @@ The NSF for funding nearly all the above, in addition to the ABI grant that fund
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-agnarsson2008acctran}{}%
-Agnarsson, I., \& Miller, J. A. (2008). Is acctran better than deltran? \emph{Cladistics}, \emph{24}(6), 1032--1038.
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-agnarsson2008acctran}{}}%
+Agnarsson, I., \& Miller, J. A. (2008). {Is ACCTRAN better than DELTRAN?} \emph{Cladistics}, \emph{24}(6), 1032--1038.
 
-\leavevmode\hypertarget{ref-alstrom2014discovery}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-alstrom2014discovery}{}}%
 Alström, P., Hooper, D. M., Liu, Y., Olsson, U., Mohan, D., Gelang, M., \ldots{} Price, T. D. (2014). Discovery of a relict lineage and monotypic family of passerine birds. \emph{Biology Letters}, \emph{10}(3), 20131067.
 
-\leavevmode\hypertarget{ref-ane2009groves}{}%
-Ané, C., Eulenstein, O., Piaggio-Talice, R., \& Sanderson, M. J. (2009). Groves of phylogenetic trees. \emph{Annals of Combinatorics}, \emph{13}(2), 139--167.
+\leavevmode\vadjust pre{\hypertarget{ref-ane2009groves}{}}%
+Ané, C., Eulenstein, O., Piaggio-Talice, R., \& Sanderson, M. J. (2009). Groves of phylogenetic trees. \emph{{Annals of Combinatorics}}, \emph{13}(2), 139--167.
 
-\leavevmode\hypertarget{ref-antonelli2017supersmart}{}%
-Antonelli, A., Hettling, H., Condamine, F. L., Vos, K., Nilsson, R. H., Sanderson, M. J., \ldots{} Vos, R. A. (2017). Toward a self-updating platform for estimating rates of speciation and migration, ages, and relationships of Taxa. \emph{Systematic Biology}, \emph{66}(2), 153--166. \url{https://doi.org/10.1093/sysbio/syw066}
+\leavevmode\vadjust pre{\hypertarget{ref-antonelli2017supersmart}{}}%
+Antonelli, A., Hettling, H., Condamine, F. L., Vos, K., Nilsson, R. H., Sanderson, M. J., \ldots{} Vos, R. A. (2017). {Toward a self-updating platform for estimating rates of speciation and migration, ages, and relationships of Taxa}. \emph{Systematic Biology}, \emph{66}(2), 153--166. \url{https://doi.org/10.1093/sysbio/syw066}
 
-\leavevmode\hypertarget{ref-archie1986newick}{}%
-Archie, J., Day, W. H., Felsenstein, J., Maddison, W., Meacham, C., Rohlf, F. J., \& Swofford, D. (1986). The Newick tree format. Retrieved from \href{\%7Bhttps://evolution.genetics.washington.edu/phylip/newicktree.html\%7D}{\{https://evolution.genetics.washington.edu/phylip/newicktree.html\}}
+\leavevmode\vadjust pre{\hypertarget{ref-archie1986newick}{}}%
+Archie, J., Day, W. H., Felsenstein, J., Maddison, W., Meacham, C., Rohlf, F. J., \& Swofford, D. (1986). {The Newick tree format}. Retrieved from \url{\%7Bhttps://evolution.genetics.washington.edu/phylip/newicktree.html\%7D}
 
-\leavevmode\hypertarget{ref-avibase-emberiza}{}%
-Avibase. (2022). Yellow-throated Bunting. \emph{Avibase - the World Bird Database}, (Online Resource). Retrieved from \href{\%7Bhttps://avibase.bsc-eoc.org/species.jsp?lang=EN\&avibaseid=82D1EE0049D8D927\%7D}{\{https://avibase.bsc-eoc.org/species.jsp?lang=EN\&avibaseid=82D1EE0049D8D927\}}
+\leavevmode\vadjust pre{\hypertarget{ref-avibase-emberiza}{}}%
+Avibase. (2022). {Yellow-throated Bunting}. \emph{{Avibase - The World Bird Database}}, (Online Resource). Retrieved from \url{\%7Bhttps://avibase.bsc-eoc.org/species.jsp?lang=EN\&avibaseid=82D1EE0049D8D927\%7D}
 
-\leavevmode\hypertarget{ref-Bapst2012a}{}%
-Bapst, D. W. (2012). Paleotree: An R package for paleontological and phylogenetic analyses of evolution. \emph{Methods in Ecology and Evolution}, \emph{3}(5), 803--807. \url{https://doi.org/10.1111/j.2041-210X.2012.00223.x}
+\leavevmode\vadjust pre{\hypertarget{ref-Bapst2012a}{}}%
+Bapst, D. W. (2012). {Paleotree: An R package for paleontological and phylogenetic analyses of evolution}. \emph{{Methods in Ecology and Evolution}}, \emph{3}(5), 803--807. \url{https://doi.org/10.1111/j.2041-210X.2012.00223.x}
 
-\leavevmode\hypertarget{ref-barba2018constraining}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-barba2018constraining}{}}%
 Barba-Montoya, J., Reis, M. dos, Schneider, H., Donoghue, P. C., \& Yang, Z. (2018). Constraining uncertainty in the timescale of angiosperm evolution and the veracity of a cretaceous terrestrial revolution. \emph{New Phytologist}, \emph{218}(2), 819--834.
 
-\leavevmode\hypertarget{ref-barker2014mitogenomic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-barker2014mitogenomic}{}}%
 Barker, F. K. (2014). Mitogenomic data resolve basal relationships among passeriform and passeridan birds. \emph{Molecular Phylogenetics and Evolution}, \emph{79}, 313--324.
 
-\leavevmode\hypertarget{ref-barker2013going}{}%
-Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2013). Going to extremes: Contrasting rates of diversification in a recent radiation of new world passerine birds. \emph{Systematic Biology}, \emph{62}(2), 298--320.
+\leavevmode\vadjust pre{\hypertarget{ref-barker2013going}{}}%
+Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2013). Going to extremes: Contrasting rates of diversification in a recent radiation of new world passerine birds. \emph{{Systematic Biology}}, \emph{62}(2), 298--320.
 
-\leavevmode\hypertarget{ref-barker2015new}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-barker2015new}{}}%
 Barker, F. K., Burns, K. J., Klicka, J., Lanyon, S. M., \& Lovette, I. J. (2015). New insights into new world biogeography: An integrated view from the phylogeny of blackbirds, cardinals, sparrows, tanagers, warblers, and allies. \emph{The Auk: Ornithological Advances}, \emph{132}(2), 333--348.
 
-\leavevmode\hypertarget{ref-barker2004phylogeny}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-barker2004phylogeny}{}}%
 Barker, F. K., Cibois, A., Schikler, P., Feinstein, J., \& Cracraft, J. (2004). Phylogeny and diversification of the largest avian radiation. \emph{Proceedings of the National Academy of Sciences}, \emph{101}(30), 11040--11045.
 
-\leavevmode\hypertarget{ref-beresford2005african}{}%
-Beresford, P., Barker, F., Ryan, P., \& Crowe, T. (2005). African endemics span the tree of songbirds (passeri): Molecular systematics of several evolutionary ``enigmas''. \emph{Proceedings of the Royal Society B: Biological Sciences}, \emph{272}(1565), 849--858.
+\leavevmode\vadjust pre{\hypertarget{ref-beresford2005african}{}}%
+Beresford, P., Barker, F., Ryan, Pg., \& Crowe, T. (2005). African endemics span the tree of songbirds (passeri): Molecular systematics of several evolutionary {``enigmas.''} \emph{Proceedings of the Royal Society B: Biological Sciences}, \emph{272}(1565), 849--858.
 
-\leavevmode\hypertarget{ref-bodenhofer2015msa}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-bodenhofer2015msa}{}}%
 Bodenhofer, U., Bonatesta, E., Horejš-Kainrath, C., \& Hochreiter, S. (2015). Msa: An r package for multiple sequence alignment. \emph{Bioinformatics}, \emph{31}(24), 3997--3999.
 
-\leavevmode\hypertarget{ref-Boyle2013}{}%
-Boyle, B., Hopkins, N., Lu, Z., Raygoza Garay, J. A., Mozzherin, D., Rees, T., \ldots{} Enquist, B. J. (2013). The taxonomic name resolution service: An online tool for automated standardization of plant names. \emph{BMC Bioinformatics}, \emph{14}(1). \url{https://doi.org/10.1186/1471-2105-14-16}
+\leavevmode\vadjust pre{\hypertarget{ref-Boyle2013}{}}%
+Boyle, B., Hopkins, N., Lu, Z., Raygoza Garay, J. A., Mozzherin, D., Rees, T., \ldots{} Enquist, B. J. (2013). {The taxonomic name resolution service: An online tool for automated standardization of plant names}. \emph{{BMC Bioinformatics}}, \emph{14}(1). \url{https://doi.org/10.1186/1471-2105-14-16}
 
-\leavevmode\hypertarget{ref-Britton2007}{}%
-Britton, T., Anderson, C. L., Jacquet, D., Lundqvist, S., \& Bremer, K. (2007). Estimating Divergence Times in Large Phylogenetic Trees. \emph{Systematic Biology}, \emph{56}(788777878), 741--752. \url{https://doi.org/10.1080/10635150701613783}
+\leavevmode\vadjust pre{\hypertarget{ref-Britton2007}{}}%
+Britton, T., Anderson, C. L., Jacquet, D., Lundqvist, S., \& Bremer, K. (2007). {Estimating Divergence Times in Large Phylogenetic Trees}. \emph{{Systematic Biology}}, \emph{56}(788777878), 741--752. \url{https://doi.org/10.1080/10635150701613783}
 
-\leavevmode\hypertarget{ref-bryson2014diversification}{}%
-Bryson Jr, R. W., Chaves, J., Smith, B. T., Miller, M. J., Winker, K., Pérez-Emán, J. L., \& Klicka, J. (2014). Diversification across the new world within the `blue'cardinalids (aves: Cardinalidae). \emph{Journal of Biogeography}, \emph{41}(3), 587--599.
+\leavevmode\vadjust pre{\hypertarget{ref-bryson2014diversification}{}}%
+Bryson Jr, R. W., Chaves, J., Smith, B. T., Miller, M. J., Winker, K., Pérez-Emán, J. L., \& Klicka, J. (2014). Diversification across the new world within the `blue'cardinalids (aves: cardinalidae). \emph{Journal of Biogeography}, \emph{41}(3), 587--599.
 
-\leavevmode\hypertarget{ref-burleigh2015building}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-burleigh2015building}{}}%
 Burleigh, J. G., Kimball, R. T., \& Braun, E. L. (2015). Building the avian tree of life using a large-scale, sparse supermatrix. \emph{Molecular Phylogenetics and Evolution}, \emph{84}, 53--63.
 
-\leavevmode\hypertarget{ref-burns2014phylogenetics}{}%
-Burns, K. J., Shultz, A. J., Title, P. O., Mason, N. A., Barker, F. K., Klicka, J., \ldots{} Lovette, I. J. (2014). Phylogenetics and diversification of tanagers (passeriformes: Thraupidae), the largest radiation of neotropical songbirds. \emph{Molecular Phylogenetics and Evolution}, \emph{75}, 41--77.
+\leavevmode\vadjust pre{\hypertarget{ref-burns2014phylogenetics}{}}%
+Burns, K. J., Shultz, A. J., Title, P. O., Mason, N. A., Barker, F. K., Klicka, J., \ldots{} Lovette, I. J. (2014). Phylogenetics and diversification of tanagers (passeriformes: Thraupidae), the largest radiation of neotropical songbirds. \emph{{Molecular Phylogenetics and Evolution}}, \emph{75}, 41--77.
 
-\leavevmode\hypertarget{ref-Chamberlain2018}{}%
-Chamberlain, S. (2018). \emph{bold: Interface to Bold Systems API}. Retrieved from \url{https://CRAN.R-project.org/package=bold}
+\leavevmode\vadjust pre{\hypertarget{ref-Chamberlain2013}{}}%
+Chamberlain, S. A., \& Szöcs, E. (2013). {taxize : taxonomic search and retrieval in R {[}version 2; referees: 3 approved{]}}. \emph{{F1000Research}}, \emph{2}(191), 1--29. \url{https://doi.org/10.12688/f1000research.2-191.v2}
 
-\leavevmode\hypertarget{ref-Chamberlain2013}{}%
-Chamberlain, S. A., \& Szöcs, E. (2013). taxize : taxonomic search and retrieval in R {[}version 2; referees: 3 approved{]}. \emph{F1000Research}, \emph{2}(191), 1--29. \url{https://doi.org/10.12688/f1000research.2-191.v2}
+\leavevmode\vadjust pre{\hypertarget{ref-Chamberlain2018}{}}%
+Chamberlain, S. A., Szöcs, E., Foster, Z., Arendsee, Z., Boettiger, C., Ram, K., \ldots{} Li, G. (2019). \emph{{taxize: Taxonomic information from around the web}}. Retrieved from \url{https://github.com/ropensci/taxize}
 
-\leavevmode\hypertarget{ref-chang2020estimating}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-chang2020estimating}{}}%
 Chang, J., Rabosky, D. L., \& Alfaro, M. E. (2020). Estimating diversification rates on incompletely sampled phylogenies: Theoretical concerns and practical solutions. \emph{Systematic Biology}, \emph{69}(3), 602--611.
 
-\leavevmode\hypertarget{ref-chaves2013biogeography}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-chaves2013biogeography}{}}%
 Chaves, J. A., Hidalgo, J. R., \& Klicka, J. (2013). Biogeography and evolutionary history of the n eotropical genus s altator (a ves: T hraupini). \emph{Journal of Biogeography}, \emph{40}(11), 2180--2190.
 
-\leavevmode\hypertarget{ref-claramunt2015new}{}%
-Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's imprint on the evolution of modern birds. \emph{Science Advances}, \emph{1}(11), e1501005.
+\leavevmode\vadjust pre{\hypertarget{ref-claramunt2015new}{}}%
+Claramunt, S., \& Cracraft, J. (2015). A new time tree reveals earth history's imprint on the evolution of modern birds. \emph{{Science Advances}}, \emph{1}(11), e1501005.
 
-\leavevmode\hypertarget{ref-Criscuolo2006}{}%
-Criscuolo, A., Berry, V., Douzery, E. J., \& Gascuel, O. (2006). SDM: A fast distance-based approach for (super)tree building in phylogenomics. \emph{Systematic Biology}, \emph{55}(5), 740--755. \url{https://doi.org/10.1080/10635150600969872}
+\leavevmode\vadjust pre{\hypertarget{ref-Criscuolo2006}{}}%
+Criscuolo, A., Berry, V., Douzery, E. J. P., \& Gascuel, O. (2006). {SDM: A fast distance-based approach for (super)tree building in phylogenomics}. \emph{{Systematic Biology}}, \emph{55}(5), 740--755. \url{https://doi.org/10.1080/10635150600969872}
 
-\leavevmode\hypertarget{ref-cusimano2010slowdowns}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cusimano2010slowdowns}{}}%
 Cusimano, N., \& Renner, S. S. (2010). Slowdowns in diversification rates from real phylogenies may not be real. \emph{Systematic Biology}, \emph{59}(4), 458--464.
 
-\leavevmode\hypertarget{ref-cusimano2012new}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cusimano2012new}{}}%
 Cusimano, N., Stadler, T., \& Renner, S. S. (2012). A new method for handling missing species in diversification analysis applicable to randomly or nonrandomly sampled phylogenies. \emph{Systematic Biology}, \emph{61}(5), 785--792.
 
-\leavevmode\hypertarget{ref-delsuc2018phylogenomic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-delsuc2018phylogenomic}{}}%
 Delsuc, F., Philippe, H., Tsagkogeorga, G., Simion, P., Tilak, M.-K., Turon, X., \ldots{} Douzery, E. J. (2018). A phylogenomic framework and timescale for comparative studies of tunicates. \emph{BMC Biology}, \emph{16}(1), 1--14.
 
-\leavevmode\hypertarget{ref-Eastman2013}{}%
-Eastman, J. M., Harmon, L. J., \& Tank, D. C. (2013). Congruification: Support for time scaling large phylogenetic trees. \emph{Methods in Ecology and Evolution}, \emph{4}(7), 688--691. \url{https://doi.org/10.1111/2041-210X.12051}
+\leavevmode\vadjust pre{\hypertarget{ref-Eastman2013}{}}%
+Eastman, J. M., Harmon, L. J., \& Tank, D. C. (2013). {Congruification: Support for time scaling large phylogenetic trees}. \emph{{Methods in Ecology and Evolution}}, \emph{4}(7), 688--691. \url{https://doi.org/10.1111/2041-210X.12051}
 
-\leavevmode\hypertarget{ref-edgar2004muscle}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-edgar2004muscle}{}}%
 Edgar, R. C. (2004). MUSCLE: Multiple sequence alignment with high accuracy and high throughput. \emph{Nucleic Acids Research}, \emph{32}(5), 1792--1797.
 
-\leavevmode\hypertarget{ref-Felsenstein1985a}{}%
-Felsenstein, J. (1985). Phylogenies and the Comparative Method. \emph{The American Naturalist}, \emph{125}(1), 1--15. Retrieved from \url{http://www.jstor.org/stable/2461605}
+\leavevmode\vadjust pre{\hypertarget{ref-Felsenstein1985a}{}}%
+Felsenstein, J. (1985). {Phylogenies and the Comparative Method}. \emph{The American Naturalist}, \emph{125}(1), 1--15. Retrieved from \url{http://www.jstor.org/stable/2461605}
 
-\leavevmode\hypertarget{ref-forest2005teasing}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-forest2005teasing}{}}%
 Forest, F., Savolainen, V., Chase, M. W., Lupia, R., Bruneau, A., \& Crane, P. R. (2005). Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: A case study in the birch family (betulaceae). \emph{Systematic Botany}, \emph{30}(1), 118--133.
 
-\leavevmode\hypertarget{ref-freckleton2002phylogenetic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-freckleton2002phylogenetic}{}}%
 Freckleton, R. P., Harvey, P. H., \& Pagel, M. (2002). Phylogenetic analysis and comparative data: A test and review of evidence. \emph{The American Naturalist}.
 
-\leavevmode\hypertarget{ref-gbif2022taxonomy}{}%
-GBIF Secretariat. (2022). GBIF Backbone Taxonomy. \emph{Checklist dataset}, (Online Resource accessed via GBIF.org). Retrieved from \href{\%7Bhttps://doi.org/10.15468/39omei\%20\%7D}{\{https://doi.org/10.15468/39omei \}}
+\leavevmode\vadjust pre{\hypertarget{ref-gbif2022taxonomy}{}}%
+GBIF Secretariat. (2022). {GBIF Backbone Taxonomy}. \emph{{Checklist Dataset}}, (Online Resource accessed via GBIF.org). Retrieved from \href{\%7Bhttps://doi.org/10.15468/39omei\%20\%7D}{\{https://doi.org/10.15468/39omei \}}
 
-\leavevmode\hypertarget{ref-gibb2015new}{}%
-Gibb, G. C., England, R., Hartig, G., McLenachan, P. A., Taylor Smith, B. L., McComish, B. J., \ldots{} Penny, D. (2015). New zealand passerines help clarify the diversification of major songbird lineages during the oligocene. \emph{Genome Biology and Evolution}, \emph{7}(11), 2983--2995.
+\leavevmode\vadjust pre{\hypertarget{ref-gibb2015new}{}}%
+Gibb, G. C., England, R., Hartig, G., McLenachan, P. A., Taylor Smith, B. L., McComish, B. J., \ldots{} Penny, D. (2015). New zealand passerines help clarify the diversification of major songbird lineages during the oligocene. \emph{{Genome Biology and Evolution}}, \emph{7}(11), 2983--2995.
 
-\leavevmode\hypertarget{ref-graur2004reading}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-graur2004reading}{}}%
 Graur, D., \& Martin, W. (2004). Reading the entrails of chickens: Molecular timescales of evolution and the illusion of precision. \emph{TRENDS in Genetics}, \emph{20}(2), 80--86.
 
-\leavevmode\hypertarget{ref-hackett2008phylogenomic}{}%
-Hackett, S. J., Kimball, R. T., Reddy, S., Bowie, R. C., Braun, E. L., Braun, M. J., \ldots{} others. (2008). A phylogenomic study of birds reveals their evolutionary history. \emph{Science}, \emph{320}(5884), 1763--1768.
+\leavevmode\vadjust pre{\hypertarget{ref-hackett2008phylogenomic}{}}%
+Hackett, S. J., Kimball, R. T., Reddy, S., Bowie, R. C., Braun, E. L., Braun, M. J., et al.others. (2008). A phylogenomic study of birds reveals their evolutionary history. \emph{Science}, \emph{320}(5884), 1763--1768.
 
-\leavevmode\hypertarget{ref-harvey1991comparative}{}%
-Harvey, P. H., Pagel, M. D., \& others. (1991). \emph{The comparative method in evolutionary biology} (Vol. 239). Oxford university press Oxford.
+\leavevmode\vadjust pre{\hypertarget{ref-harvey1991comparative}{}}%
+Harvey, P. H., Pagel, M. D., et al. (1991). \emph{The comparative method in evolutionary biology} (Vol. 239). Oxford university press Oxford.
 
-\leavevmode\hypertarget{ref-Hedges2015}{}%
-Hedges, S. B., Marin, J., Suleski, M., Paymer, M., \& Kumar, S. (2015). Tree of life reveals clock-like speciation and diversification. \emph{Molecular Biology and Evolution}, \emph{32}(4), 835--845. \url{https://doi.org/10.1093/molbev/msv037}
+\leavevmode\vadjust pre{\hypertarget{ref-Hedges2015}{}}%
+Hedges, S. B., Marin, J., Suleski, M., Paymer, M., \& Kumar, S. (2015). {Tree of life reveals clock-like speciation and diversification}. \emph{{Molecular Biology and Evolution}}, \emph{32}(4), 835--845. \url{https://doi.org/10.1093/molbev/msv037}
 
-\leavevmode\hypertarget{ref-Heibl2008}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Heibl2008}{}}%
 Heibl, C. (2008). \emph{PHYLOCH: R language tree plotting tools and interfaces to diverse phylogenetic software packages.} Retrieved from \url{http://www.christophheibl.de/Rpackages.html}
 
-\leavevmode\hypertarget{ref-hooper2017chromosomal}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-hooper2017chromosomal}{}}%
 Hooper, D. M., \& Price, T. D. (2017). Chromosomal inversion differences correlate with range overlap in passerine birds. \emph{Nature Ecology \& Evolution}, \emph{1}(10), 1526.
 
-\leavevmode\hypertarget{ref-Huelsenbeck2001}{}%
-Huelsenbeck, J. P., \& Ronquist, F. (2001). MRBAYES: Bayesian inference of phylogenetic trees. \emph{Bioinformatics}, \emph{17}(8), 754--755. \url{https://doi.org/10.1093/bioinformatics/17.8.754}
+\leavevmode\vadjust pre{\hypertarget{ref-Huelsenbeck2001}{}}%
+Huelsenbeck, J. P., \& Ronquist, F. (2001). {MRBAYES: Bayesian inference of phylogenetic trees}. \emph{Bioinformatics}, \emph{17}(8), 754--755. \url{https://doi.org/10.1093/bioinformatics/17.8.754}
 
-\leavevmode\hypertarget{ref-Jetz2012}{}%
-Jetz, W., Thomas, G., Joy, J. J., Hartmann, K., \& Mooers, A. (2012). The global diversity of birds in space and time. \emph{Nature}, \emph{491}(7424), 444--448. \url{https://doi.org/10.1038/nature11631}
+\leavevmode\vadjust pre{\hypertarget{ref-Jetz2012}{}}%
+Jetz, W., Thomas, G., Joy, J. J. B., Hartmann, K., \& Mooers, A. (2012). {The global diversity of birds in space and time}. \emph{Nature}, \emph{491}(7424), 444--448. \url{https://doi.org/10.1038/nature11631}
 
-\leavevmode\hypertarget{ref-johansson2008phylogenetic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-johansson2008phylogenetic}{}}%
 Johansson, U. S., Fjeldså, J., \& Bowie, R. C. (2008). Phylogenetic relationships within passerida (aves: Passeriformes): A review and a new molecular phylogeny based on three nuclear intron markers. \emph{Molecular Phylogenetics and Evolution}, \emph{48}(3), 858--876.
 
-\leavevmode\hypertarget{ref-katoh2009multiple}{}%
-Katoh, K., Asimenos, G., \& Toh, H. (2009). Multiple alignment of dna sequences with mafft. In \emph{Bioinformatics for dna sequence analysis} (pp. 39--64). Springer.
+\leavevmode\vadjust pre{\hypertarget{ref-katoh2009multiple}{}}%
+Katoh, K., Asimenos, G., \& Toh, H. (2009). Multiple alignment of DNA sequences with MAFFT. In \emph{Bioinformatics for DNA sequence analysis} (pp. 39--64). Springer.
 
-\leavevmode\hypertarget{ref-kimball2019phylogenomic}{}%
-Kimball, R. T., Oliveros, C. H., Wang, N., White, N. D., Barker, F. K., Field, D. J., \ldots{} others. (2019). A phylogenomic supertree of birds. \emph{Diversity}, \emph{11}(7), 109.
+\leavevmode\vadjust pre{\hypertarget{ref-kimball2019phylogenomic}{}}%
+Kimball, R. T., Oliveros, C. H., Wang, N., White, N. D., Barker, F. K., Field, D. J., et al.others. (2019). A phylogenomic supertree of birds. \emph{Diversity}, \emph{11}(7), 109.
 
-\leavevmode\hypertarget{ref-klicka2014comprehensive}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-klicka2014comprehensive}{}}%
 Klicka, J., Barker, F. K., Burns, K. J., Lanyon, S. M., Lovette, I. J., Chaves, J. A., \& Bryson Jr, R. W. (2014). A comprehensive multilocus assessment of sparrow (aves: Passerellidae) relationships. \emph{Molecular Phylogenetics and Evolution}, \emph{77}, 177--182.
 
-\leavevmode\hypertarget{ref-ksepka2015fossil}{}%
-Ksepka, D. T., Parham, J. F., Allman, J. F., Benton, M. J., Carrano, M. T., Cranston, K. A., \ldots{} others. (2015). The fossil calibration database---a new resource for divergence dating. \emph{Systematic Biology}, \emph{64}(5), 853--859.
+\leavevmode\vadjust pre{\hypertarget{ref-ksepka2015fossil}{}}%
+Ksepka, D. T., Parham, J. F., Allman, J. F., Benton, M. J., Carrano, M. T., Cranston, K. A., et al.others. (2015). The fossil calibration database---a new resource for divergence dating. \emph{Systematic Biology}, \emph{64}(5), 853--859.
 
-\leavevmode\hypertarget{ref-lamichhaney2015evolution}{}%
-Lamichhaney, S., Berglund, J., Almén, M. S., Maqbool, K., Grabherr, M., Martinez-Barrio, A., \ldots{} others. (2015). Evolution of darwin's finches and their beaks revealed by genome sequencing. \emph{Nature}, \emph{518}(7539), 371--375.
+\leavevmode\vadjust pre{\hypertarget{ref-lamichhaney2015evolution}{}}%
+Lamichhaney, S., Berglund, J., Almén, M. S., Maqbool, K., Grabherr, M., Martinez-Barrio, A., et al.others. (2015). Evolution of darwin's finches and their beaks revealed by genome sequencing. \emph{Nature}, \emph{518}(7539), 371--375.
 
-\leavevmode\hypertarget{ref-laubichler2009form}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-laubichler2009form}{}}%
 Laubichler, M. D., \& Maienschein, J. (2009). \emph{Form and function in developmental evolution}. Cambridge University Press.
 
-\leavevmode\hypertarget{ref-lepage2004avibase}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-lepage2004avibase}{}}%
 Lepage, D. (2004). \emph{Avibase: The world bird database}. Bird Studies Canada.
 
-\leavevmode\hypertarget{ref-lepage2014avibase}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-lepage2014avibase}{}}%
 Lepage, D., Vaidya, G., \& Guralnick, R. (2014). Avibase--a database system for managing and organizing taxonomic concepts. \emph{ZooKeys}, (420), 117.
 
-\leavevmode\hypertarget{ref-lerner2011multilocus}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-lerner2011multilocus}{}}%
 Lerner, H. R., Meyer, M., James, H. F., Hofreiter, M., \& Fleischer, R. C. (2011). Multilocus resolution of phylogeny and timescale in the extant adaptive radiation of hawaiian honeycreepers. \emph{Current Biology}, \emph{21}(21), 1838--1844.
 
-\leavevmode\hypertarget{ref-lovette2010comprehensive}{}%
-Lovette, I. J., Pérez-Emán, J. L., Sullivan, J. P., Banks, R. C., Fiorentino, I., Córdoba-Córdoba, S., \ldots{} others. (2010). A comprehensive multilocus phylogeny for the wood-warblers and a revised classification of the parulidae (aves). \emph{Molecular Phylogenetics and Evolution}, \emph{57}(2), 753--770.
+\leavevmode\vadjust pre{\hypertarget{ref-lovette2010comprehensive}{}}%
+Lovette, I. J., Pérez-Emán, J. L., Sullivan, J. P., Banks, R. C., Fiorentino, I., Córdoba-Córdoba, S., et al.others. (2010). A comprehensive multilocus phylogeny for the wood-warblers and a revised classification of the parulidae (aves). \emph{Molecular Phylogenetics and Evolution}, \emph{57}(2), 753--770.
 
-\leavevmode\hypertarget{ref-magallon2001absolute}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-magallon2001absolute}{}}%
 Magallon, S., \& Sanderson, M. (2001). Absolute diversification rates in angiosperm clades. \emph{Evolution}, \emph{55}(9), 1762--1780.
 
-\leavevmode\hypertarget{ref-magallon2010using}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-magallon2010using}{}}%
 Magallón, S. (2010). Using fossils to break long branches in molecular dating: A comparison of relaxed clocks applied to the origin of angiosperms. \emph{Systematic Biology}, \emph{59}(4), 384--399.
 
-\leavevmode\hypertarget{ref-magallon2015metacalibrated}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-magallon2015metacalibrated}{}}%
 Magallón, S., Gómez-Acevedo, S., Sánchez-Reyes, L. L., \& Hernández-Hernández, T. (2015). A metacalibrated time-tree documents the early rise of flowering plant phylogenetic diversity. \emph{New Phytologist}, \emph{207}(2), 437--453.
 
-\leavevmode\hypertarget{ref-mctavish2015phylesystem}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-mctavish2015phylesystem}{}}%
 McTavish, E. J., Hinchliff, C. E., Allman, J. F., Brown, J. W., Cranston, K. A., Holder, M. T., \ldots{} Smith, S. (2015). Phylesystem: A git-based data store for community-curated phylogenetic estimates. \emph{Bioinformatics}, \emph{31}(17), 2794--2800.
 
-\leavevmode\hypertarget{ref-Michonneau2016}{}%
-Michonneau, F., Brown, J. W., \& Winter, D. J. (2016). rotl: an R package to interact with the Open Tree of Life data. \emph{Methods in Ecology and Evolution}, \emph{7}(12), 1476--1481. \url{https://doi.org/10.1111/2041-210X.12593}
+\leavevmode\vadjust pre{\hypertarget{ref-Michonneau2016}{}}%
+Michonneau, F., Brown, J. W., \& Winter, D. J. (2016). {rotl: an R package to interact with the Open Tree of Life data}. \emph{{Methods in Ecology and Evolution}}, \emph{7}(12), 1476--1481. \url{https://doi.org/10.1111/2041-210X.12593}
 
-\leavevmode\hypertarget{ref-Morlon2014}{}%
-Morlon, H. (2014). Phylogenetic approaches for studying diversification. \emph{Ecology Letters}, \emph{17}(4), 508--525. \url{https://doi.org/10.1111/ele.12251}
+\leavevmode\vadjust pre{\hypertarget{ref-Morlon2014}{}}%
+Morlon, H. (2014). {Phylogenetic approaches for studying diversification.} \emph{{Ecology Letters}}, \emph{17}(4), 508--525. \url{https://doi.org/10.1111/ele.12251}
 
-\leavevmode\hypertarget{ref-moyle2016tectonic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-moyle2016tectonic}{}}%
 Moyle, R. G., Oliveros, C. H., Andersen, M. J., Hosner, P. A., Benz, B. W., Manthey, J. D., \ldots{} Faircloth, B. C. (2016). Tectonic collision and uplift of wallacea triggered the global songbird radiation. \emph{Nature Communications}, \emph{7}(1), 1--7.
 
-\leavevmode\hypertarget{ref-oliveros2019earth}{}%
-Oliveros, C. H., Field, D. J., Ksepka, D. T., Barker, F. K., Aleixo, A., Andersen, M. J., \ldots{} others. (2019). Earth history and the passerine superradiation. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(16), 7916--7925.
-
-\leavevmode\hypertarget{ref-Ooms2018}{}%
-Ooms, J., \& Chamberlain, S. (2018). \emph{Phylocomr: Interface to 'phylocom'}. Retrieved from \url{https://CRAN.R-project.org/package=phylocomr}
-
-\leavevmode\hypertarget{ref-opentreeAPIs}{}%
-Open Tree Of Life, Redelings, B., Cranston, K. A., Allman, J., Holder, M. T., \& McTavish, E. J. (2016). Open Tree of Life APIs v3.0. \emph{Open Tree of Life Project}, (Online Resources). Retrieved from \href{\%7Bhttps://github.com/OpenTreeOfLife/germinator/wiki/Open-Tree-of-Life-Web-APIs\%7D}{\{https://github.com/OpenTreeOfLife/germinator/wiki/Open-Tree-of-Life-Web-APIs\}}
-
-\leavevmode\hypertarget{ref-opentreeoflife2019synth}{}%
-Open Tree Of Life, Redelings, B., Sánchez Reyes, L. L., Cranston, K. A., Allman, J., Holder, M. T., \& McTavish, E. J. (2019). Open tree of life synthetic tree v12.3. \emph{Zenodo}. Retrieved from \url{https://doi.org/10.5281/zenodo.3937742}
-
-\leavevmode\hypertarget{ref-odeen2011evolution}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-odeen2011evolution}{}}%
 Ödeen, A., Håstad, O., \& Alström, P. (2011). Evolution of ultraviolet vision in the largest avian radiation-the passerines. \emph{BMC Evolutionary Biology}, \emph{11}(1), 1--8.
 
-\leavevmode\hypertarget{ref-paradis2004}{}%
-Paradis, E., Claude, J., \& Strimmer, K. (2004). APE: analyses of phylogenetics and evolution in R language. \emph{Bioinformatics}, \emph{20}(2), 289--290.
+\leavevmode\vadjust pre{\hypertarget{ref-oliveros2019earth}{}}%
+Oliveros, C. H., Field, D. J., Ksepka, D. T., Barker, F. K., Aleixo, A., Andersen, M. J., et al.others. (2019). Earth history and the passerine superradiation. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(16), 7916--7925.
 
-\leavevmode\hypertarget{ref-parchman2007coevolution}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Ooms2018}{}}%
+Ooms, J., \& Chamberlain, S. (2018). \emph{Phylocomr: Interface to 'phylocom'}. Retrieved from \url{https://CRAN.R-project.org/package=phylocomr}
+
+\leavevmode\vadjust pre{\hypertarget{ref-opentreeAPIs}{}}%
+Open Tree Of Life, Redelings, B., Cranston, K. A., Allman, J., Holder, M. T., \& McTavish, E. J. (2016). {Open Tree of Life APIs v3.0}. \emph{{Open Tree of Life Project}}, (Online Resources). Retrieved from \url{\%7Bhttps://github.com/OpenTreeOfLife/germinator/wiki/Open-Tree-of-Life-Web-APIs\%7D}
+
+\leavevmode\vadjust pre{\hypertarget{ref-opentreeoflife2019synth}{}}%
+Open Tree Of Life, Redelings, B., Sánchez Reyes, L. L., Cranston, K. A., Allman, J., Holder, M. T., \& McTavish, E. J. (2019). Open tree of life synthetic tree v12.3. \emph{Zenodo}. Retrieved from \url{https://doi.org/10.5281/zenodo.3937742}
+
+\leavevmode\vadjust pre{\hypertarget{ref-packert2012horizontal}{}}%
+Päckert, M., Martens, J., Sun, Y.-H., Severinghaus, L. L., Nazarenko, A. A., Ting, J., \ldots{} Tietze, D. T. (2012). Horizontal and elevational phylogeographic patterns of himalayan and southeast asian forest passerines (aves: passeriformes). \emph{Journal of Biogeography}, \emph{39}(3), 556--573.
+
+\leavevmode\vadjust pre{\hypertarget{ref-paradis2004}{}}%
+Paradis, E., Claude, J., \& Strimmer, K. (2004). {APE: analyses of phylogenetics and evolution in R language}. \emph{Bioinformatics}, \emph{20}(2), 289--290.
+
+\leavevmode\vadjust pre{\hypertarget{ref-parchman2007coevolution}{}}%
 Parchman, T. L., Benkman, C. W., \& Mezquida, E. T. (2007). Coevolution between hispaniolan crossbills and pine: Does more time allow for greater phenotypic escalation at lower latitude? \emph{Evolution}, \emph{61}(9), 2142--2153.
 
-\leavevmode\hypertarget{ref-packert2012horizontal}{}%
-Päckert, M., Martens, J., Sun, Y.-H., Severinghaus, L. L., Nazarenko, A. A., Ting, J., \ldots{} Tietze, D. T. (2012). Horizontal and elevational phylogeographic patterns of himalayan and southeast asian forest passerines (aves: Passeriformes). \emph{Journal of Biogeography}, \emph{39}(3), 556--573.
-
-\leavevmode\hypertarget{ref-pennell2014geiger}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-pennell2014geiger}{}}%
 Pennell, M. W., Eastman, J. M., Slater, G. J., Brown, J. W., Uyeda, J. C., FitzJohn, R. G., \ldots{} Harmon, L. J. (2014). Geiger v2. 0: An expanded suite of methods for fitting macroevolutionary models to phylogenetic trees. \emph{Bioinformatics}, \emph{30}(15), 2216--2218.
 
-\leavevmode\hypertarget{ref-posadas2006historical}{}%
-Posadas, P., Crisci, J. V., \& Katinas, L. (2006). Historical biogeography: A review of its basic concepts and critical issues. \emph{Journal of Arid Environments}, \emph{66}(3), 389--403.
+\leavevmode\vadjust pre{\hypertarget{ref-posadas2006historical}{}}%
+Posadas, P., Crisci, J. V., \& Katinas, L. (2006). Historical biogeography: A review of its basic concepts and critical issues. \emph{{Journal of Arid Environments}}, \emph{66}(3), 389--403.
 
-\leavevmode\hypertarget{ref-powell2014comprehensive}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-powell2014comprehensive}{}}%
 Powell, A. F., Barker, F. K., Lanyon, S. M., Burns, K. J., Klicka, J., \& Lovette, I. J. (2014). A comprehensive species-level molecular phylogeny of the new world blackbirds (icteridae). \emph{Molecular Phylogenetics and Evolution}, \emph{71}, 94--112.
 
-\leavevmode\hypertarget{ref-price2014niche}{}%
-Price, T. D., Hooper, D. M., Buchanan, C. D., Johansson, U. S., Tietze, D. T., Alström, P., \ldots{} others. (2014). Niche filling slows the diversification of himalayan songbirds. \emph{Nature}, \emph{509}(7499), 222.
+\leavevmode\vadjust pre{\hypertarget{ref-price2014niche}{}}%
+Price, T. D., Hooper, D. M., Buchanan, C. D., Johansson, U. S., Tietze, D. T., Alström, P., et al.others. (2014). Niche filling slows the diversification of himalayan songbirds. \emph{Nature}, \emph{509}(7499), 222.
 
-\leavevmode\hypertarget{ref-pulgarin2013multilocus}{}%
-Pulgarín-R, P. C., Smith, B. T., Bryson Jr, R. W., Spellman, G. M., \& Klicka, J. (2013). Multilocus phylogeny and biogeography of the new world pheucticus grosbeaks (aves: Cardinalidae). \emph{Molecular Phylogenetics and Evolution}, \emph{69}(3), 1222--1227.
+\leavevmode\vadjust pre{\hypertarget{ref-pulgarin2013multilocus}{}}%
+Pulgarín-R, P. C., Smith, B. T., Bryson Jr, R. W., Spellman, G. M., \& Klicka, J. (2013). Multilocus phylogeny and biogeography of the new world pheucticus grosbeaks (aves: cardinalidae). \emph{Molecular Phylogenetics and Evolution}, \emph{69}(3), 1222--1227.
 
-\leavevmode\hypertarget{ref-rabosky2015no}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-RCoreTeam2018}{}}%
+R Core Team. (2018). \emph{{R: a language and environment for statistical computing}}. Vienna, Austria: R Foundation for Statistical Computing.
+
+\leavevmode\vadjust pre{\hypertarget{ref-rabosky2015no}{}}%
 Rabosky, D. L. (2015). No substitute for real data: A cautionary note on the use of phylogenies from birth--death polytomy resolvers for downstream comparative analyses. \emph{Evolution}, \emph{69}(12), 3207--3216.
 
-\leavevmode\hypertarget{ref-rabosky2018inverse}{}%
-Rabosky, D. L., Chang, J., Title, P. O., Cowman, P. F., Sallan, L., Friedman, M., \ldots{} others. (2018). An inverse latitudinal gradient in speciation rate for marine fishes. \emph{Nature}, \emph{559}(7714), 392.
+\leavevmode\vadjust pre{\hypertarget{ref-rabosky2018inverse}{}}%
+Rabosky, D. L., Chang, J., Title, P. O., Cowman, P. F., Sallan, L., Friedman, M., et al.others. (2018). An inverse latitudinal gradient in speciation rate for marine fishes. \emph{Nature}, \emph{559}(7714), 392.
 
-\leavevmode\hypertarget{ref-ramshaw1972time}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-ramshaw1972time}{}}%
 Ramshaw, J., Richardson, D., Meatyard, B., Brown, R., Richardson, M., Thompson, E., \& Boulter, D. (1972). The time of origin of the flowering plants determined by using amino acid sequence data of cytochrome c. \emph{New Phytologist}, \emph{71}(5), 773--779.
 
-\leavevmode\hypertarget{ref-ratnasingham2007bold}{}%
-Ratnasingham, S., \& Hebert, P. D. (2007). BOLD: The barcode of life data system (http://www. Barcodinglife. Org). \emph{Molecular Ecology Notes}, \emph{7}(3), 355--364.
+\leavevmode\vadjust pre{\hypertarget{ref-ratnasingham2007bold}{}}%
+Ratnasingham, S., \& Hebert, P. D. (2007). BOLD: The barcode of life data system (http://www. Barcodinglife. org). \emph{Molecular Ecology Notes}, \emph{7}(3), 355--364.
 
-\leavevmode\hypertarget{ref-RCoreTeam2018}{}%
-R Core Team. (2018). \emph{R: a language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing.
-
-\leavevmode\hypertarget{ref-rees2017automated}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-rees2017automated}{}}%
 Rees, \& Cranston, K. (2017). Automated assembly of a reference taxonomy for phylogenetic data synthesis. \emph{Biodiversity Data Journal}, (5).
 
-\leavevmode\hypertarget{ref-rees2017irmng}{}%
-Rees, Vandepitte, L., Decock, W., \& Vanhoorne, B. (2017). IRMNG 2006--2016: 10 Years of a Global Taxonomic Database. \emph{Biodiversity Informatics}, \emph{12}.
+\leavevmode\vadjust pre{\hypertarget{ref-rees2017irmng}{}}%
+Rees, Vandepitte, L., Decock, W., \& Vanhoorne, B. (2017). {IRMNG 2006--2016: 10 Years of a Global Taxonomic Database}. \emph{Biodiversity Informatics}, \emph{12}.
 
-\leavevmode\hypertarget{ref-Revell2012}{}%
-Revell, L. J. (2012). Phytools: An r package for phylogenetic comparative biology (and other things). \emph{Methods in Ecology and Evolution}, \emph{3}, 217--223.
+\leavevmode\vadjust pre{\hypertarget{ref-Revell2012}{}}%
+Revell, L. J. (2012). Phytools: An r package for phylogenetic comparative biology (and other things). \emph{{Methods in Ecology and Evolution}}, \emph{3}, 217--223.
 
-\leavevmode\hypertarget{ref-Ronquist2003}{}%
-Ronquist, F., \& Huelsenbeck, J. P. (2003). MrBayes 3: Bayesian phylogenetic inference under mixed models. \emph{Bioinformatics}, \emph{19}(12), 1572--1574. \url{https://doi.org/10.1093/bioinformatics/btg180}
+\leavevmode\vadjust pre{\hypertarget{ref-Ronquist2003}{}}%
+Ronquist, F., \& Huelsenbeck, J. P. (2003). {MrBayes 3: Bayesian phylogenetic inference under mixed models}. \emph{Bioinformatics}, \emph{19}(12), 1572--1574. \url{https://doi.org/10.1093/bioinformatics/btg180}
 
-\leavevmode\hypertarget{ref-roquet2014one}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-roquet2014one}{}}%
 Roquet, C., Lavergne, S., \& Thuiller, W. (2014). One tree to link them all: A phylogenetic dataset for the european tetrapoda. \emph{PLoS Currents}, \emph{6}.
 
-\leavevmode\hypertarget{ref-datelifeplot}{}%
-Sanchez-Reyes, L. L., \& O'Meara, B. (2022). \texttt{datelifeplot}: Methods to plot chronograms and outputs of the \texttt{datelife} package. \emph{R Package Release V0.2.2}. Retrieved from \url{https://zenodo.org/badge/latestdoi/381501451}
+\leavevmode\vadjust pre{\hypertarget{ref-datelifeplot}{}}%
+Sanchez-Reyes, L. L., \& O'Meara, B. (2022). {\texttt{datelifeplot}: Methods to plot chronograms and outputs of the \texttt{datelife} package}. \emph{R Package Release V0.2.2}. Retrieved from \url{https://zenodo.org/badge/latestdoi/381501451}
 
-\leavevmode\hypertarget{ref-sanchez2022}{}%
-Sanchez-Reyes, L. L., O'Meara, B., Eastman, J., Heath, T., Wright, A., Schliep, K., \ldots{} Alfaro, M. (2022). \texttt{datelife}: Scientific Data on Time of Lineage Divergence for Your Taxa. In \emph{R package version 0.6.6}. Retrieved from \href{https://CRAN.R-project.org/package=datelife\%20and\%20https://doi.org/10.5281/zenodo.593938}{https://CRAN.R-project.org/package=datelife and https://doi.org/10.5281/zenodo.593938}
+\leavevmode\vadjust pre{\hypertarget{ref-sanchez2022}{}}%
+Sanchez-Reyes, L. L., O'Meara, B., Eastman, J., Heath, T., Wright, A., Schliep, K., \ldots{} Alfaro, M. (2022). {\texttt{datelife}: Scientific Data on Time of Lineage Divergence for Your Taxa}. In \emph{R package version 0.6.6}. Retrieved from \href{https://CRAN.R-project.org/package=datelife\%20and\%20https://doi.org/10.5281/zenodo.593938}{https://CRAN.R-project.org/package=datelife and https://doi.org/10.5281/zenodo.593938}
 
-\leavevmode\hypertarget{ref-sanderson2002}{}%
-Sanderson, M. (2002). Estimating Absolute Rates of Molecular Evolution and Divergence Times: A Penalized Likelihood Approach. \emph{Molecular Biology and Evolution}, \emph{19}(1), 101--109. \url{https://doi.org/10.1093/oxfordjournals.molbev.a003974}
+\leavevmode\vadjust pre{\hypertarget{ref-sanderson2002}{}}%
+Sanderson, M. J. (2002). {Estimating Absolute Rates of Molecular Evolution and Divergence Times: A Penalized Likelihood Approach}. \emph{Molecular Biology and Evolution}, \emph{19}(1), 101--109. \url{https://doi.org/10.1093/oxfordjournals.molbev.a003974}
 
-\leavevmode\hypertarget{ref-sanderson2003r8s}{}%
-Sanderson, M. (2003). r8s: Inferring Absolute Rates of Molecular Evolution and Divergence Times in the Absence of a Molecular Clock. \emph{Bioinformatics}, \emph{19}(2), 301--302.
+\leavevmode\vadjust pre{\hypertarget{ref-sanderson2003r8s}{}}%
+Sanderson, M. J. (2003). {r8s: Inferring Absolute Rates of Molecular Evolution and Divergence Times in the Absence of a Molecular Clock}. \emph{Bioinformatics}, \emph{19}(2), 301--302.
 
-\leavevmode\hypertarget{ref-sanderson2001sources}{}%
-Sanderson, M., \& Doyle, J. (2001). Sources of error and confidence intervals in estimating the age of angiosperms from rbcL and 18S rDNA data. \emph{American Journal of Botany}, \emph{88}(8), 1499--1516.
+\leavevmode\vadjust pre{\hypertarget{ref-sanderson2001sources}{}}%
+Sanderson, M. J., \& Doyle, J. A. (2001). Sources of error and confidence intervals in estimating the age of angiosperms from rbcL and 18S rDNA data. \emph{American Journal of Botany}, \emph{88}(8), 1499--1516.
 
-\leavevmode\hypertarget{ref-sauquet2013practical}{}%
-Sauquet, H. (2013). A practical guide to molecular dating. \emph{Comptes Rendus Palevol}, \emph{12}(6), 355--367.
+\leavevmode\vadjust pre{\hypertarget{ref-sauquet2013practical}{}}%
+Sauquet, H. (2013). A practical guide to molecular dating. \emph{{Comptes Rendus Palevol}}, \emph{12}(6), 355--367.
 
-\leavevmode\hypertarget{ref-sauquet2021age}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-sauquet2021age}{}}%
 Sauquet, H., Ramírez-Barahona, S., \& Magallón, S. (2021). \emph{The age of flowering plants is unknown}.
 
-\leavevmode\hypertarget{ref-schenk2016sec}{}%
-Schenk, J. J. (2016). Consequences of secondary calibrations on divergence time estimates. \emph{PLoS ONE}, \emph{11}(1). \url{https://doi.org/10.1371/journal.pone.0148228}
+\leavevmode\vadjust pre{\hypertarget{ref-schenk2016sec}{}}%
+Schenk, J. J. (2016). {Consequences of secondary calibrations on divergence time estimates}. \emph{PLoS ONE}, \emph{11}(1). \url{https://doi.org/10.1371/journal.pone.0148228}
 
-\leavevmode\hypertarget{ref-schliep2011phangorn}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-schliep2011phangorn}{}}%
 Schliep, K. P. (2011). Phangorn: Phylogenetic analysis in r. \emph{Bioinformatics}, \emph{27}(4), 592--593.
 
-\leavevmode\hypertarget{ref-schoch2020ncbi}{}%
-Schoch, C. L., Ciufo, S., Domrachev, M., Hotton, C. L., Kannan, S., Khovanskaya, R., \ldots{} others. (2020). NCBI Taxonomy: a Comprehensive Update on Curation, Resources and Tools. \emph{Database}, \emph{2020}.
+\leavevmode\vadjust pre{\hypertarget{ref-schoch2020ncbi}{}}%
+Schoch, C. L., Ciufo, S., Domrachev, M., Hotton, C. L., Kannan, S., Khovanskaya, R., et al.others. (2020). {NCBI Taxonomy: a Comprehensive Update on Curation, Resources and Tools}. \emph{Database}, \emph{2020}.
 
-\leavevmode\hypertarget{ref-selvatti2015paleogene}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-selvatti2015paleogene}{}}%
 Selvatti, A. P., Gonzaga, L. P., \& Moraes Russo, C. A. de. (2015). A paleogene origin for crown passerines and the diversification of the oscines in the new world. \emph{Molecular Phylogenetics and Evolution}, \emph{88}, 1--15.
 
-\leavevmode\hypertarget{ref-smith2018constructing}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-smith2018constructing}{}}%
 Smith, S., \& Brown, J. (2018). Constructing a broadly inclusive seed plant phylogeny. \emph{American Journal of Botany}, \emph{105}(3), 302--314.
 
-\leavevmode\hypertarget{ref-Smith2012}{}%
-Smith, S., \& O'Meara, B. (2012). TreePL: Divergence time estimation using penalized likelihood for large phylogenies. \emph{Bioinformatics}, \emph{28}(20), 2689--2690. \url{https://doi.org/10.1093/bioinformatics/bts492}
+\leavevmode\vadjust pre{\hypertarget{ref-Smith2012}{}}%
+Smith, S., \& O'Meara, B. (2012). {TreePL: Divergence time estimation using penalized likelihood for large phylogenies}. \emph{Bioinformatics}, \emph{28}(20), 2689--2690. \url{https://doi.org/10.1093/bioinformatics/bts492}
 
-\leavevmode\hypertarget{ref-Stoltzfus2013}{}%
-Stoltzfus, A., Lapp, H., Matasci, N., Deus, H., Sidlauskas, B., Zmasek, C. M., \ldots{} Jordan, G. (2013). Phylotastic! Making tree-of-life knowledge accessible, reusable and convenient. \emph{BMC Bioinformatics}, \emph{14}. \url{https://doi.org/10.1186/1471-2105-14-158}
+\leavevmode\vadjust pre{\hypertarget{ref-Stoltzfus2013}{}}%
+Stoltzfus, A., Lapp, H., Matasci, N., Deus, H., Sidlauskas, B., Zmasek, C. M., \ldots{} Jordan, G. (2013). {Phylotastic! Making tree-of-life knowledge accessible, reusable and convenient}. \emph{{BMC Bioinformatics}}, \emph{14}. \url{https://doi.org/10.1186/1471-2105-14-158}
 
-\leavevmode\hypertarget{ref-sun2020estimating}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-sun2020estimating}{}}%
 Sun, M., Folk, R. A., Gitzendanner, M. A., Soltis, P. S., Chen, Z., Soltis, D. E., \& Guralnick, R. P. (2020). Estimating rates and patterns of diversification with incomplete sampling: A case study in the rosids. \emph{American Journal of Botany}, \emph{107}(6), 895--909.
 
-\leavevmode\hypertarget{ref-tietze2013complete}{}%
-Tietze, D. T., Päckert, M., Martens, J., Lehmann, H., \& Sun, Y.-H. (2013). Complete phylogeny and historical biogeography of true rosefinches (aves: Carpodacus). \emph{Zoological Journal of the Linnean Society}, \emph{169}(1), 215--234.
+\leavevmode\vadjust pre{\hypertarget{ref-tietze2013complete}{}}%
+Tietze, D. T., Päckert, M., Martens, J., Lehmann, H., \& Sun, Y.-H. (2013). Complete phylogeny and historical biogeography of true rosefinches (aves: carpodacus). \emph{Zoological Journal of the Linnean Society}, \emph{169}(1), 215--234.
 
-\leavevmode\hypertarget{ref-title2016macrophylogenies}{}%
-Title, P. O., \& Rabosky, D. L. (2016). Do Macrophylogenies Yield Stable Macroevolutionary Inferences? An Example from Squamate Reptiles. \emph{Systematic Biology}, syw102. \url{https://doi.org/10.1093/sysbio/syw102}
+\leavevmode\vadjust pre{\hypertarget{ref-title2016macrophylogenies}{}}%
+Title, P. O., \& Rabosky, D. L. (2016). {Do Macrophylogenies Yield Stable Macroevolutionary Inferences? An Example from Squamate Reptiles}. \emph{Systematic Biology}, syw102. \url{https://doi.org/10.1093/sysbio/syw102}
 
-\leavevmode\hypertarget{ref-treplin2008molecular}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-treplin2008molecular}{}}%
 Treplin, S., Siegert, R., Bleidorn, C., Thompson, H. S., Fotso, R., \& Tiedemann, R. (2008). Molecular phylogeny of songbirds (aves: Passeriformes) and the relative utility of common nuclear marker loci. \emph{Cladistics}, \emph{24}(3), 328--349.
 
-\leavevmode\hypertarget{ref-uyeda2017evolution}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-uyeda2017evolution}{}}%
 Uyeda, J. C., Pennell, M. W., Miller, E. T., Maia, R., \& McClain, C. R. (2017). The evolution of energetic scaling across the vertebrate tree of life. \emph{The American Naturalist}, \emph{190}(2), 185--199.
 
-\leavevmode\hypertarget{ref-vos2012nexml}{}%
-Vos, R. A., Balhoff, J. P., Caravas, J. A., Holder, M. T., Lapp, H., Maddison, W. P., \ldots{} others. (2012). NeXML: Rich, extensible, and verifiable representation of comparative data and metadata. \emph{Systematic Biology}, \emph{61}(4), 675--689. \url{https://doi.org/10.1093/sysbio/sys025}
+\leavevmode\vadjust pre{\hypertarget{ref-vos2012nexml}{}}%
+Vos, R. A., Balhoff, J. P., Caravas, J. A., Holder, M. T., Lapp, H., Maddison, W. P., et al.others. (2012). NeXML: Rich, extensible, and verifiable representation of comparative data and metadata. \emph{Systematic Biology}, \emph{61}(4), 675--689.
 
-\leavevmode\hypertarget{ref-Webb2000}{}%
-Webb, C. (2000). Exploring the Phylogenetic Structure of Ecological Communities : An Example for Rain Forest Trees. \emph{The American Naturalist}, \emph{156}(2), 145--155.
+\leavevmode\vadjust pre{\hypertarget{ref-vos2004reconstructing}{}}%
+Vos, R. A., \& Mooers, A. Ø. (2004). Reconstructing divergence times for supertrees: A molecular approach. \emph{Phylogenetic Supertrees: Combining Information to Reveal the Tree of Life}, 281--299.
 
-\leavevmode\hypertarget{ref-Webb2008}{}%
-Webb, C., Ackerly, D., \& Kembel, S. (2008). Phylocom: Software for the analysis of phylogenetic community structure and trait evolution. \emph{Bioinformatics}, \emph{24}(18), 2098--2100. \url{https://doi.org/10.1093/bioinformatics/btn358}
+\leavevmode\vadjust pre{\hypertarget{ref-Webb2000}{}}%
+Webb, C. (2000). {Exploring the Phylogenetic Structure of Ecological Communities : An Example for Rain Forest Trees}. \emph{{The American Naturalist}}, \emph{156}(2), 145--155.
 
-\leavevmode\hypertarget{ref-webb2005phylomatic}{}%
-Webb, C., \& Donoghue, M. (2005). Phylomatic: Tree assembly for applied phylogenetics. \emph{Molecular Ecology Notes}, \emph{5}(1), 181--183.
+\leavevmode\vadjust pre{\hypertarget{ref-Webb2008}{}}%
+Webb, C., Ackerly, D., \& Kembel, S. (2008). {Phylocom: Software for the analysis of phylogenetic community structure and trait evolution}. \emph{Bioinformatics}, \emph{24}(18), 2098--2100. \url{https://doi.org/10.1093/bioinformatics/btn358}
 
-\leavevmode\hypertarget{ref-weir2008calibrating}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-webb2005phylomatic}{}}%
+Webb, C., \& Donoghue, M. (2005). Phylomatic: Tree assembly for applied phylogenetics. \emph{{Molecular Ecology Notes}}, \emph{5}(1), 181--183.
+
+\leavevmode\vadjust pre{\hypertarget{ref-weir2008calibrating}{}}%
 Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{Molecular Ecology}, \emph{17}(10), 2321--2328.
 
-\leavevmode\hypertarget{ref-zuccon2012phylogenetic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-zuccon2012phylogenetic}{}}%
 Zuccon, D., Prŷs-Jones, R., Rasmussen, P. C., \& Ericson, P. G. (2012). The phylogenetic relationships and generic limits of finches (fringillidae). \emph{Molecular Phylogenetics and Evolution}, \emph{62}(2), 581--596.
 
+\end{CSLReferences}
+
 \endgroup
-
-\newpage
-
-\captionof{table}{Ages of congruified nodes. See Figure 3, step C2.}
-\label{tbl:table1}
-\includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example.pdf}
-
-\vspace{15mm}
-
-\captionof{table}{Summary of congruified nodes ages. See Figure 3, step C3.}
-
-\label{tbl:table2}
-\includegraphics[width=\linewidth]{../tables/table-fringillidae-small-example-summary.png}
-
-\begin{minipage}[t]{17.3cm}
-\includegraphics{../figures/figure-workflow/figure1-new.pdf}
-\captionof{figure}{\textit{Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{https://phylotastic.org/datelife}.}}
-\label{fig:workflow}
-\end{minipage}
-
-\includegraphics{../figures/fig_runtime_main.pdf}
-\captionof{figure}{\textit{DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names. For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a datelife search processing the input names with Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that had been pre-processed with TNRS (light blue).}}
-\label{fig:runtime_main}
-
-\begin{center}
-\includegraphics{../figures/figure-small-example/figure2.pdf}
-\end{center}
-\vspace{10mm}
-\captionof{figure}{\textit{DateLife analysis results for a small sample of A) 6 bird species within the Passeriformes. B) Processed species names were found across 9 chronograms within 6 independent studies (Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}).) C) This revealed 28 source age data points for the queried species names. Summarized age data is used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree, resulting in a summary chronogram of source ages.}}
-
-\label{fig:figure2}
-
-\begin{minipage}{18.2cm}
-\includegraphics{../figures/fringillidae-topologies/fringillidae-topology.pdf}
-\captionof{figure}{Tree topologies extracted from Open Tree of Life's (OpenTree) synthetic phylogenetic tree.
-A) Topology of 2,333 tips and 1,305 internal nodes, encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same Most Recent Common Ancestor (MRCA) node in OpenTree's synthetic tree (purple).
-B) Subtree topology of 289 tips and 253 internal nodes, resulting from pruning species that do not belong to the family Fringillidae according to the NCBI taxonomy (purple branches in topology A).
-Bird species within the Fringillidae are paraphyletic
-(Alström et al. \protect\hyperlink{ref-alstrom2014discovery}{2014},
-Barker, Cibois, Schikler, Feinstein, \& Cracraft \protect\hyperlink{ref-barker2004phylogeny}{2004},
-Barker et al. \protect\hyperlink{ref-barker2013going}{2013},
-Barker \protect\hyperlink{ref-barker2014mitogenomic}{2014},
-Barker et al. \protect\hyperlink{ref-barker2015new}{2015},
-Beresford, Barker, Ryan, \& Crowe \protect\hyperlink{ref-beresford2005african}{2005},
-Bryson Jr et al. \protect\hyperlink{ref-bryson2014diversification}{2014},
-Burleigh, Kimball, \& Braun \protect\hyperlink{ref-burleigh2015building}{2015},
-Burns et al. \protect\hyperlink{ref-burns2014phylogenetics}{2014},
-Chaves, Hidalgo, \& Klicka \protect\hyperlink{ref-chaves2013biogeography}{2013},
-Claramunt \& Cracraft \protect\hyperlink{ref-claramunt2015new}{2015},
-Gibb et al. \protect\hyperlink{ref-gibb2015new}{2015},
-Hackett et al. \protect\hyperlink{ref-hackett2008phylogenomic}{2008},
-Jetz et al. \protect\hyperlink{ref-Jetz2012}{2012},
-Johansson, Fjeldså, \& Bowi \protect\hyperlink{ref-johansson2008phylogenetic}{200},
-Kimball et al. \protect\hyperlink{ref-kimball2019phylogenomic}{2019},
-Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014},
-Lamichhaney et al. \protect\hyperlink{ref-lamichhaney2015evolution}{2015},
-Lerner, Meyer, James, Hofreiter, \& Fleischer \protect\hyperlink{ref-lerner2011multilocus}{2011},
-Lovette et al. \protect\hyperlink{ref-lovette2010comprehensive}{2010},
-Moyle et al. \protect\hyperlink{ref-moyle2016tectonic}{2016},
-Ödeen, Håstad, \& Alström \protect\hyperlink{ref-odeen2011evolution}{2011},
-Oliveros et al. \protect\hyperlink{ref-oliveros2019earth}{2019},
-Päckert et al. \protect\hyperlink{ref-packert2012horizontal}{2012},
-Parchman, Benkman, \& Mezquida \protect\hyperlink{ref-parchman2007coevolution}{2007},
-Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
-  Price et al. \protect\hyperlink{ref-price2014niche}{2014},
-  Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka \protect\hyperlink{ref-pulgarin2013multilocus}{2013},
-  Selvatti, Gonzaga, \& Moraes Russo \protect\hyperlink{ref-selvatti2015paleogene}{2015},
-  Tietze, Päckert, Martens, Lehmann, \& Sun \protect\hyperlink{ref-tietze2013complete}{2013},
-  Treplin et al. \protect\hyperlink{ref-treplin2008molecular}{2008},
-  Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012}).}
-\label{fig:fringillidae-topologies}
-\end{minipage}
-
-\begin{minipage}{18cm}
-\begin{center}
-\includegraphics{../figures/figure-fringillidae/median_and_calibration_ages-congruified.png}
-\end{center}
-
-\captionof{figure}{Fringillidae median summary chronogram generated with DateLife. It has 289 tips and 253 nodes, from which 212 have age data from at least one published chronogram. These nodes have age data points from 19 different chronograms from 13 different studies (colored circles), which were summarized into 194 data points that were used as secondary calibrations (purple slashes) with the Branch Length Adjuster (BLADJ ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).}
-\label{fig:fringillidages}
-\end{minipage}
-
-\newpage
-
-\begin{minipage}{18cm}
-\begin{center}
-\includegraphics{../figures/fringillidae-cross-validation/fig-cross-validation-xy-plots.pdf}
-\end{center}
-\captionof{figure}{Results from cross validation analysis. Each plot compares the original age estimate (x axis) with the age obtained with a DateLife analysis (y axis), per node.}
-\label{fig:cvXY}
-\end{minipage}
 
 
 \end{document}

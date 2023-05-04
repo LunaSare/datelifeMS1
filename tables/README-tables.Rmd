@@ -1,0 +1,21 @@
+---
+title: "Tables"
+output: html_document
+date: "2023-05-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages("xtable")
+library(xtable)
+```
+
+Use of package `xtable` to create latex tables:
+Trick from https://www.youtube.com/watch?v=N-hLp8ADhVE
+
+```{r}
+table1 <- read.csv(file = "table-fringillidae-small-example.csv")
+head(table1)
+print(xtable(table1, type = "latex"))
+```
+

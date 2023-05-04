@@ -6,7 +6,9 @@ output:
 date: "2023-05-01"
 ---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 **Dear _Editor-in-Chief_ Isabel Sanmartín,** 
 
