@@ -54,8 +54,7 @@ embed_figure <- TRUE
 For Discussion
 tendency to underestimate ages for topologically deeper nodes, and overestimate ages for nodes closer to the tips. However, node ages obtained with DateLife are generally correlated with those from the dating analysis that used primary calibrations.
 
-@cusimano2012new: Simulating branch lengths following a birth-death species diversification model for
-missing taxa to chronograms with non random sampling, lowers type I error (false positive,
+@cusimano2012new: Simulating branch lengths following a birth-death species diversification model for missing taxa to chronograms with non random sampling, lowers type I error (false positive,
 incorrectly accepting the null hypothesis of a constant-rate or temporally varying rate
 birth-death model) when analyzing changes in diversification rate using the gamma statistic.
 
@@ -75,14 +74,12 @@ missing (unsampled) taxa onto phylogenetic trees, using taxonomic information al
 
 Adding branch lengths sampled from a birth-death model in the absence of genetic data
 improves insight from phylogeny-based analyses of diversification rates [@chang2020estimating].
-@chang2020estimating state that stochastic politomy resolution alleviate low statistical power to
+@chang2020estimating state that stochastic polytomy resolution alleviate low statistical power to
 identify shifts in diversification rate with methods that account for sampling fractions.
 @chang2020estimating "demonstrate theoretical concerns with the widespread use of analytical
 sampling corrections for sparsely sampled phylogenies of higher taxonomic groups. In particular,
 corrections based on “sampling fractions” can lead to low statistical power to infer rate variation
-when it is present, depending on the likelihood function used for inference. In the extreme, the sampling
-fraction correction can lead to spurious patterns of diversification that are driven solely by unbalanced
-sampling across the tree in concert with low overall power to infer shifts."
+when it is present, depending on the likelihood function used for inference. In the extreme, the sampling fraction correction can lead to spurious patterns of diversification that are driven solely by unbalanced sampling across the tree in concert with low overall power to infer shifts."
 
 @title2019tip do not test possible estimate biases using phylogenies with randomly
 resolved politomies. They analyse complete phylogenies and found that estimating species diversification
@@ -92,7 +89,7 @@ diversification rate, and bad for extinction rates.
 @sun2020estimating used a 50% species level sampled phylogeny of the family Cucurbitaceae to estimate
 speciation rates with two parametric methods (RPANDA and BAMM) and one semi-parametric method (DR) and
 tested the effect of using incompletely sampled phylogenies on one hand, and incomplete phylogenies that
-have been made near complete, using a stochastic politomy resolver based on taxonomy, on the other hand
+have been made near complete, using a stochastic polytomy resolver based on taxonomy, on the other hand
 (with two different methods: 1) adding missing species at random following a backbone taxonomy, and 2)
 adding missing species to a genus level taxonomy based on a taxonomy resolver only). When using incomplete
 phylogenies, parametric methods tend to overestimate speciation rate as sampling gets worse (less complete),
