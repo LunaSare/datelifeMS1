@@ -1,0 +1,116 @@
+---
+title             : "Review: Effects of initial phylogenetic and chronogram hypothesis on evolutionary downstream analyses"
+shorttitle        : "Litt review"
+
+author:
+  - name          : "Luna L. Sánchez Reyes"
+    affiliation   : "1,2"
+    corresponding : yes    # Define only one corresponding author
+    address       : ""
+    email         : "sanchez.reyes.luna@gmail.com"
+    role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+      - Data curation
+      - Investigation
+      - Software
+      - Visualization
+      - Validation
+      - Writing
+      - Original Draft Preparation
+      - Writing
+      - Review & Editing
+
+affiliation:
+  - id            : "1"
+    institution   : "University of California, Merced, USA"
+  - id            : "2"
+    institution   : "University of Tennessee, Knoxville, USA"
+
+authornote: |
+  School of Natural Sciences, University of California, Merced, 258 Science and Engineering Building 1, Merced, CA 95340, USA.
+  Department of Ecology and Evolutionary Biology, University of Tennessee, Knoxville, 446 Hesler Biology Building, Knoxville, TN 37996, USA.
+bibliography      : ["paper_references.bib"]
+wordcount         : "`r wordcountaddin::word_count()`"
+floatsintext      : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+documentclass     : "apa6"
+classoption       : "man"
+output            :
+  papaja::apa6_pdf:
+    includes      :
+      in_header: "preamble.tex"
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+r_refs("paper_references.bib")
+embed_figure <- TRUE
+```
+An early set of litterature cautions against the use of secondary calibrations in divergence time estimation.
+
+The scientific community has generally more confidence in chronograms generated from a single analysis, where primary calibrations constitute the main source of information in a dating analysis. Early, @shaul2002playing and @graur2004reading warned about the misleading lack of uncertainty in divergence times estimated using secondary calibrations, and more recently, @sauquet2012testing and @schenk2016sec found that node ages obtained using secondary calibrations with Maximum Likelihood and Bayesian inference dating in two different empirical data sets, are significantly younger than those obtained using primary calibrations. However, more recently, @powell2020quantifying reported that secondary calibrations appear to be as good as primary calibrations when dating simulated phylogenies. It seems that using several secondary calibrations (as opposed to just one) can provide sufficient information to alleviate or even neutralize potential biases [@shaul2002playing; @graur2004reading; @sauquet2013practical].
+
+
+@shaul2002playing: They assess the reliability of divergence time estimates obtained
+using secondary calibration points by testing the consistency of the age of the secondary calibration with divergence time estimates calculated assuming no rate heterogeneity, estimating pairwise aminoacid rate substitutions from 21 different protein alignments, following a Poisson model.
+They use the same secondary calibrations with all alignments and find that all divergence times are indeed older than the secondary calibration. I believe this is expected, as actual divergence times should be at least as old or older than a calibration point.
+
+However, because this is a secondary calibration, it can't be treated with the same rationale as a fossil calibration, the key difference beig that secondary calibrations already represent the divergence time, so they can't follow the same priors as fossil, such as being necessarily equal or younger than the actual divergence time. An estimated divergence time could in fact be older than the actual divergence time.5tdsx89c v
+
+They list set of methodological steps that can affect divergence time estimates
+for the same group or "evolutionary event. High on the list are":
+- (1) different molecular datasets;
+- (2) different criteria for inclusion or exclusion of [molecular] data;
+- (3) different methodologies for the derivation of genetic distances; and
+- (4) different calibration points for converting genetic distances into evolutionary rates and subsequently into dates of divergence (for discussion, see Easteal, 1999, Wang et al., 1999, Bromham et al., 2000).
+- (5) whether calibrations are primary or secondary
+They recommend using multiple primary calibrations, using a model with rate heterogeneity and discussing confidence intervals that could show different hypothesis of divergence time.
+
+@graur2004reading: made a review of divergence times estimated using secondary calibrations (from the Hedges and Kumar group) and found that they were completely ignoring uncertainty of the estimate, giving an illusion of precision to all other node age estimates in the tree.
+Their main recommendation is to use multiple calibration points.
+
+@garzon2015incompatible empirical data, bayesian inference, secondary calibrations
+
+@shcenck2016 simulated trees, Bayesian inference with program BEAST, relaxed-clock methods
+"Applying secondary calibrations has been said to increase the accuracy of the age estimates across a secondary study as long as the estimate was derived from a robust primary calibration @hedges2004precision. Shaul and Graur's [@shaul2002playing] evidence of inconsistency makes intuitive sense, but their methodology has been criticized [@morrison2010counting; @hedges2004precision]".
+
+@powell2020quantifying find that secondary calibrations are as useful as primary calibrations when used appropriately.
+"We quantify the amount of errors in estimates produced by the use of secondary calibrations relative to true times and primary calibrations placed on distant nodes. We find that, overall, the inaccuracies in estimates based on secondary calibrations are predictable and mirror errors associated with primary calibrations and their confidence intervals.
+
+@hipsley2014beyond: Beyond fossil calibrations: realities of molecular clock practices.
+
+
+## Difficulties of using fossil calibrations
+
+Ho & Phillips 2009: Accounting for calibration uncertainty in phylogenetic estimation of evolutionary
+divergence times
+
+Ho, Saarma, Barnett, Haile, & Shapiro, 2008: The effect of inappropriate calibration: three case studies in molecular ecology
+
+Inoue, P.C.J. Donoghue, Z. Yang, 2010: The impact of the representation of fossil calibrations on Bayesian estimation of species divergence times
+
+Ksepka, M.J. Benton, M.T. Carrano, M. Gandolfo, J.J. a Head, E.J. Hermsen, W.G. Joyce, K.S. Lamm, J.S.L. Patané, M.J. Phillips, P.D. Polly, M. Van Tuinen, J.L. Ware, R.C.M. Warnock, J.F. Parham, 2011: Synthesizing and databasing fossil calibrations: divergence dating and beyond
+
+Sebastian S. Groh, Paul Upchurch, Paul M. Barrett, Julia J. Day, 2022: How to date a crocodile: estimation of neosuchian clade ages and a comparison of four time-scaling methods
+
+### Difficulties of dating divergence events
+
+Susana A. Magallón 2004, Dating Lineages: Molecular and Paleontological Approaches to the Temporal Framework of Clades
+
+Smith 2002, Dating the Time of Origin of Major Clades: Molecular Clocks and the Fossil Record
+
+## Open database of fossil calibrations
+
+After Kspeka et al. 2011, a fossil calibration database should have the following components:
+- Should provide a tree-based representation of phylogenetic placement of a fossil
+- Only include fossils that have been vetted as calibrations
+- Clearly provide attribution of original fossil descriptions (to incentivize paleontologists to contribute more) and papers were fossil was vetted as calibrations, for appropriate citation of all original data in research papers that use fossils from the database.
+
+## Review of studeis that cite the Fossil Calibrations Database
+
+## Review of studies from Ksepka in google scholar
+
