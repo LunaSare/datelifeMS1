@@ -569,6 +569,7 @@ Funding was provided by the US National Science Foundation (NSF) grants ABI-1458
 \textsc{Acknowledgements}
 \end{center}
 
+We thank Isabel Sanmartín, Daniele Silvestro, Rutger Vos and an anonymous reviewer, for comments that greatly improved this manuscript.
 The DateLife project was born as a prototype tool aiming to provide the services describe in this paper, and was initially developed over a series of hackathons at the National Evolutionary Synthesis Center, NC, USA [@Stoltzfus2013].
 We thank colleagues from the O'Meara Lab at the University
 of Tennessee Knoxville for suggestions, discussions and software testing.
