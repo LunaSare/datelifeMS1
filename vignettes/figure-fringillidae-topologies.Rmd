@@ -42,7 +42,8 @@ fringillidae_monophyletic <- rotl::tol_subtree(node_id = "mrcaott4083ott370807",
 ape::write.tree(fringillidae_monophyletic, file = paste0(writing_dir, "fringillidae_monophyletic_topology.tre"))
 
 fringillidae_monophyletic
-
+# object saved as .rda in data/ folder
+# script in data-raw/fringillidae-topologies.R
 ```
 
 ```{r}
@@ -54,6 +55,8 @@ fringillidae_paraphyletic <- rotl::tol_induced_subtree(ott_ids = fringillidae_v0
 ape::write.tree(fringillidae_paraphyletic, file = paste0(writing_dir, "fringillidae_paraphyletic_topology.tre"))
 
 fringillidae_paraphyletic
+# object saved as .rda in data/ folder
+# script in data-raw/fringillidae-topologies.R
 ```
 
 
@@ -177,7 +180,7 @@ for (i in c("fan", "radial", "phylogram")) {
                   type = i,
                   cex = ifelse("phylogram" %in% i, 0.1, 0.05),
                   tip.color = tip_colors,
-                  label.offset =ifelse("phylogram" %in% i, 5, 0.001),
+                  label.offset = ifelse("phylogram" %in% i, 5, 0.001),
                   edge.color = edge_colors,
                   edge.width = 1 #ifelse("phylogram" %in% i, 1, 0.3)
        )
@@ -216,7 +219,7 @@ for (i in seq(color_loop)) {
                   type = "fan",
                   cex = 0.05,
                   tip.color = tip_colors_anti,
-                  label.offset = 0.001,
+                  label.offset = 0.005,
                   edge.color = edge_colors_anti,
                   edge.width = 1)
   dev.off()
@@ -235,6 +238,7 @@ pdf(file = paste0(writing_dir,
 par(mai = c(0,0,0,0))
 ape::plot.phylo(ape::ladderize(fringillidae_paraphyletic),
                 type = "phylogram",
-                cex = 0.1)
+                cex = 0.1,
+                label.offset = 1)
 dev.off()
 ```
