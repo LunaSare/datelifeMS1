@@ -22,10 +22,13 @@ To create the mock datelife example for the workflow figure of the manuscript, w
 ```{r setup}
 # library(datelifeMS1)
 devtools::load_all("../../datelifeplot")
+devtools::load_all("../../datelife")
 devtools::load_all()
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_tree <- ape::drop.tip(phy = frin_sample_dsumm$phylo_median, tip = frin_sample_dsumm$phylo_median$tip.label[-(1:6)])
 spp_dq <- datelife::make_datelife_query(spp)
+spp_dq$phy <- spp_tree
 spp_dr <- datelife::get_datelife_result(spp_dq)
 ```
 
@@ -47,6 +50,47 @@ names(spp_dr)[c(1,4,5)] == names(spp_dr_fig1)
 ```{r}
 class(spp_dr_fig1) <- "datelifeResult"
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr_fig1)
+```
+
+```{r}
+  datelife_query = spp_dq
+	datelife_result <- spp_dr_fig1
+	mrcas <- datelife:::datelife_result_MRCA(datelife_result, na_rm = TRUE)
+	newick_all <- datelife_result_newick_all(datelife_result, na_rm = TRUE)
+	phylo_all <- datelife_result_phylo_all(datelife_result, na_rm = TRUE)
+	biggest <- get_biggest_multiphylo(phylo_all) # NAs in trees are removed in get_biggest_multiphylo
+
+	median_and_sdm <- datelife:::datelife_result_median_and_sdm(datelife_result, datelife_query, na_rm = na_rm)
+####	
+	best_grove <- get_best_grove(datelife_result, criterion = "taxa", n = 2)$best_grove
+  target_tree <- datelife_query$phy
+###
+  median_phylo <- datelife_result_median(best_grove, target_tree = target_tree)
+###
+  median_matrix <- datelife_result_median_matrix(datelife_result)
+  
+  phy <- summary_matrix_to_phylo(median_matrix, use = "median")
+###
+  
+	
+	
+#  html_table <- datelife_result_html(datelife_result, datelife_query, na_rm = na_rm)
+#  data_frame <- datelife_result_data_frame(datelife_result, na_rm = na_rm)
+#	res <- list(citations = names(mrcas),
+#	            mrca = mrcas,
+#		          newick_all = newick_all,
+#							phylo_all = phylo_all,
+#						  newick_median = median_and_sdm$median_newick,
+#						  phylo_median = median_and_sdm$median_phylo,
+#							newick_sdm = median_and_sdm$sdm_newick,
+#							phylo_sdm = median_and_sdm$sdm_phylo,
+#							phylo_biggest = biggest,
+#							html = html_table,
+#							data_frame = data_frame)
+```
+
+
+```{r}
 spp_summ$phylo_all
 
 mock_spp_names <- gsub(" ", "_", spp_summ$phylo_median$tip.label)
@@ -161,9 +205,28 @@ Plot ages from source chronograms on top of opentree synth tree:
 studies <- as.character(unique(calib_summ$in_phy$reference))
 # order references alphabetically:
 studies <- studies[order(studies)]
+```
+
+```{r}
 #create a vector of colors with study names:
 color_studies <- viridis::turbo(n = 9)
-color_median <- color_studies[6] # mustard yellow
+color_studies
+```
+
+visualize colors sampled form viridis turbo:
+```{r}
+c1 <- "#30123BFF" 
+c2 <- "#466BE3FF" 
+c3 <- "#28BBECFF" 
+c4 <- "#31F299FF" 
+c5 <- "#A2FC3CFF" 
+c6 <- "#EDD03AFF" 
+c7 <- "#FB8022FF" 
+c8 <- "#D23105FF"
+c9 <- "#7A0403FF"
+```
+
+```{r}
 color_studies <- color_studies[c(2,8,4)]
 names(color_studies) <- studies
 
@@ -195,6 +258,7 @@ datelifeplot::plot_node_ages(pp,
 ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
 dev.off()
 ```
+
 ## Plot tree topology with node labels and no time axis
 
 ```{r}
@@ -224,8 +288,7 @@ dev.off()
 
 ## Get pairwise median age points and plot them:
 
-```{r}
-
+```{r} 
 names(spp_dr_fig1)
 spp_dr_fig1[[1]]
 
@@ -238,10 +301,12 @@ median_matrix_list <- list(summary_matrix = median_matrix)
 
 median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
 
-matched_median_ages <- datelife::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
+matched_median_ages <- datelife:::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
 
 mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+```
 
+```{r}
 mm_summ$in_phy
 
 ## rename
@@ -285,16 +350,49 @@ colnames(pretty)[4] <- "Median Pairwise Age"
 colnames(pretty)[1] <- "Node Name"
 # Change node numbers my node names
 pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
-
+write.csv(pretty, file = "../figures/figure-workflow/median_table.csv")
 # Print table as pdf
 pdf("../figures/figure-workflow/median_table.pdf")       # Export PDF
 gridExtra::grid.table(pretty) # if you do not want row numbers set rows = NULL
 dev.off()
 ```
 
+### Summary table
+
+```{r, error = TRUE}
+library(dplyr)
+colnames(pretty)[1] <- "NodeName"
+?group_by
+pretty %>% 
+  group_by(NodeName) -> pretty_group
+
+summarize(pretty_group, abundance = summary())
+```
+
+```{r}
+colnames(pretty)[1] <- "Node Name"
+
+res <- matrix(nrow = length(unique(pretty$`Node Name`)), ncol = 6)
+
+for (i in 1:length(unique(pretty$`Node Name`))) {
+  rowsies <- pretty$`Node Name` == unique(pretty$`Node Name`)[i]
+  summi <- summary(pretty$`Median Pairwise Age`[rowsies])
+  res[i, ] <- summi
+  
+}
+summary_table <- as.data.frame(summary_table)
+summary_table[,2:8]
+summary_table[, 1] <- unique(pretty$`Node Name`)
+colnames(summary_table) <- c("Node Name", names(summi), "SD")
+```
+
+
+
 ## Median chronogram
 
 ```{r}
+color_median <- color_studies[6] # mustard yellow
+
 mm_summ$in_phy$reference <- rep("Median pairwise \nnode ages", 
                                 nrow(mm_summ$in_phy))
 length(unique(mm_summ$in_phy$nodeAge))
