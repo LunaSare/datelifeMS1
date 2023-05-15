@@ -372,18 +372,30 @@ summarize(pretty_group, abundance = summary())
 ```{r}
 colnames(pretty)[1] <- "Node Name"
 
-res <- matrix(nrow = length(unique(pretty$`Node Name`)), ncol = 6)
+res <- matrix(nrow = length(unique(pretty$`Node Name`)), ncol = 7)
 
 for (i in 1:length(unique(pretty$`Node Name`))) {
   rowsies <- pretty$`Node Name` == unique(pretty$`Node Name`)[i]
   summi <- summary(pretty$`Median Pairwise Age`[rowsies])
-  res[i, ] <- summi
-  
+  res[i, 1:6] <- summi
+  res[i, 7] <- sd(pretty$`Median Pairwise Age`[rowsies])
 }
-summary_table <- as.data.frame(summary_table)
-summary_table[,2:8]
-summary_table[, 1] <- unique(pretty$`Node Name`)
-colnames(summary_table) <- c("Node Name", names(summi), "SD")
+summary_table <- as.data.frame(res)
+
+summary_table$Node <- unique(pretty$`Node Name`)
+colnames(summary_table) <- c(names(summi), "SD", "Node Name")
+
+summary_table <- summary_table[, c(8, 1:7)]
+
+write.csv(summary_table, file = "../figures/figure-workflow/summary_table.csv")
+# Export PDF
+pdf("../figures/figure-workflow/summary_table.pdf", height = 2)       
+gridExtra::grid.table(summary_table, rows = NULL) # if you do not want row numbers set rows = NULL
+dev.off()
+
+pdf("../figures/figure-workflow/summary_table_reduced.pdf", height = 2)       
+gridExtra::grid.table(summary_table[, c("Node Name", "Min.", "Median", "Max.", "SD")], rows = NULL) # if you do not want row numbers set rows = NULL
+dev.off()
 ```
 
 
