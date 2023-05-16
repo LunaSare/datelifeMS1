@@ -64,6 +64,7 @@ names(phylo_all)
 # names(phylo_all)[-not_before]
 cv1 <- congruify_other_calibrations(phylo_all = phylo_all, 
                                     index = 6)
+str(cv1)
 attributes(cv1[[1]])
 ```
 
@@ -138,6 +139,7 @@ for (i in seq(validated_trees)) {
 ```{r}
 # load(file = "../data/frin_color_studies.rda")
 color_studies <- frin_color_studies
+color_studies
 ```
 
 ### plot chronograms, overlapped
@@ -254,6 +256,9 @@ for (index in seq(validated_trees)) {
 }
 
 names(ages_all) <- names(res_all) <- names(phylo_all)
+str(ages_all)
+# usethis::use_data(ages_all)
+# usethis::use_vignette("correlations")
 ```  
 
 Get max age:
