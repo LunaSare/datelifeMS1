@@ -1,0 +1,58 @@
+---
+title: "correlations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{correlations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+load("../data/ages_all.rda")
+```
+
+```{r}
+ages_all$`Barker et al. 2013`
+res <- cor.test(x = ages_all[[1]]$original, y = ages_all[[1]]$cross_val)
+str(res)
+```
+
+```{r}
+res <- list()
+for (i in (seq(ages_all))) {
+  print(i)
+  resi <- tryCatch(cor.test(x = ages_all[[i]]$original, y= ages_all[[i]]$cross_val), error = function(e) NA)
+  res <- c(res, list(resi))
+  
+}
+which(is.na(res))
+length(res)
+typeof(res[[1]])
+ls(res[[1]])
+```
+
+```{r}
+data.frame(p_value = sapply(res, "[", "p.value"))
+sapply(res, as.data.frame)
+str(res[[1]])
+class(res[[1]]) <- "list"
+data.frame(res[[1]])
+
+data.frame(conf.int_1 = res[[1]]$conf.int[1], conf.int_2 = res[[1]]$conf.int[2])
+
+function1 <- function(x){
+  data.frame(conf.int_1 = x$conf.int[1], conf.int_2 = x$conf.int[2])
+}
+
+lapply(res, function1)
+
+
+```
+
