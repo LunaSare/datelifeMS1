@@ -31,7 +31,7 @@ Then I rendered the differences.tex file from terminal with R:
 
 And moved it to the folder I want it to be in:
 
-    mv differences.pdf submission-sysbio-reviews.pdf
+    mv differences.pdf ../submission/manuscript-differences.pdf
 
 ---
 

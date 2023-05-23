@@ -1,0 +1,60 @@
+
+Figure 1
+
+Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{https://phylotastic.org/datelife}.
+
+Figure 2:
+
+DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names. For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a \texttt{datelife} search processing the input names using the Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that has been pre-processed with TNRS (light blue).
+
+Figure 3:
+
+DateLife analysis results for a small sample of 6 bird species within the Passeriformes (a). Processed species names were found across 9 chronograms within 6 independent studies (b; Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}). This revealed 28 source age data points for the queried species names. Summarized age data was used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree v13.4, resulting in a chronogram of summary source ages (c).
+
+
+Figure 4:
+
+Tree topologies extracted from Open Tree of Life's (OpenTree) synthetic phylogenetic tree.
+Topology of 2,333 tips and 1,305 internal nodes (a), encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same Most Recent Common Ancestor (MRCA) node in OpenTree's synthetic tree (purple).
+(Subtree topology of 289 tips and 253 internal nodes (b), resulting from pruning species that do not belong to the family Fringillidae according to the NCBI taxonomy (purple branches in topology a).
+Bird species within the Fringillidae are paraphyletic
+(Alström et al. \protect\hyperlink{ref-alstrom2014discovery}{2014},
+Barker, Cibois, Schikler, Feinstein, \& Cracraft \protect\hyperlink{ref-barker2004phylogeny}{2004},
+Barker et al. \protect\hyperlink{ref-barker2013going}{2013},
+Barker \protect\hyperlink{ref-barker2014mitogenomic}{2014},
+Barker et al. \protect\hyperlink{ref-barker2015new}{2015},
+Beresford, Barker, Ryan, \& Crowe \protect\hyperlink{ref-beresford2005african}{2005},
+Bryson Jr et al. \protect\hyperlink{ref-bryson2014diversification}{2014},
+Burleigh, Kimball, \& Braun \protect\hyperlink{ref-burleigh2015building}{2015},
+Burns et al. \protect\hyperlink{ref-burns2014phylogenetics}{2014},
+Chaves, Hidalgo, \& Klicka \protect\hyperlink{ref-chaves2013biogeography}{2013},
+Claramunt \& Cracraft \protect\hyperlink{ref-claramunt2015new}{2015},
+Gibb et al. \protect\hyperlink{ref-gibb2015new}{2015},
+Hackett et al. \protect\hyperlink{ref-hackett2008phylogenomic}{2008},
+Jetz et al. \protect\hyperlink{ref-Jetz2012}{2012},
+Johansson, Fjeldså, \& Bowi \protect\hyperlink{ref-johansson2008phylogenetic}{200},
+Kimball et al. \protect\hyperlink{ref-kimball2019phylogenomic}{2019},
+Klicka et al. \protect\hyperlink{ref-klicka2014comprehensive}{2014},
+Lamichhaney et al. \protect\hyperlink{ref-lamichhaney2015evolution}{2015},
+Lerner, Meyer, James, Hofreiter, \& Fleischer \protect\hyperlink{ref-lerner2011multilocus}{2011},
+Lovette et al. \protect\hyperlink{ref-lovette2010comprehensive}{2010},
+Moyle et al. \protect\hyperlink{ref-moyle2016tectonic}{2016},
+Ödeen, Håstad, \& Alström \protect\hyperlink{ref-odeen2011evolution}{2011},
+Oliveros et al. \protect\hyperlink{ref-oliveros2019earth}{2019},
+Päckert et al. \protect\hyperlink{ref-packert2012horizontal}{2012},
+Parchman, Benkman, \& Mezquida \protect\hyperlink{ref-parchman2007coevolution}{2007},
+Powell et al. \protect\hyperlink{ref-powell2014comprehensive}{2014},
+Price et al. \protect\hyperlink{ref-price2014niche}{2014},
+Pulgarín-R, Smith, Bryson Jr, Spellman, \& Klicka \protect\hyperlink{ref-pulgarin2013multilocus}{2013},
+Selvatti, Gonzaga, \& Moraes Russo \protect\hyperlink{ref-selvatti2015paleogene}{2015},
+Tietze, Päckert, Martens, Lehmann, \& Sun \protect\hyperlink{ref-tietze2013complete}{2013},
+Treplin et al. \protect\hyperlink{ref-treplin2008molecular}{2008},
+Zuccon, Prŷs-Jones, Rasmussen, \& Ericson \protect\hyperlink{ref-zuccon2012phylogenetic}{2012}).
+
+Figure 5:
+
+Fringillidae median summary chronogram generated with DateLife. It has 289 tips and 253 nodes, from which 212 have age data from at least one published chronogram. These nodes have age data points from 19 different chronograms from 13 different studies (colored circles), which were summarized into 194 data points that were used as secondary calibrations (purple slashes) with the Branch Length Adjuster (BLADJ ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).
+
+Figure 6:
+
+Cross validation of results from a DateLife analysis of the family Fringillidae, shown in Fig. 5. Each plot compares node age estimate from an original study chronogram (x axis) with the corresponding node age obtained with a DateLife analysis (y axis).
