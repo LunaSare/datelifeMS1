@@ -116,6 +116,6 @@ After Kspeka et al. 2011, a fossil calibration database should have the followin
 
 ## Review of studies that infer molecular substitution rates in birds
 
-Burns et al. 2014: "[we] used a substitution rate of 0.0105 mean substitutions per million years along each branch (Weir and Schluter, 2008)"
+Burns et al. 2014 used a single secondary calibration point with Bayesian analyses using BEAST v1.7.1: "[we] used a substitution rate of 0.0105 mean substitutions per million years along each branch [from] (Weir and Schluter, 2008)".
 
 Weir & Schluter 2008: "A mitochondrial DNA clock of approximately 2% has been widely used for birds, mammals, and other vertebrate groups (Brown et al. 1979; Klicka & Zink 1997; Garcia-Moreno 2004; Lovette 2004). This traditional rate was based on relatively few calibrations and disparate methods of estimating genetic distances [i.e. distances based on third codon positions, all codon positions or restriction fragment length polymorphism (RFLP) data; see review in Lovette 2004]. Nevertheless, using consistent methods of calibration (all codon positions for a single gene) and an unbiased method for choosing calibration points, our analysis supports an average molecular rate of 2.1% with little variation in mean rate across most orders (Table 1). These results suggest that the 2% rate is highly conserved in birds.""
