@@ -1,0 +1,91 @@
+---
+title: "Figure 5"
+output: pdf_document
+date: "2023-06-02"
+---
+
+```{r setup, include=FALSE}
+getwd()
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all("../../datelifeplot")
+source("../R/plot_node_ages_v2.1.R")
+writing_dir <- "../figures/figure-fringillidae/"
+
+load("../data/phylo_median_congruified.rda")
+load("../data/frin_color_studies.rda")
+my_chronogram <- phylo_median_congruified
+data(fringillidae_all_ages)
+ls(fringillidae_all_ages)
+# matched_ages <- fringillidae_all_ages
+# max(matched_ages$a1$in_phy$nodeAge)
+time_depth <- 45
+color_median <- rep("purple", 2)
+names(color_median) <- unique(fringillidae_all_ages$a2$in_phy$reference)
+points_median <- stats::setNames(c("/", "*"), names(color_median))
+point_type <- list(a1 =  "•", a2 = points_median)
+pch_type = point_type
+data(frin_color_studies)
+point_colors <- list(a1 = frin_color_studies, a2 = color_median)
+pch_color = point_colors
+cex_median <- stats::setNames(c(2, 3), names(color_median))
+point_cex <- list(a1 =  2.3, a2 = cex_median)
+pch_cex = point_cex
+leg_cex = rep(1.7, 2)
+leg_pt_cex <- list(a1 = 1.7, a2 = c(1.7, 2.5))
+leg_box <- c(TRUE, TRUE)
+leg_color<- list(a1 = frin_color_studies, a2 = color_median)
+leg_pch <- list(a1 = 19, a2 = points_median)
+leg_text <- lapply(leg_color, names)
+leg_title <- c("Taxon pair node ages from source chronograms", "Median of node ages")
+```
+
+```{r}
+size <- 3
+png(filename = paste0(writing_dir, "/figure5.png"),
+    height = 12*size,   
+    width = 8.5*size,
+    units = "in",
+    res = 300)
+plot_node_ages_2.1(my_chronogram,
+               title = c("Fringillidae Median Summary Chronogram"),
+               pos_title = -6,
+               cex_title = 2.5,
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               cex_axis = 2,
+               cex_axislabel = 2,
+               edge_width = 3,
+               cex_tiplabels = 0.7,
+               label.offset = 0.4,
+               matched_ages  = fringillidae_all_ages,
+               pch_type = point_type,
+               pch_color = point_colors,
+               pch_cex = point_cex,
+               bars_lwd = 10,
+               bars_color = "#80808060",
+#               legend_x = -5,
+#               legend_y = 200,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+#               mai1 = 1,
+#               mai2 = 0.8,
+#               mai4 = 3.6,
+               axis_label = "",
+               legend_title = leg_title,
+               legend_box = leg_box,
+               mai1 = 0,
+               mai2 = 0,
+               mai3 = 0.5,
+               mai4 = 1,
+               omi1 = 0,
+               omi2 = 0,
+               omi3 = 0,
+               legend_cex = leg_cex,
+               legend_pt_cex = leg_pt_cex,
+               legend_x = c(1, 1),
+               legend_y = c(140, 80)
+)
+dev.off()
+```

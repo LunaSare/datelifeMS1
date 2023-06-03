@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 devtools::load_all("../../datelifeplot")
-devtools::load_all("../../datelife")
+devtools::load_all("../../lunasare/datelife")
 writing_dir <- "../figures/figure-fringillidae/"
 source_chronograms_dir <- "../figures/figure-fringillidae/source_chronograms"
 dir_exists <- dir.exists(path = source_chronograms_dir)
@@ -80,7 +80,7 @@ assign(data_filename, value = list(dquery = dquery,
 ls(fringillidae_v2022.01.28)
 ```
 
-```{r}
+```{r eval = FALSE}
 usethis::use_data(fringillidae_v2022.01.28, 
                   overwrite = TRUE)
 ```
@@ -122,6 +122,7 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
                       "Roquet et al. 2014 - chronogram 1", # 17
                       "Roquet et al. 2014 - chronogram 2", # 18 
                       "Uyeda et al 2017") # 19
+# usethis::use_data(phylo_all)
 ```
 
 ### Plotting source chronograms
@@ -129,6 +130,7 @@ names(phylo_all) <- c("Barker et al. 2013",  # 1
 Getting oldest age among all source chronograms in a `multiPhylo` object:
 
 ```{r}
+data("phylo_all")
 max(unlist(lapply(phylo_all, ape::branching.times)))
 
 plot_max_time <- 45
@@ -193,7 +195,7 @@ Congruify source chronograms to a chosen tree topology:
 phylo_median <- fringillidae_v2022.01.28$dsumm$phylo_median
 
 ape::write.tree(phylo_median, "../figures/figure-fringillidae/median_chronogram.tre")
-
+data("phylo_all")
 sc1 <- datelife::congruify_and_mrca_phylo(phy = phylo_median,
                              source_chronogram = phylo_all[[1]],
                              reference = names(phylo_all)[1])
@@ -203,7 +205,8 @@ attributes(sc1)
 colnames(sc1)
 sc1
 
-congruified_calibs <- congruify_and_mrca_multiPhylo(phy = phylo_median,
+data("phylo_all")
+congruified_calibs <- datelife::congruify_and_mrca_multiPhylo(phy = phylo_median,
                               source_chronograms = phylo_all)
 nrow(congruified_calibs)
 attributes(congruified_calibs)
@@ -214,9 +217,11 @@ my_phy <- attributes(congruified_calibs)$phy
 min(my_phy$node.label)
 
 my_phy$calibration_distribution
-# TODO: figure out from where this calibration_distribution comes from
+# TODO: trace back from where this calibration_distribution comes from
 
-congruified_calibs
+head(congruified_calibs)
+# usethis::use_data(congruified_calibs, overwrite = TRUE)
+# a data frame of 818 rows and 8 columns
 ```
 
 Use congruified calibrations with bladj:
@@ -224,7 +229,7 @@ Use congruified calibrations with bladj:
 ```{r}
 inherits(congruified_calibs, "congruifiedCalibrations")
 phylo_median_congruified <- datelife::use_calibrations_bladj(calibrations = congruified_calibs)
-
+# usethis::use_data(phylo_median_congruified)
 attributes(phylo_median_congruified)
 attributes(phylo_median_congruified)$used_calibrations
 
@@ -233,20 +238,22 @@ calibration_distribution_congruified <- lapply(unique(congruified_calibs$mrca_no
                                                  ages <- congruified_calibs$MinAge[congruified_calibs$mrca_node_name == i]
                                                })
 names(calibration_distribution_congruified) <- unique(congruified_calibs$mrca_node_name)
-calibration_distribution_congruified
+head(calibration_distribution_congruified)
+length(calibration_distribution_congruified)
 ```
 
 TODO: verify that `check_conflicting_calibrations` is working good and being used where needed
 
 ```{r, eval = FALSE}
-datelife:::check_conflicting_calibrations(phy = phylo_median_congruified,
+test1 <- datelife:::check_conflicting_calibrations(phy = phylo_median_congruified,
                                             calibration_distribution = calibration_distribution_congruified)
+names(test1)
 ```
 
 Make calibrations table pretty for writing as csv, pdf and summarizing:
 
 ```{r}
-# source("../R/make_pretty_tables.R")
+source("../R/make_pretty_tables.R")
 my_calibrations <- congruified_calibs
 number_of_tips <- min(congruified_calibs$mrca_node_number)-1
 my_calibrations$mrca_node_name <- paste0("n", (my_calibrations$mrca_node_number - number_of_tips))
@@ -275,6 +282,7 @@ row_order <- order(node_numbers,
 pretty_calibrations <- pretty_calibrations[row_order,]
 
 head(pretty_calibrations)
+nrow(pretty_calibrations)
 ```
 
 Save congruified calibs as CSV and PDF:
@@ -292,7 +300,7 @@ dev.off()
 ```
 Saving the congruified table as data
 
-```{r}
+```{r, eval = FALSE}
 congruified_calibrations_v2022.01.28 <- pretty_calibrations
 
 usethis::use_data(congruified_calibrations_v2022.01.28, 
@@ -303,8 +311,9 @@ usethis::use_data(congruified_calibrations_v2022.01.28,
 Table of summary statistics of congruified ages. Creating summary table with a function:
 
 ```{r}
-summary_ages <- summarize_congruifiedCalibrations(my_calibrations)
-summary_ages
+summary_ages <- datelife::summarize_congruifiedCalibrations(my_calibrations)
+head(summary_ages)
+nrow(summary_ages)
 ```
 
 Save summary table as CSV:
@@ -422,16 +431,27 @@ Set summary calibrations data. First, get median ages that were not used as cali
 
 ```{r}
 used_calibs <- attributes(phylo_median_congruified)$used_calibrations
-
+length(used_calibs) # 194
 has_age_data <- phylo_median_congruified$node.label %in% names(used_calibs)
 nodes_without_age <- phylo_median_congruified$node.label[!has_age_data]
-
-data.frame(median = summary_ages$`Median Age`, 
+sum(has_age_data)
+summary_ages <- read.csv("../tables/table-fringillidae-all-summary.csv")
+colnames() <- gsub("[.]", " ", colnames(summary_ages))
+head(summary_ages)
+nrow(summary_ages)
+data.frame(node_name = summary_ages$`Node Name`,
+           median = summary_ages$`Median Age`, 
            times = ape::branching.times(phylo_median_congruified)[has_age_data])
 
-median_equals_branching_time <- round(summary_ages$`Median Age`, digits = 4) == round(ape::branching.times(phylo_median_congruified)[has_age_data], digits = 4)
+chronogram_ages <- round(ape::branching.times(phylo_median_congruified)[has_age_data], digits = 4)
+length(chronogram_ages) # 194
+median_equals_branching_time <- round(summary_ages$`Median Age`, digits = 4) == chronogram_ages
+
+node_ages_used <- summary_ages$`Node Name`[median_equals_branching_time]
+length(node_ages_used) # 173 ages not used as calibration
+
 node_ages_unused <- summary_ages$`Node Name`[!median_equals_branching_time]
-length(node_ages_unused)
+length(node_ages_unused) # 21 ages not used as calibration
 node_ages_unused
 ```
 
@@ -485,6 +505,7 @@ Assemble arguments for plotting:
 ```{r}
 point_colors <- list(a1 = color_studies, a2 = color_median)
 fringillidae_all_ages <- list(a1 = cc_calibs, a2 = summ_calibs)
+# usethis::use_data(fringillidae_all_ages)
 points_median <- stats::setNames(c("/", "*"), names(color_median))
 point_type <- list(a1 =  "•", a2 = points_median)
 cex_median <- stats::setNames(c(2, 3), names(color_median))
@@ -781,7 +802,7 @@ Get calibrations for the topology in `dsumm$phylo_median`
 First, get all calibrations per chronogram against themselves:
 
 ```{r}
-all_calibrations <- datelife::extract_calibrations_phylo(
+all_calibrations <- datelife:::extract_calibrations_phylo(
   input = phylo_all,
   each = FALSE)
 nrow(all_calibrations) # 1206
@@ -790,10 +811,10 @@ nrow(all_calibrations) # 1206
 Then match node pairs to topology. This will use all node ages as calibrations regardless if the node is monophyletic in the target tree (topology to add dates to) and source tree (chronogram from original study).
 
 ```{r}
-matched <- datelife::match_all_calibrations(
+matched <- datelife:::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
-ls(matched)
+ ls(matched)
 nrow(matched$matched_calibrations) # 1206
 ```
 
