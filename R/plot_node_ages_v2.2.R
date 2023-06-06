@@ -38,11 +38,11 @@
 #' @inheritParams plot_phylo
 #' @inheritDotParams ape::plot.phylo
 #' @importFrom ape .PlotPhyloEnv
-#' @details Plot are margin sizes as defined by [graphics::par()$mai] and [graphics::par()$omi]
+#' @details Plot area margin sizes, as defined by [graphics::par()$mai] and [graphics::par()$omi],
 #' are overruled within the function. To modify them you have to use the arguments
 #' `mai1`, `mai2`, `mai3` and `mai4`, and omi1, omi2, omi3 and omi4.
 #' @export
-plot_node_ages_2.1 <- function(chronogram,
+plot_node_ages_2.2 <- function(chronogram,
                            matched_ages,
                            time_depth = NULL,
                            plot_type = "phyloch",
@@ -82,6 +82,7 @@ plot_node_ages_2.1 <- function(chronogram,
   }
   # get calibrations that are in_phy only
   # create a list of data.frames with info per node, one with congruified ages, another one with summary ages:
+  # matched_ages <- small_all_ages
   in_phy <- lapply(matched_ages, "[[", "in_phy")
   # obtain max x lim from calibration ages, chronogram and chronogram + root:
   phylo_length <- max(ape::branching.times(chronogram))
@@ -98,12 +99,12 @@ plot_node_ages_2.1 <- function(chronogram,
   ############################################################################
   # start chunk that can be replaced by plot_chronogram
   datelifeplot::plot_chronogram(chronogram,
-                  title = "",
+                  title = title,
                   time_depth = time_depth,
                   plot_type = "phyloch",
                   time_axis = TRUE,
-                  mai1 = 0, mai2 = 0, mai3 = 0.5, mai4 = 2.22314453125,
-                  omi1 = 0, omi2 = 0, omi3 = 0, omi4 = 0,
+                  mai1 = mai1, mai2 = mai2, mai3 = mai3, mai4 = mai4,
+                  omi1 = omi1, omi2 = omi2, omi3 = omi3, omi4 = omi4,
                   plot_height = 30, plot_width = 20,
                   geologic_timescale = "strat2012",
                   geologic_unit = "period",
@@ -111,10 +112,11 @@ plot_node_ages_2.1 <- function(chronogram,
                   cex_axislabel = cex_axislabel,
                   cex_axis = cex_axis,
                   cex_title = cex_title,
-                  pos_title = 1,
-                  pos_axis = 1,
+                  pos_title = pos_title,
+                  pos_axis = pos_axis,
                   center_axislabel = 0.5,
-                  axis_label = "Time (MYA)")
+                  axis_label = axis_label,
+                  ...)
 
   lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 
@@ -145,6 +147,11 @@ plot_node_ages_2.1 <- function(chronogram,
                                  mrca_node_number = chronogram_node_numbers,
                                  mrca_node_name = names(branching_times),
                                  nodeAge = as.numeric(branching_times))
+  below_ntip <- times_data_frame$mrca_node_number <= lastPP$Ntip
+  if (any(below_ntip)) {
+    fixed <- times_data_frame$mrca_node_number[below_ntip] +  lastPP$Ntip
+    times_data_frame$mrca_node_number[below_ntip] <- fixed
+  }
   ############################################################################
   ## combine the data.frames into a single one:
   # dplyr::bind_rows only works for class data.frame, so convert ages to data.frame:
@@ -174,8 +181,9 @@ plot_node_ages_2.1 <- function(chronogram,
                 length(mrca_node_numbers),
                 "nodes with congruified age data."))
   mismatches <- c()
-  # i = 257
+  # i = 7
   for (i in mrca_node_numbers) {
+    print(i)
     rowsies1 <- in_phy[[1]]$mrca_node_number == i
     youngest_age <- max(lastPP$xx) - min(in_phy[[1]]$nodeAge[rowsies1])
     oldest_age <- max(lastPP$xx) - max(in_phy[[1]]$nodeAge[rowsies1])
@@ -249,9 +257,13 @@ plot_node_ages_2.1 <- function(chronogram,
       color_pch_all <- in_phy[[data_set]]$reference
     } else {
       # choose colors from pch_color, by matching data_set names:
-      mm <- match(as.character(in_phy[[data_set]]$reference), names(pch_color[[data_set]]))
-      if (!is.numeric(mm)) {
-        stop("Something is wrong with pch_color names. Do they match node_ages data sets??")
+      if (is.null(names(pch_color[[data_set]]))) {
+        warning("Argument pch_color$", data_set, "has no names, plotting of points will fail.")
+      }
+      study_names <- unique(as.character(in_phy[[data_set]]$reference))
+      mm <- names(pch_color[[data_set]]) %in% study_names
+      if (sum(mm) == 0) {
+        stop("Something is wrong with pch_color study names. Do they match node_ages data sets??")
       }
       color_pch_all <- pch_color[[data_set]][mm]
     }
@@ -260,7 +272,7 @@ plot_node_ages_2.1 <- function(chronogram,
     if (missing(pch_type)) {
       pch_type_all <- 20
     } else {
-      print(pch_type)
+      print(pch_type[[data_set]])
       pch_type_all <- pch_type[[data_set]]
     }
     if (length(pch_type_all) > 1) {
@@ -305,41 +317,6 @@ plot_node_ages_2.1 <- function(chronogram,
    # get pch symbols for legend:
    xx <- rep(pch_type[[data_set]], length(pch_type[[data_set]]))
    legend_pch_in <- c(legend_pch_in, list(xx))
-  }
-  ############################################################################
-  ############################################################################
-  # add a time axis
-  ############################################################################
-  ############################################################################
-  ## choose an axis plot_type
-  match.arg(arg = plot_type, choices = c("phyloch", "ape"))
-  ## get the geologic timescale
-  if (is.null(geologic_timescale) | "strat2012" %in% geologic_timescale) {
-    utils::data("strat2012", package = "phyloch")
-    geologic_timescale <- strat2012
-  }
-  if ("ape" %in% plot_type) {
-    # TODO: fix axis not plotting all the way through the root
-    # See issue https://github.com/phylotastic/datelifeplot/issues/1
-    ape::axisPhylo(side = 1, line = pos_axis, cex.axis = cex_axis)
-    axisChrono(side = 1, unit = NULL, line = pos_axis, cex.axis = cex_axis)
-  } else { # if ("phyloch" %in% plot_type) {
-    axisGeo(GTS = geologic_timescale,
-            unit = geologic_unit,
-            col = c("gray80", "white"),
-            gridcol = c("gray80", "white"),
-            cex = cex_axis,
-            gridty = "twodash")
-  }
-  # add a label to the axis
-  if (!is.null(axis_label)) {
-    graphics::mtext(axis_label,
-                    cex = cex_axislabel,
-                    side = 1,
-                    font = 2,
-                    line = (omi1-0.2)/0.2,
-                    outer = FALSE,
-                    at = max(lastPP$xx) * center_axislabel)  # centering of the time axis label
   }
   ############################################################################
   ############################################################################

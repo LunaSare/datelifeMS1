@@ -23,13 +23,13 @@ color_median <- rep("purple", 2)
 names(color_median) <- unique(fringillidae_all_ages$a2$in_phy$reference)
 points_median <- stats::setNames(c("/", "*"), names(color_median))
 point_type <- list(a1 =  "•", a2 = points_median)
-pch_type = point_type
+# pch_type = point_type
 data(frin_color_studies)
 point_colors <- list(a1 = frin_color_studies, a2 = color_median)
-pch_color = point_colors
+# pch_color = point_colors
 cex_median <- stats::setNames(c(2, 3), names(color_median))
 point_cex <- list(a1 =  2.3, a2 = cex_median)
-pch_cex = point_cex
+# pch_cex = point_cex
 leg_cex = rep(1.7, 2)
 leg_pt_cex <- list(a1 = 1.7, a2 = c(1.7, 2.5))
 leg_box <- c(TRUE, TRUE)

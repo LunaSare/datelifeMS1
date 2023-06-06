@@ -14,16 +14,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-To create the mock datelife example for the workflow figure of the manuscript, we used the real data from the samll example.
+To create the mock datelife example for the workflow figure of the manuscript, we used the real data from the small example.
 
 
 ## Getting source chronograms
 
 ```{r setup}
-# library(datelifeMS1)
+getwd()
 devtools::load_all("../../datelifeplot")
-devtools::load_all("../../datelife")
-devtools::load_all()
+# devtools::load_all("../../datelife")
+devtools::install_github(repo = "phylotastic/datelife")
+load("../data/frin_sample_dsumm.rda")
 frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
 spp_tree <- ape::drop.tip(phy = frin_sample_dsumm$phylo_median, tip = frin_sample_dsumm$phylo_median$tip.label[-(1:6)])
@@ -56,38 +57,33 @@ spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = 
   datelife_query = spp_dq
 	datelife_result <- spp_dr_fig1
 	mrcas <- datelife:::datelife_result_MRCA(datelife_result, na_rm = TRUE)
-	newick_all <- datelife_result_newick_all(datelife_result, na_rm = TRUE)
-	phylo_all <- datelife_result_phylo_all(datelife_result, na_rm = TRUE)
-	biggest <- get_biggest_multiphylo(phylo_all) # NAs in trees are removed in get_biggest_multiphylo
+	newick_all <- datelife:::datelife_result_newick_all(datelife_result, na_rm = TRUE)
+	phylo_all <- datelife:::datelife_result_phylo_all(datelife_result, na_rm = TRUE)
+	biggest <- datelife:::get_biggest_multiphylo(phylo_all) # NAs in trees are removed in get_biggest_multiphylo
 
 	median_and_sdm <- datelife:::datelife_result_median_and_sdm(datelife_result, datelife_query, na_rm = na_rm)
 ####	
-	best_grove <- get_best_grove(datelife_result, criterion = "taxa", n = 2)$best_grove
+	best_grove <- datelife::get_best_grove(datelife_result, criterion = "taxa", n = 2)$best_grove
   target_tree <- datelife_query$phy
 ###
-  median_phylo <- datelife_result_median(best_grove, target_tree = target_tree)
+  median_phylo <- datelife::datelife_result_median(best_grove, target_tree = target_tree)
 ###
-  median_matrix <- datelife_result_median_matrix(datelife_result)
-  
-  phy <- summary_matrix_to_phylo(median_matrix, use = "median")
-###
-  
-	
-	
-#  html_table <- datelife_result_html(datelife_result, datelife_query, na_rm = na_rm)
-#  data_frame <- datelife_result_data_frame(datelife_result, na_rm = na_rm)
-#	res <- list(citations = names(mrcas),
-#	            mrca = mrcas,
-#		          newick_all = newick_all,
-#							phylo_all = phylo_all,
-#						  newick_median = median_and_sdm$median_newick,
-#						  phylo_median = median_and_sdm$median_phylo,
-#							newick_sdm = median_and_sdm$sdm_newick,
-#							phylo_sdm = median_and_sdm$sdm_phylo,
-#							phylo_biggest = biggest,
-#							html = html_table,
-#							data_frame = data_frame)
+  median_matrix <- datelife::datelife_result_median_matrix(datelife_result)
 ```
+
+```{r eval = FALSE}
+phy <- datelife::summary_matrix_to_phylo(median_matrix, use = "median")
+
+###
+check_ott_input(input, ott_ids)  
+
+```
+
+```{r}
+phy <- datelife::summary_matrix_to_phylo(median_matrix, use = "median", target_tree = target_tree)
+phy
+```
+
 
 
 ```{r}
@@ -130,7 +126,7 @@ names(phylo_all_renamed) <- names(mock_study_names)
 ### Plotting ALL source chronograms
 
 I combined source chronogram plots with ppt.
-```{r}
+```{r eval = FALSE}
 # as pdf:
 plot_max_time <- 30
 datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
@@ -163,22 +159,34 @@ phylo_median$tip.label <- names(mock_spp_names)[is_in_tree]
 
 Save as newick:
 
-```{r}
+```{r eval = FALSE}
 ape::write.tree(phylo_median, file = "../figures/figure-workflow/median_chronogram.tre")
 ```
 
 Get calibrations:
 
 ```{r}
-all_calibrations <- datelife::extract_calibrations_phylo(
-  input = phylo_all_renamed,
-  each = FALSE)
-matched <- datelife::match_all_calibrations(
+devtools::load_all("../../lunasare/datelife")
+all_calibrations <- datelife::extract_calibrations_phylo(input = phylo_all_renamed,
+                                                         each = FALSE)
+small_phylo_all <- phylo_all_renamed
+#phylo_median <- read.tree(file = "../figures/figure-workflow/median_chronogram.tre")
+small_phylo_median <- phylo_median
+matched <- datelife:::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
+small_matched <- matched
 calib_summ <- datelife:::summary.matchedCalibrations(
   matched$matched_calibrations)
-
+if (all(calib_summ$in_phy$minAge == calib_summ$in_phy$maxAge)) {
+  calib_summ$in_phy$nodeAge <- calib_summ$in_phy$MinAge
+}
+ls(calib_summ$in_phy)
+small_calib_summ <- calib_summ
+# usethis::use_data(small_calib_summ, overwrite = TRUE)
+# usethis::use_data(small_phylo_all)
+# usethis::use_data(small_matched)
+# usethis::use_data(small_phylo_median)
 ```
 ## Phylo median tree as a phylogram (all branches equal length)
 
@@ -192,7 +200,7 @@ ape::branching.times(pp)
 pp$edge.length
 plot(pp)
 ape::axisPhylo(side = 1)
-# to make branch lengths proportional to a certain age we have o multiply them by that age, in this case it's the total plot_max_time
+# to make branch lengths proportional to a certain age we have to multiply them by that age, in this case it's the total plot_max_time
 pp$edge.length <- pp$edge.length*45 
 # I decided to make the two oldest branches shorter:
 pp$edge.length[pp$edge.length == 27] <- 9
@@ -226,8 +234,9 @@ c8 <- "#D23105FF"
 c9 <- "#7A0403FF"
 ```
 
+Plot of source ages against an opentree topology:
 ```{r}
-color_studies <- color_studies[c(2,8,4)]
+color_studies <- c(c2, c8, c4)
 names(color_studies) <- studies
 
 plot_max_time <- 30
@@ -259,7 +268,7 @@ ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
 dev.off()
 ```
 
-## Plot tree topology with node labels and no time axis
+## Plot OpenTree tree topology with node labels and no time axis
 
 ```{r}
 plot_max_time <- 30
@@ -351,6 +360,9 @@ colnames(pretty)[1] <- "Node Name"
 # Change node numbers my node names
 pretty$`Node Name` <- paste0("n", pretty$`Node Name`-6)
 write.csv(pretty, file = "../figures/figure-workflow/median_table.csv")
+```
+
+```{r}
 # Print table as pdf
 pdf("../figures/figure-workflow/median_table.pdf")       # Export PDF
 gridExtra::grid.table(pretty) # if you do not want row numbers set rows = NULL
@@ -511,48 +523,67 @@ dev.off()
 ```
 
 
-Plotting source ages AND summary ages on the same dated tree:
+Plotting source ages AND summary ages on the same dated tree
+
+Developed for new workflow figure (file figure1-new-horizontal.pdf)
+
 ```{r}
-# some code development for plot_node_ages2 function:
-all_ages <- list(a1 = calib_summ, a2 = mm_summ)
-in_phy_only <- lapply(all_ages, "[[", "in_phy")
-class(in_phy_only[[1]])
-for (i in seq(in_phy_only)){
-  class(in_phy_only[[i]]) <- "data.frame"
-  print(class(in_phy_only[[i]]))
-}
-class(in_phy_only[[1]])
-combined <- dplyr::bind_rows(in_phy_only)
+# summary_table <- read.csv(file = "../figures/figure-workflow/summary_table.csv")
+# TODO: need to actually summarize mm_summ$in_phy per node
+mm_summ$in_phy
+rr <- !duplicated(mm_summ$in_phy$mrca_node_number)
+mm_summ$in_phy <- mm_summ$in_phy[rr,]
+mm_summ$in_phy$reference <- NULL
+mm_summ$in_phy$reference <- "Used as calibrations"
+```
+
+Set parameters for plotting:
+```{r}
+ color_median <- "purple"
+names(color_median) <- as.vector(unique(mm_summ$in_phy$reference)) 
+point_colors <- list(a1 = color_studies, a2 = color_median)
+small_all_ages <- list(a1 = small_calib_summ, a2 = mm_summ)
+point_type <- list(a1 = "•", a2 = "/")
+point_cex <- list(a1 =  3.5, a2 = 2.5)
+plot_max_time <- 30
+leg_title <- c("Taxon pair node ages \nfrom source chronograms", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
+leg_pt_cex <- list(a1 = 1.7, a2 = 1)
 ```
 
 ```{r}
-point_colors <- list(a1 = color_studies, a2 = color_median)
-all_ages <- list(a1 = calib_summ, a2 = mm_summ)
-point_type <- list(a1 = "|", a2 = "•")
-
-svg(filename = "../figures/figure-workflow/median_and_calibration_ages.svg",
-    height = 5,
-    width = 5.5)
-datelifeplot::plot_node_ages2(phylo_median,
-               title = c("Median Summary Chronogram"),
-               pos_title = 3,
-               cex_title = 2,
-               plot_type = "phyloch",
-               time_depth = plot_max_time,
-               pos_axis = 2,
-               cex_axis = 1.3,
-               edge.width = 3,
-               cex_tiplabels = 2,
-               matched_ages  = all_ages,
-               pch = point_type,
-               pch_color = point_colors,
-               pch_cex = 3.5,
-               bars_lwd = 15,
-               legend_cex = 0.7,
-               legend_x = 0,
-               legend_y = 7,
-               mai2 = 0,
-               axis_label = ""
-               )
+# devtools::load_all(path = "../../datelifeplot")
+# source("../R/plot_node_ages_v2.2.R")
+svg(filename = "../figures/figure-workflow/all_ages.svg",
+    height = 4,
+    width = 6)
+plot_node_ages_2.2(chronogram = small_phylo_median,
+                   title = c("Median Summary Chronogram"),
+                   matched_ages  = small_all_ages,
+                   pos_title = 3,
+                   cex_title = 2,
+                   plot_type = "phyloch",
+                   time_depth = plot_max_time,
+                   cex_axis = 1.3,
+                   edge_width = 2,
+                   label.offset = 0.5,
+                   cex_tiplabels = 1.8,
+                   pch_type = point_type, 
+                   pch_color = point_colors,
+                   pch_cex = point_cex,
+                   bars_lwd = 15,
+                   legend_cex = 0.6,
+                   legend_pt_cex = leg_pt_cex,
+                   legend_x = c(2, 2.5),
+                   legend_y = c(3.4, 1.7 ),
+                   legend_title = leg_title,
+                   legend_box = leg_box,
+                   cex_axislabel = 1,
+                   axis_label = "",
+                   mai1 = 0 , mai2 = 0.3, mai3 = 0.3, mai4 = 0.3,
+                   omi1 = 1, omi2 = 0.3, omi3 = 0.3, omi4 = 0.3
+                  )
 dev.off()
 ```
+
+figure-small-example.dmf
