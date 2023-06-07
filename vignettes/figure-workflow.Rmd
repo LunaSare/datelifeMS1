@@ -539,7 +539,7 @@ mm_summ$in_phy$reference <- "Used as calibrations"
 
 Set parameters for plotting:
 ```{r}
- color_median <- "purple"
+color_median <- "purple"
 names(color_median) <- as.vector(unique(mm_summ$in_phy$reference)) 
 point_colors <- list(a1 = color_studies, a2 = color_median)
 small_all_ages <- list(a1 = small_calib_summ, a2 = mm_summ)
@@ -586,4 +586,4 @@ plot_node_ages_2.2(chronogram = small_phylo_median,
 dev.off()
 ```
 
-figure-small-example.dmf
+

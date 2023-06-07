@@ -1,0 +1,267 @@
+---
+title: "Untitled"
+output: pdf_document
+date: "2023-06-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting source chronograms
+
+```{r}
+load("../data/frin_sample_dsumm.rda")
+frin_sample_dsumm$phylo_median
+spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
+spp_write <- sub("_", " ", spp)
+spp_write <- spp_write[order(spp_write)]
+write(spp_write, file = "../figures/fringillidae_species_sample.txt")
+spp_dq <- datelife::make_datelife_query(spp)
+spp_dr <- datelife::get_datelife_result(spp_dq)
+```
+
+```{r}
+topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)
+spp_dq$phy <- topology
+spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, 
+                                              object = spp_dr)
+```
+
+
+
+```{r}
+phylo_median <- spp_summ$phylo_median
+ape::branching.times(phylo_median)
+```
+Node ages in `phylo_median` do not seem to represent the median
+
+
+
+```{r}
+phylo_all <- spp_summ$phylo_all
+# Reorder chronogram list alphabetically:
+alphabetic_order <- order(names(phylo_all))
+phylo_all <- phylo_all[alphabetic_order]
+names(phylo_all)
+```
+
+```{r}
+names(phylo_all) <- c("Barker et al. 2013",
+                      "Barker et al. 2015 - chronogram 1",
+                      "Barker et al. 2015 - chronogram 2",
+                      "Burns et al. 2014",
+                      "Hedges et al. 2015 - chronogram 1",
+                      "Hedges et al. 2015 - chronogram 2",
+                      "Hooper et al. 2017",
+                      "Jetz et al. 2012 - chronogram 1",
+                      "Jetz et al. 2012 - chronogram 2")
+```
+
+All calibrations, even those that are not congruent:
+
+```{r}
+all_calibrations <- datelife::extract_calibrations_phylo(
+  input = phylo_all,
+  each = FALSE)
+class(all_calibrations)
+ls(all_calibrations)
+nrow(all_calibrations)
+```
+There is a total of 28 calibrations from the 9 source chronograms.
+
+Congruified calibrations:
+```{r}
+matched <- datelife:::match_all_calibrations(
+  phy = phylo_median, 
+  calibrations = all_calibrations)
+nrow(matched$matched_calibrations)
+```
+All calibrations are congruent with the topology.
+
+```{r}
+calib_summ <- datelife:::summary.matchedCalibrations(
+  matched$matched_calibrations)
+```
+
+`calib_summ` and `matched` objects are the same:
+```{r}
+nrow(matched$matched_calibrations) == nrow(calib_summ$in_phy)
+colnames(matched$matched_calibrations) == colnames(calib_summ$in_phy)
+```
+
+```{r}
+head(matched$matched_calibrations) 
+```
+```{r}
+head(calib_summ$in_phy)
+```
+
+Add nodeAge column to calib_summ:
+
+```{r}
+if (all(calib_summ$in_phy$MinAge == calib_summ$in_phy$MaxAge)) {
+  calib_summ$in_phy$nodeAge <- calib_summ$in_phy$MinAge
+}
+rr <- calib_summ$in_phy$mrca_node_number == 7
+calib_summ$in_phy[rr,]
+mean(calib_summ$in_phy[rr,"nodeAge"])
+```
+
+
+Load a color scheme for the studies:
+
+```{r}
+load("../data/color_studies.rda")
+color_studies
+```
+
+The following is supposed to get the median summary matrix, but it is not.
+```{r}
+best_grove <- datelife::get_best_grove(spp_dr)
+
+# Take a list of chronograms as tables and summarize age data per taxon pair into a single matrix:
+median_matrix <- datelife::datelife_result_median_matrix(best_grove$best_grove)
+colnames(median_matrix)
+
+median_matrix_list <- list(summary_matrix = median_matrix)
+
+median_matrix_table <- datelife::matrices_to_table(median_matrix_list)
+
+# match taxon pairs to nodes on a tree topology
+matched_median_ages <- datelife:::match_all_calibrations(phy = spp_summ$phylo_median, calibrations = median_matrix_table)
+mm_summ <- datelife:::summary.matchedCalibrations(matched_median_ages$matched_calibrations)
+mm_summ$in_phy
+```
+
+
+Simplifying median ages on tree plot:
+
+```{r}
+# Getting the median per node:
+median_singletons <- c()
+for (i in unique(mm_summ$in_phy$mrca_node_name)) {
+  print(i)
+  x <- median(unique(mm_summ$in_phy$nodeAge[mm_summ$in_phy$mrca_node_name == i]))
+  median_singletons <- c(median_singletons, x)
+}
+
+# Detecting node names that are duplicated 
+duplos <- duplicated(mm_summ$in_phy$mrca_node_name)
+# Simplifying median ages:
+mm_summ_sim <- mm_summ
+rr <- mm_summ$in_phy$mrca_node_number == 7
+mm_summ$in_phy[rr,]
+mm_summ_sim$in_phy$nodeAge[!duplos] <- median_singletons
+# Removing duplicates:
+mm_summ_sim$in_phy <- mm_summ$in_phy[!duplos,]
+# Columns MinAge and MaxAge need to be equal to nodeAge
+mm_summ_sim$in_phy$MinAge <- mm_summ_sim$in_phy$MaxAge <- mm_summ_sim$in_phy$nodeAge
+```
+
+Let's do a DateLife approach for getting the median summary:
+
+```{r}
+calib_summ$in_phy
+node_median <- c()
+for (i in (unique(calib_summ$in_phy$mrca_node_name))) {
+  rr <- calib_summ$in_phy$mrca_node_name == i
+  node_median <- c(node_median, median(calib_summ$in_phy$nodeAge[rr]))
+}
+node_median
+
+mm_summ_sim$in_phy$nodeMedian <- node_median
+mm_summ_sim$in_phy[,c("mrca_node_name", "nodeAge", "nodeMedian")]
+mm_summ_sim$in_phy$nodeAge <- node_median
+
+```
+```{r}
+topology$node.label <- mm_summ_sim$in_phy$mrca_node_name
+plot(topology)
+ape::nodelabels(text = topology$node.label)
+phylo_median_new <- datelife::make_bladj_tree(tree = topology, 
+                          nodenames = as.character(topology$node.label), 
+                          nodeages = mm_summ_sim$in_phy$nodeMedian)
+plot(phylo_median_new)
+ape::branching.times(phylo_median_new)
+```
+
+
+
+Plotting parameters:
+
+```{r}
+mm_summ_sim$in_phy$reference <- rep("Used as calibration", length(mm_summ_sim$in_phy$reference))
+mm_summ_sim$in_phy$reference[2] <- "Not used"
+gplots::col2hex("purple") # "#A020F070", 
+color_median <- rep("purple", 2) # mustard yellow "#7A0403FF"
+
+names(color_median) <- unique(mm_summ_sim$in_phy$reference)
+
+point_colors <- list(a1 = color_studies, a2 = color_median)
+all_ages <- list(a1 = calib_summ, a2 = mm_summ_sim)
+
+points_median <- stats::setNames(c("/", "*"), names(color_median))
+point_type <- list(a1 =  19, a2 = points_median)
+median_cex <- c(4.5, 6)
+names(median_cex) <- names(color_median)
+# point_cex <- list(a1 =  3, a2 = 4.5)
+point_cex <- list(a1 =  3, a2 = median_cex)
+
+
+leg_color<- list(a1 = color_studies, a2 = color_median)
+
+leg_pch <- list(a1 = 19, a2 = c("/", "*"))
+leg_cex <- c(1.1, 1.2)
+leg_text <- lapply(leg_color, names)
+leg_title <- c("Taxon pair node ages from source chronograms", "Median of node ages")
+leg_box <- c(TRUE, TRUE)
+leg_pt_cex <- list(a1 = 1.7, a2 = c(1.7, 2.5))
+```
+
+
+
+Plot:
+
+```{r}
+# source("../R/plot_node_ages_v2.1.R")
+devtools::load_all(path = "../../datelifeplot")
+source("../R/plot_node_ages_v2.2.R")
+library(ape)
+```
+
+```{r}
+size <- 2
+svg(file = "../figures/figure-small-example/all_ages.svg",
+    height = 4.5 * size,
+    width = 6 * size)
+plot_node_ages_2.2(chronogram = phylo_median_new,
+               title = "",
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               cex_axis = 2,
+               cex_axislabels = 2,
+               axis_label = "",
+               edge_width = 3,
+               cex_tiplabels = 2.3,
+               matched_ages  = all_ages,
+               pch_type = point_type,
+               pch_color = point_colors,
+               pch_cex = point_cex,
+               bars_lwd = 23,
+               legend_cex = leg_cex,
+               legend_pt_cex = leg_pt_cex,
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+               legend_title = leg_title,
+               legend_box = leg_box,
+               legend_x = c(-6, -2),
+               legend_y = c(6.2, 3.8),
+               mai1 = 1, mai2 = 1, mai3 = 0.3, mai4 = 4,
+               omi1 = 1, omi2 = 0.3, omi3 = 0.3, omi4 = 0.3,
+               label.offset = 1
+               )
+dev.off()
+```     

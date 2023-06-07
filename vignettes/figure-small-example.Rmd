@@ -33,6 +33,12 @@ spp_dr <- datelife::get_datelife_result(spp_dq)
 ```{r}
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
 ```
+```{r}
+topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)
+spp_dq$phy <- topology
+spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, 
+                                              object = spp_dr)
+```
 
 
 ```{r}
@@ -50,7 +56,6 @@ names(phylo_all)
 We will rename source chronograms to have a shorter study name:
 
 ```{r}
-
 names(phylo_all) <- c("Barker et al. 2013",
                       "Barker et al. 2015 - chronogram 1",
                       "Barker et al. 2015 - chronogram 2",
@@ -175,7 +180,7 @@ nrow(all_calibrations)
 Find mrca of taxon pairs in `all_calibrations` on a given tree topology (`phylo_median` in this case):
 
 ```{r}
-matched <- datelife::match_all_calibrations(
+matched <- datelife:::match_all_calibrations(
   phy = phylo_median, 
   calibrations = all_calibrations)
 
@@ -423,7 +428,8 @@ color_studies <- xx[c(12,
                       20,
                       8,9)]
 names(color_studies) <- studies
-usethis::use_data(color_studies)
+color_studies
+# usethis::use_data(color_studies)
 ```
 
 Now, we can plot:

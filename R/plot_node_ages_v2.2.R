@@ -182,6 +182,9 @@ plot_node_ages_2.2 <- function(chronogram,
                 "nodes with congruified age data."))
   mismatches <- c()
   # i = 7
+  if(is.null(in_phy[[1]]$nodeAge)) {
+    stop("nodeAge column is missing in argument `matched_ages[[1]]$in_phy")
+  }
   for (i in mrca_node_numbers) {
     print(i)
     rowsies1 <- in_phy[[1]]$mrca_node_number == i
@@ -382,6 +385,9 @@ plot_node_ages_2.2 <- function(chronogram,
       }
       # determine legend cex:
       legend_cex_i <- legend_cex[i]
+      if (!inherits(legend_pt_cex, "list")) {
+        legend_pt_cex <- rep(list(legend_pt_cex), 2)
+      }
       legend_pt_cex_i <- legend_pt_cex[[i]]
       # determine legend pch:
       legend_pch_i <- unlist(ifelse(missing(legend_pch),
