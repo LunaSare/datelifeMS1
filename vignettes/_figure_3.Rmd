@@ -196,9 +196,11 @@ Adjust to make the plot look better:
 ```{r}
 color_studies_new <- color_studies
 names(color_studies)
-color_studies_new[c("Hedges et al. 2015 - chronogram 1", "Hedges et al. 2015 - chronogram 2")] <- c("#EFCD3AFF", "#FCB036FF") # yellow colors obtained in vignettes/figure-small-example.Rmd
 color_studies_new["Burns et al. 2014"] <- "#7A0403FF"
 color_studies_new["Hooper et al. 2017"] <- "#E14209FF" 
+greens <- color_studies[8:9] # original colors from Jetz et al
+color_studies_new[c("Jetz et al. 2012 - chronogram 1", "Jetz et al. 2012 - chronogram 2")] <- c("#EFCD3AFF", "#FCB036FF") # yellow colors obtained in vignettes/figure-small-example.Rmd
+color_studies_new[c("Hedges et al. 2015 - chronogram 1", "Hedges et al. 2015 - chronogram 2")] <- greens
 ```
 
 ```{r}
