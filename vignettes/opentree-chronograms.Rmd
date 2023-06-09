@@ -1,0 +1,295 @@
+---
+title: "opentree chronograms"
+output: pdf_document
+date: "2023-06-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(datelife)
+data("opentree_chronograms")
+```
+
+```{r}
+layouts <- c("rectangular", "ellipse", "circular", "fan", "roundrect")
+i =1
+for (i in seq(layouts)) {
+  tree <- opentree_chronograms$trees[[i]]
+  class(tree) <- "phylo" 
+  ggtree::ggtree(tree, 
+                 layout = layouts[i],
+                 ladderize = FALSE)
+  ggplot2::ggsave(filename = paste0("../figures/opentree_chronograms/chronogram_", i, ".png"),
+                  device = "png")  
+}
+```
+Some layouts do not work, maybe bc they are meant for unrooted trees:
+
+```{r error=TRUE}
+ggtree::ggtree(tree, layout = "radial")
+```
+
+
+```{r}
+set.seed(seed = 1976452)
+layouts_all <- sample(x = layouts, 
+                      size = length(opentree_chronograms$trees), 
+                      replace = TRUE)
+```
+
+```{r}
+for (i in seq(opentree_chronograms$trees)) {
+  print(i)
+  tree <- opentree_chronograms$trees[[i]]
+  class(tree) <- "phylo" 
+  ggtree::ggtree(tree, 
+                 layout = layouts_all[i],
+                 ladderize = FALSE) +
+    ggfun::theme_transparent()
+  ggplot2::ggsave(
+    filename =  paste0("../figures/opentree_chronograms/chronogram_", 
+                       i, ".png"),
+    device = "png",
+    bg = "transparent")  
+}
+```
+
+Create an image combining all, most or some sample of opentree chronograms.
+
+Tip to use cowplot package from https://www.youtube.com/watch?v=_gfcIXxXe00.
+
+Tip for good resolution on output image from https://stackoverflow.com/questions/50026862/the-draw-image-function-from-cowplot-results-in-blurred-pdfs.
+
+A test:
+
+```{r}
+# install.packages("cowplot")
+library(cowplot)
+library(magick)
+ggdraw(xlim = c(-1,1),
+      ylim = c(0, 4)) +
+  draw_image(image = "../figures/opentree_chronograms/chronogram_1.png",
+             x = -1,
+             y = 0,
+             scale = 0.5) +
+  draw_image(image = "../figures/opentree_chronograms/chronogram_2.png",
+             x = 0,
+             y = 3,
+             scale = 0.7)
+ggsave2(filename =  "../figures/opentree_chronograms/all_chronograms_test.png",
+        plot = fig,
+        device = "png",
+        bg = "white",
+        dpi = 1200)
+```
+
+Test adding more chronograms with a loop:
+
+```{r}
+number <- 100 # number of chronograms to plot
+chronogram_pngs <- paste0("../figures/opentree_chronograms/chronogram_", 
+                       1:number, ".png")
+set.seed(seed = 1976452)
+x_samples <- sample(x = seq(-1, 0, by = 0.01), 
+                    size = number, 
+                    replace = FALSE)
+x_samples
+y_samples <- sample(x = seq(0, 9, by = 0.08), 
+                    size = number, 
+                    replace = FALSE)
+
+scale_samples <- sample(x = seq(0.2, 1.5, by = 0.01), 
+                        size = number, 
+                        replace = TRUE)
+
+ggdraw(xlim = c(-1,1),
+                ylim = c(0, 10)) +
+  mapply(draw_image, 
+         image = chronogram_pngs, 
+         x = x_samples, y = y_samples, 
+         scale = scale_samples) -> fig
+
+ggsave2(filename =  "../figures/opentree_chronograms/all_chronograms_test.png",
+        plot = fig,
+        device = "png",
+        bg = "white",
+        dpi = 1200)
+```
+Loving the output, but still a lot of random overlap.
+I think I know how I can reduce the iverlap, but need some time to think and implement it.
+
+For now, I am going to save the individual chronograms in different sizes with `draw_image()`, and then manually arrange them in ppt.
+
+```{r}
+chronogram_pngs <- paste0("../figures/opentree_chronograms/chronogram_", 
+                       1:length(opentree_chronograms$trees), ".png")
+```
+
+```{r}
+# Initial idea and implementation
+# 5 chr at 2
+# 10 chronograms at 1.4 to 1.5
+# 20 chr at 1.2 to 1.4
+# 30 chr at 0.9 to 1.2
+# 40 chr at 0.5 to 0.9
+# 80 chr at 0.2 to 0.5
+# remaining 253 - 185 = 68 chr at same minimum
+
+# I increased scale for better resolution
+scale_samples <- vector(mode = "numeric", length = length(chronogram_pngs))
+scale_samples[1:5] <- 3.7
+set.seed(seed = 1976452)
+scale_samples[6:15] <- sample(x = seq(3, 3.5, by = 0.01), 
+                        size = 10, 
+                        replace = TRUE)
+scale_samples[11:30] <- sample(x = seq(2.5, 2.99, by = 0.01), 
+                        size = 20, 
+                        replace = TRUE)
+scale_samples[31:60] <- sample(x = seq(2, 2.49, by = 0.01), 
+                        size = 30, 
+                        replace = TRUE)
+scale_samples[61:100] <- sample(x = seq(1.5, 1.99, by = 0.01), 
+                        size = 40, 
+                        replace = TRUE)
+scale_samples[101:180] <- sample(x = seq(1.1, 1.49, by = 0.01), 
+                        size = 80, 
+                        replace = TRUE)
+scale_samples[181:length(scale_samples)] <- 1
+```
+
+```{r}
+set.seed(seed = 1976452)
+
+# Plotting area goes from -0.4 to 0 in x axis, when xlim = c(-1,0)
+x_samples <- sample(x = seq(-0.4, 0.4, by = 0.01), 
+                    size = 253, 
+                    replace = TRUE)
+
+# Plotting area goes from 0.5 to 8.5 in y axis, when xlim = c(-1,0)
+y_samples <- sample(x = seq(0.5, 19.0, by = 0.07), 
+                    size = 253, 
+                    replace = FALSE)
+```
+
+Now, rescaling and replacing on the canvas.
+
+Testing some positions:
+```{r eval = FALSE}
+x_samples[5] # original value is -0.52, but that makes the chronogram go over plotting area, tried different values: anything below -0.4 does not work
+x_samples[1] # original value is -0.1, and that makes the chronogram go in the middle, so we can get x coordinates up to 0.4
+y_samples[6] # original value is 8.93, so max y values coordinate should be 8.5
+y_samples[15] # 8.21
+y_samples[28] # 8.33
+y_samples[40] # 8.24
+y_samples[48] # 8. 39 all these have values above 8, so cap to that
+opentree_chronograms$trees[44]
+# 107 and 108, and almost everything after that have very low res; and they are too small
+# smaller scale should be 0.5 or 0.4 for these size of canvas
+x_samples[2]
+y_samples[2]
+i <- 1
+```
+
+
+```{r}
+for (i in seq(scale_samples)) {
+  print(i)
+  ggdraw(c(-1,1),
+        ylim = c(0, 20)) +
+  draw_image(image = chronogram_pngs[i], 
+             x = x_samples[i],
+             y = y_samples[i],
+             scale = scale_samples[i]) -> fig
+
+  ggsave2(filename =  
+        paste0("../figures/opentree_chronograms/resized/chronogram", 
+               i, ".png"),
+        plot = fig,
+        device = "png",
+        bg = "transparent",
+        dpi = 1200,
+        width = 7.5,
+        height = 10.83)
+}
+
+```
+
+Tweaking some positions:
+
+```{r}
+x_samples[5] <- -0.14
+y_samples[5] <- 4.105
+i <- 5
+x_samples[6] <- 0.1
+y_samples[6] <- 1.05
+i <- 6
+x_samples[9] <- -0.39
+y_samples[9] <- 1.06
+i <- 9
+x_samples[10] <- -0.38
+y_samples[10] <- 13.17
+i <- 10
+x_samples[11] <- 0.4
+i <- 11
+y_samples[12] <- 18 # 18.91 gets cut off on the top
+i <- 12
+x_samples[15] <- -0.12
+y_samples[15] <- 0.7
+i <- 15
+y_samples[16] <- 15.3
+i <- 16
+y_samples[17] <- 6.5 # move down
+i <- 17
+x_samples[18] <- -0.01 #move to the right, probably 0
+i <- 18
+x_samples[19] <- 0.4 # move to the right a bit
+y_samples[19] <- 5.15
+i <- 19
+x_samples[21] # move to the center
+x_samples[22] <- #move down and to the right, closer to the lower right quadrant
+x_samples[23] <- # move all the way to the right and up a bit
+x_samples[24] <- 
+y_samples[24]
+  x_samples[25] <- #move all the way to the left
+x_samples[26] <- # move all the way to the left down corner
+x_samples[27] <- # move to the right
+```
+
+```{r}
+ggdraw(c(-1,1),
+      ylim = c(0, 20)) +
+draw_image(image = chronogram_pngs[i], 
+           x = x_samples[i],
+           y = y_samples[i],
+           scale = scale_samples[i]) -> fig
+ggsave2(filename =  
+      paste0("../figures/opentree_chronograms/resized/chronogram", 
+             i, ".png"),
+      plot = fig,
+      device = "png",
+      bg = "transparent",
+      dpi = 1200,
+      width = 7.5,
+      height = 10.83)
+```
+
+```{r}
+ggdraw(c(-1,1),
+      ylim = c(0, 20)) +
+  mapply(draw_image, 
+         image = chronogram_pngs, 
+         x = x_samples,
+         y = y_samples,
+         scale = scale_samples) -> fig
+ggsave2(filename = "../figures/opentree_chronograms/all_chronograms_resized.png",
+      plot = fig,
+      device = "png",
+      bg = "transparent",
+      dpi = 1200,
+      width = 7.5,
+      height = 10.83)
+```
+
