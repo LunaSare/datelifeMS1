@@ -98,6 +98,7 @@ plot_node_ages_2.2 <- function(chronogram,
   }
   ############################################################################
   # start chunk that can be replaced by plot_chronogram
+  # mai4 <- 1
   datelifeplot::plot_chronogram(chronogram,
                   title = title,
                   time_depth = time_depth,
@@ -234,7 +235,7 @@ plot_node_ages_2.2 <- function(chronogram,
   ############################################################################
   ############################################################################
   legend_color_in <- legend_pch_in <- pch_color_in <- vector(mode = "list")
-  # data_set <- "a2"
+  # data_set <- "a1"
   for (data_set in names(in_phy)) {
     ############################################################################
     # we use lastPP$xx positions to get plot x position for node ages
@@ -263,12 +264,14 @@ plot_node_ages_2.2 <- function(chronogram,
       if (is.null(names(pch_color[[data_set]]))) {
         warning("Argument pch_color$", data_set, "has no names, plotting of points will fail.")
       }
-      study_names <- unique(as.character(in_phy[[data_set]]$reference))
-      mm <- names(pch_color[[data_set]]) %in% study_names
+      study_names <- as.character(in_phy[[data_set]]$reference)
+      mm <- study_names %in% names(pch_color[[data_set]])
       if (sum(mm) == 0) {
         stop("Something is wrong with pch_color study names. Do they match node_ages data sets??")
+      } else if (sum(mm) != length(study_names)) {
+        warning("Some study references in data set are not in pch_color")
       }
-      color_pch_all <- pch_color[[data_set]][mm]
+      color_pch_all <- pch_color[[data_set]][study_names]
     }
     ############################################################################
     # Use study references to get vector point types (pch_type)

@@ -430,6 +430,7 @@ color_studies <- xx[c(12,
 names(color_studies) <- studies
 color_studies
 # usethis::use_data(color_studies)
+xx[13:14] # colors used on final figure 3 of the ms
 ```
 
 Now, we can plot:

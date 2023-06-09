@@ -108,14 +108,6 @@ calib_summ$in_phy[rr,]
 mean(calib_summ$in_phy[rr,"nodeAge"])
 ```
 
-
-Load a color scheme for the studies:
-
-```{r}
-load("../data/color_studies.rda")
-color_studies
-```
-
 The following is supposed to get the median summary matrix, but it is not.
 ```{r}
 best_grove <- datelife::get_best_grove(spp_dr)
@@ -188,17 +180,43 @@ ape::branching.times(phylo_median_new)
 
 
 
-Plotting parameters:
+Plotting parameters
+
+
+Load a color scheme for the studies:
+
+```{r}
+load("../data/color_studies.rda")
+color_studies
+"#FD8A26FF"
+```
+
+Adjust to make the plot look better:
+
+```{r}
+color_studies_new <- color_studies
+names(color_studies)
+color_studies_new[c("Hedges et al. 2015 - chronogram 1", "Hedges et al. 2015 - chronogram 2")] <- c("#EFCD3AFF", "#FCB036FF") # yellow colors obtained in vignettes/figure-small-example.Rmd
+color_studies_new["Burns et al. 2014"] <- "#7A0403FF"
+color_studies_new["Hooper et al. 2017"] <- "#E14209FF" 
+```
 
 ```{r}
 mm_summ_sim$in_phy$reference <- rep("Used as calibration", length(mm_summ_sim$in_phy$reference))
 mm_summ_sim$in_phy$reference[2] <- "Not used"
+```
+
+Median color scheme:
+
+```{r}
 gplots::col2hex("purple") # "#A020F070", 
 color_median <- rep("purple", 2) # mustard yellow "#7A0403FF"
 
 names(color_median) <- unique(mm_summ_sim$in_phy$reference)
+```
 
-point_colors <- list(a1 = color_studies, a2 = color_median)
+```{r}
+point_colors <- list(a1 = color_studies_new, a2 = color_median)
 all_ages <- list(a1 = calib_summ, a2 = mm_summ_sim)
 
 points_median <- stats::setNames(c("/", "*"), names(color_median))
@@ -209,7 +227,7 @@ names(median_cex) <- names(color_median)
 point_cex <- list(a1 =  3, a2 = median_cex)
 
 
-leg_color<- list(a1 = color_studies, a2 = color_median)
+leg_color <- list(a1 = color_studies_new, a2 = color_median)
 
 leg_pch <- list(a1 = 19, a2 = c("/", "*"))
 leg_cex <- c(1.1, 1.2)
@@ -241,7 +259,7 @@ plot_node_ages_2.2(chronogram = phylo_median_new,
                time_depth = 45,
                pos_axis = 2,
                cex_axis = 2,
-               cex_axislabels = 2,
+               cex_axislabel = 2,
                axis_label = "",
                edge_width = 3,
                cex_tiplabels = 2.3,
@@ -258,10 +276,51 @@ plot_node_ages_2.2(chronogram = phylo_median_new,
                legend_title = leg_title,
                legend_box = leg_box,
                legend_x = c(-6, -2),
-               legend_y = c(6.2, 3.8),
+               legend_y = c(5.9, 3.5),
                mai1 = 1, mai2 = 1, mai3 = 0.3, mai4 = 4,
                omi1 = 1, omi2 = 0.3, omi3 = 0.3, omi4 = 0.3,
                label.offset = 1
                )
 dev.off()
-```     
+```   
+Trying to use unicode for more variety of symbols of points, from https://thoughtfulbloke.wordpress.com/2017/03/18/getting-the-cool-symbols-onto-graphs-in-r/
+
+```{r}
+# install.packages("showtext")
+# install Noto Sans Symbols font from https://fonts.google.com/noto/specimen/Noto+Sans+Symbols?query=symbols
+# follow Google Noto fonts instruction installations here https://fonts.google.com/noto/use#use-noto-fonts
+library(showtext)
+# Once installed browse the paths out put of teh following function to find the file NotoSansSymbols-Regular.ttf
+font_paths()
+# Use the correct path and file name of the Noto Sans Symbols fonts as follows:
+font_add(family="Noto", regular="~/Library/Fonts/NotoSansSymbols-Regular.ttf")
+```
+
+```{r}
+names(color_studies)
+
+pch_studies <- c("▲", "▼", "►", "◀︎", "◆", "◼︎", "⬟", "⬢", "⬣")
+
+plot(x = 1:9, y = 1:9, pch = pch_studies)
+
+plot(1,1,pch=-0x25D1L)
+plot(1,1,pch=-as.hexmode("25D1"))
+plot(1,1,pch=-0x25D1L)
+
+TestUnicode <- function(start="25a0", end="25ff", ...)
+  {
+    nstart <- as.hexmode(start)
+    nend <- as.hexmode(end)
+    r <- nstart:nend
+    s <- ceiling(sqrt(length(r)))
+    par(pty="s")
+    plot(c(-1,(s)), c(-1,(s)), type="n", xlab="", ylab="",
+         xaxs="i", yaxs="i")
+    grid(s+1, s+1, lty=1)
+    for(i in seq(r)) {
+      try(points(i%%s, i%/%s, pch=-1*r[i],...))
+    }
+  }
+TestUnicode()
+```
+
