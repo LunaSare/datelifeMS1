@@ -10,12 +10,34 @@ knitr::opts_chunk$set(echo = TRUE)
 library(xtable)
 ```
 
+tex file of small examples table 1 developed in vignettes/figure-small-example.Rmd L289-295.
+It is the same as the tex resulting in the code at the end.
+
+Tex file for table 2 generated here:
+
 Use of package `xtable` to create latex tables:
 Trick from https://www.youtube.com/watch?v=N-hLp8ADhVE
+
+```{r}
+table2 <- read.csv(file = "table-fringillidae-small-example-summary.csv")
+head(table2)
+t2 <- knitr::kable(table2, 
+                   format = 'latex',
+                   row.names = FALSE,
+                   align = "c",
+                   caption = "Summary of congruified ages per node.",
+                   label = "table2")
+
+# t2 <- xtable(table2, type = "latex")
+class(t2)
+writeLines(t2, '../tables/table-fringillidae-small-example-summary.tex')
+
+```
 
 ```{r}
 table1 <- read.csv(file = "table-fringillidae-small-example.csv")
 head(table1)
 print(xtable(table1, type = "latex"))
 ```
+
 
