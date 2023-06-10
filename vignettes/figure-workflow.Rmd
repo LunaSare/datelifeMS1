@@ -39,7 +39,7 @@ To produce a figure that would showcase the datelife workflow in a clear and str
 Study 1, and
 Study 3 - Chronogram 1 and 2.
 
-These studies correspond to indices 1, 4 and 5 from the datelife result, so we are going to prune those out:
+These studies correspond to indices 1, 4 and 5 from the datelife result, so we are going to pluck those out:
 
 ```{r}
 spp_dr_fig1 <- spp_dr[c(1,4,5)]
@@ -51,6 +51,9 @@ names(spp_dr)[c(1,4,5)] == names(spp_dr_fig1)
 ```{r}
 class(spp_dr_fig1) <- "datelifeResult"
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr_fig1)
+```
+```{r}
+ls(spp_summ)
 ```
 
 ```{r}
@@ -70,7 +73,7 @@ spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = 
 ###
   median_matrix <- datelife::datelife_result_median_matrix(datelife_result)
 ```
-
+The following gives an aerror, check:
 ```{r eval = FALSE}
 phy <- datelife::summary_matrix_to_phylo(median_matrix, use = "median")
 
@@ -79,6 +82,7 @@ check_ott_input(input, ott_ids)
 
 ```
 
+If we add a target tree, it works fine:
 ```{r}
 phy <- datelife::summary_matrix_to_phylo(median_matrix, use = "median", target_tree = target_tree)
 phy
@@ -166,9 +170,20 @@ ape::write.tree(phylo_median, file = "../figures/figure-workflow/median_chronogr
 Get calibrations:
 
 ```{r}
-devtools::load_all("../../lunasare/datelife")
-all_calibrations <- datelife::extract_calibrations_phylo(input = phylo_all_renamed,
-                                                         each = FALSE)
+# devtools::load_all("../../lunasare/datelife")
+all_calibrations <- datelife::extract_calibrations_phylo(
+                          input = phylo_all_renamed,
+                          each = FALSE)
+all_calibrations
+```
+`all_calibrations` is the table of nodes from the source chronograms, that is why it is missing actual node names from the target tree:
+
+```{r}
+colnames(all_calibrations)
+```
+
+Congruified node ages are in calib_summ$in_phy:
+```{r}
 small_phylo_all <- phylo_all_renamed
 #phylo_median <- read.tree(file = "../figures/figure-workflow/median_chronogram.tre")
 small_phylo_median <- phylo_median
@@ -188,6 +203,31 @@ small_calib_summ <- calib_summ
 # usethis::use_data(small_matched)
 # usethis::use_data(small_phylo_median)
 ```
+
+Extract columns from `calib_summ$in_phy` to show in figure 1
+```{r}
+pretty_table <- data.frame(node_name = 1, calib_summ$in_phy[,c("nodeAge", "reference")])
+pretty_table$node_name <- paste0("n", calib_summ$in_phy$mrca_node_number - ape::Ntip(phylo_median))
+pretty_table
+rr <- order(pretty_table$node_name, pretty_table$reference)
+pretty_table <- pretty_table[rr,]
+colnames(pretty_table) <- c("Node Name", "Node Age", "Study chronogram")
+rownames(pretty_table) <- 1:11
+```
+
+
+Print table as pdf
+```{r}
+## set the theme to have italics in species names:
+tt1 <- gridExtra::ttheme_default(core=list(fg_params=list(fontface=c(rep("plain", 33)))))
+
+# Export PDF
+pdf("../figures/figure-workflow/congruified_nodes_table.pdf", 
+    width = 5, height = 4)
+gridExtra::grid.table(pretty_table, theme = tt1) # if you do not want row numbers set rows = NULL
+dev.off()
+```
+
 ## Phylo median tree as a phylogram (all branches equal length)
 
 ```{r}
@@ -215,6 +255,8 @@ studies <- as.character(unique(calib_summ$in_phy$reference))
 studies <- studies[order(studies)]
 ```
 
+### Color scheme
+
 ```{r}
 #create a vector of colors with study names:
 color_studies <- viridis::turbo(n = 9)
@@ -234,11 +276,16 @@ c8 <- "#D23105FF"
 c9 <- "#7A0403FF"
 ```
 
-Plot of source ages against an opentree topology:
 ```{r}
 color_studies <- c(c2, c8, c4)
 names(color_studies) <- studies
+```
 
+## Plot
+
+Plot of source ages against an opentree topology:
+
+```{r}
 plot_max_time <- 30
 
 svg(filename = "../figures/figure-workflow/opentree_source_ages.svg",
@@ -268,7 +315,7 @@ ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white")
 dev.off()
 ```
 
-## Plot OpenTree tree topology with node labels and no time axis
+### Plot OpenTree tree topology with node labels and no time axis
 
 ```{r}
 plot_max_time <- 30
@@ -410,6 +457,37 @@ gridExtra::grid.table(summary_table[, c("Node Name", "Min.", "Median", "Max.", "
 dev.off()
 ```
 
+### Update summary table
+
+I found some errors in the table on Fig 1, so there must be a bug in the way I was calculating the median summary tables above.
+I am using the DateLife approach next:
+
+```{r}
+i <- "n7"
+res <- list()
+summ_sd <- c()
+for (i in unique(calib_summ$in_phy$mrca_node_name)) {
+  rr <- i == calib_summ$in_phy$mrca_node_name
+  xx <- summary(calib_summ$in_phy$nodeAge[rr])
+  res <- c(res, list(xx))
+  summ_sd <- c(summ_sd, sd(calib_summ$in_phy$nodeAge[rr]))
+}
+
+# go from list to data frame by row:
+summ_table <- as.data.frame(do.call(rbind, res)) 
+
+summ_table$node_name <- paste0("n",
+                                      unique(calib_summ$in_phy$mrca_node_number) - ape::Ntip(phylo_median))
+
+summ_table$sd <- summ_sd
+colnames(summ_table)
+pretty_summ_table <- summ_table[, c("node_name", "Min.", "Median", "Mean", "Max.", "sd")]
+colnames(pretty_summ_table) <- c("Node", "Min. Age", "Median", "Mean", "Max. Age", "SD")
+
+pdf("../figures/figure-workflow/summary_table_updated.pdf", height = 2)       
+gridExtra::grid.table(pretty_summ_table, rows = NULL) # if you do not want row numbers set rows = NULL
+dev.off()
+```
 
 
 ## Median chronogram
@@ -536,6 +614,36 @@ mm_summ$in_phy <- mm_summ$in_phy[rr,]
 mm_summ$in_phy$reference <- NULL
 mm_summ$in_phy$reference <- "Used as calibrations"
 ```
+Something odd with median ages and the tree: 
+```{r}
+data.frame(node = mm_summ$in_phy$mrca_node_name,
+           age = mm_summ$in_phy$nodeAge,
+           median = summ_table$Median, 
+           median_node = summ_table$node_name,
+           median_phylo = ape::branching.times(small_phylo_median)[summ_table$node_name])
+```
+
+Remake the tree with correct median on node 1:
+
+```{r}
+topology <- small_phylo_median
+topology$edge.length <- NULL
+topology
+plot(topology)
+ape::nodelabels(text = topology$node.label)
+small_phylo_median_new <- datelife::make_bladj_tree(tree = topology, 
+                          nodenames = summ_table$node_name, 
+                          nodeages = summ_table$Median)
+plot(small_phylo_median_new)
+ape::nodelabels(text = topology$node.label)
+ape::branching.times(small_phylo_median_new)
+```
+
+Fix `mm_summ`
+```{r}
+mm_summ$in_phy$nodeAge[1] <- summ_table$Median[1]
+```
+
 
 Set parameters for plotting:
 ```{r}
@@ -551,13 +659,20 @@ leg_box <- c(TRUE, TRUE)
 leg_pt_cex <- list(a1 = 1.7, a2 = 1)
 ```
 
+
+
+
 ```{r}
 # devtools::load_all(path = "../../datelifeplot")
-# source("../R/plot_node_ages_v2.2.R")
+#  source("../R/plot_node_ages_v2.3.R")
+```
+
+
+```{r}
 svg(filename = "../figures/figure-workflow/all_ages.svg",
     height = 4,
     width = 6)
-plot_node_ages_2.2(chronogram = small_phylo_median,
+plot_node_ages_2.3(chronogram = small_phylo_median_new,
                    title = c("Median Summary Chronogram"),
                    matched_ages  = small_all_ages,
                    pos_title = 3,
@@ -574,8 +689,8 @@ plot_node_ages_2.2(chronogram = small_phylo_median,
                    bars_lwd = 15,
                    legend_cex = 0.6,
                    legend_pt_cex = leg_pt_cex,
-                   legend_x = c(2, 2.5),
-                   legend_y = c(3.4, 1.7 ),
+                   legend_x = c(2.5, 3.1),
+                   legend_y = c(3.6, 2),
                    legend_title = leg_title,
                    legend_box = leg_box,
                    cex_axislabel = 1,
