@@ -3,7 +3,7 @@ title: "Response to decision letter"
 output: 
   pdf_document:
     keep_md: yes
-date: "2023-05-01"
+date: "2023-06-09"
 ---
 
 
@@ -13,7 +13,7 @@ date: "2023-05-01"
 &nbsp;
 &nbsp;
 
-**Please find below response to each point raised by the _Associate Editor_ Daniele Silvestro and the two _Reviewers_. We greatly appreciate your time and consideration for our resubmission.**
+**Please find below response to each point raised by the _Associate Editor_ Daniele Silvestro and the two _Reviewers_. We experienced a delay due to a dependency to our software that was orphaned, and kicked out from the official R repository (CRAN), putting at risk the status of our own software. DateLife is hosted in other stable resources, but CRAN is the most widely used, so we decided to adopt the orphaned dependency to get it back on CRAN. However, the dependency is written in C, a language that we are not very familiar with, so it took us a while to figure it out. It was worthy, as our package is now stable in the official CRAN repository. We also carefully addressed all points made by the reviewers and AE, and we think they greatly improved the manuscript. We greatly appreciate your time and consideration for our resubmission.**
 
 &nbsp;
 &nbsp;
@@ -92,7 +92,7 @@ Then, in a separate section after the main text, include a statement such as:
 > SUPPLEMENTARY MATERIAL. 
 > Supplementary material, including data files and/or online-only appendices, can be found in the Dryad data repository (put your Dryad doi in parentheses here).
 
-**We added DOIs for Dryad package with Supplementary Material, L551.**
+**We added the DOI of our Dryad package containing all Supplementary Material on L690 (manuscript-differences.pdf).**
 
 > Make sure all section headings conform to Systematic Biology style for first, second and third levels. Use of incorrect styles is potentially confusing and, in any case, is likely to delay processing of the manuscript.
 
@@ -108,7 +108,7 @@ Then, in a separate section after the main text, include a statement such as:
 
 > All funding used for this work should be listed in a "Funding" section preceding the Acknowledgements. Please give the full official name of each funding body.
 
-**Done on L556-558.**
+**Done on L700 (manuscript-differences.pdf).**
 
 > Our accepted abbreviation for millions of years ago is Ma. The abbreviation for millions of years duration is myr.
 
@@ -144,19 +144,18 @@ Then, in a separate section after the main text, include a statement such as:
 
 > 1. how and why is a parsimony method used to estimate branch lengths and how is this used in combination with a likelihood method (line 174)?
 
-**Thanks for this question. We elaborate on this on the Description section, subsection "Dating a tree with branch lengths" L221-228. Briefly, we implement the parsimony algorithm ACCTRAN using functions from the R package phangorn. We chose this algorithm as a quick way to obtain initial branch lengths that can be optimized afterwards using ML. The DNA matrices generated from data mined from the Barcode of Life Database (BOLD) do not have too much variation, so ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (Agnarsson & Miller, 2008, doi:10.1111/j.1096-0031.2008.00229.x).Once parsimony branch lengths are estimated, they become parameters that are then optimized using Maximum Likelihood (ML), given the alignment, the topology and a simple JC model. The branches that are returned are ML branches.**
+**Thanks for this question. We elaborate on this on the Description section, subsection "Dating a tree with branch lengths" L278 (manuscript-differences.pdf). Briefly, we implement the parsimony algorithm ACCTRAN using functions from the R package phangorn. We chose this algorithm as a quick way to obtain initial branch lengths that can be optimized afterwards using ML. The DNA matrices generated from data mined from the Barcode of Life Database (BOLD) do not have too much variation, so ACCTRAN resolves ambiguous character optimization by assigning changes along branches of the tree as close to the root as possible (Agnarsson & Miller, 2008, doi:10.1111/j.1096-0031.2008.00229.x).Once parsimony branch lengths are estimated, they become parameters that are then optimized using Maximum Likelihood (ML), given the alignment, the topology and a simple JC model. The branches that are returned are ML branches.**
 <!--ACCTRAN has been implemented in Forest et al. 2005. Teasing apart molecular-versus fossil-based error estimates when dating phylogenetic trees: a case study in the birch family Betulaceae. Systematic Botany.-->
 **We added a vignette to the R package in which we showcase the whole workflow of branch length optimization, from parsimony to ML. This vignette is available at http://phylotastic.org/datelife/articles/making_bold_trees.html.**
 
 ***
 > 2. Why are the node ages evenly distributed between calibrations? I would expect an exponential distribution of node ages under a standard birth-death process.
 
-**Thanks for this questions. We elaborate on it on the "Description" section, at the end of subsection "Dating a tree topology with no branch lengths", L 202-210.Note that we expanded the subsection "Dating a tree topology" into three sections: "Applying secondary calibrations", "Dating a tree topology" and "Dating a tree with branch lengths".**
+**Thanks for this questions. We elaborate on it on the "Description" section, at the end of subsection "Dating a tree topology without branch lengths", L 2268 (manuscript-differences.pdf). Note that we expanded the subsection "Dating a tree topology" into three sections: "Applying secondary calibrations", "Dating a tree topology" and "Dating a tree with branch lengths".**
 
-**We want to point out that the main goal of the summarizing step in DateLife (when we distribute ages evenly in the chronogram) is to provide a single chronogram that can quickly show at a glance, and in the most agnostic way possible, the distribution of node ages obtained from published studies. Using an exponential distribution for missing node ages would make additional assumptions about the underlying evolutionary model of the chronogram, which can bias results in downstream analyses, as we elaborate in the discussion section, "Effects of phylogenetic sampling on downstream analyses" (L445 of manuscript without differences; L527 of manuscript with differences).**
+**We want to point out that the main goal of the summarizing step in DateLife (when we distribute ages evenly in the chronogram) is to provide a single chronogram that can quickly show at a glance, and in the most agnostic way possible, the distribution of node ages obtained from published studies. Using an exponential distribution for missing node ages would make additional assumptions about the underlying evolutionary model of the chronogram, which can bias results in downstream analyses, as we elaborate in the discussion section, "Effects of taxon sampling on downstream analyses" (L598 of file manuscript-differences.pdf).**
 
-**In the DateLife package we have implemented a function called "make_mrbayes_tree", that runs the MrBayes algorithm using the option in which you can use a birth-death strict-clock model to sample branch lengths in the absence of genetic data.
-Inherited from MrBayes implementation, the function requires setting parameter values for birth and death rates. If the amount of missing genetic data is large, the birth and death rate values applied will determine the shape of the chronogram branch length distribution and bias the tree shape (Rabosky 2015, doi:10.1111/evo.12817).**
+**In the DateLife package we have implemented a function called "make_mrbayes_tree", that runs the MrBayes algorithm using the option in which you can use a birth-death strict-clock model to sample branch lengths in the absence of genetic data. Inherited from MrBayes implementation, the function requires setting parameter values for birth and death rates. If the amount of missing genetic data is large, the birth and death rate values applied will determine the shape of the chronogram branch length distribution and bias the tree shape (Rabosky 2015, doi:10.1111/evo.12817).**
 
 **We discuss the effects of using this type of chronograms with missing data that have been completed at random following a certain diversification model, especially when used for analyses that require estimating a diversification rate, which might introduce circularity (Rabosky, 2015. Evolution doi:10.1111/evo.12817).**
 
@@ -168,7 +167,7 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 ***
 > 4. I think the use of an arbitrary root age set by default as 10% older than the oldest age is unjustified and dangerous. If no root age is provided by the user, I think the function should return an interpretable error message and refuse to run.
 
-**Thanks for raising this point. We agree that this practice could be dangerous if a user is not aware that the age of the root was set in an arbitrary way. We changed the behaviour of the code to return a very conspicuous warning message when the root is arbitrary to make sure that users are aware of the fact (L196-201).**
+**Thanks for raising this point. We agree that this practice could be dangerous if a user is not aware that the age of the root was set in an arbitrary way. We changed the behaviour of the code to return a very conspicuous warning message when the root is arbitrary to make sure that users are aware of the fact that an arbitrary age is assigned to the root (L262 manuscript-differences.pdf).**
 
 **In line with our thoughts on the previous point, we want our program to be able to return a chronogram if there is at least one age data point available from the literature. Unfortunately, it is impossible to return a chronogram if there is no age for the root, so in the absence of that information, and to be able to automatize the algorithm, the only option available to us is to randomly chose an age that will allow to generate a chronogram using the real data that is available. We agree that choosing the 10% is probably too arbitrary, so the function now adds one standard deviation unit of the mean of ages available to the max age value, if there is more than one age data point, and uses that as the root age.**
 
@@ -182,7 +181,7 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 ***
 > As one of the reviewers pointed out, it is good to provide links to permanent repositories for your code. I see that DateLife actually is already hosted in a Zenodo repository, so maybe you can add the link to your Availability section to make it more visible.
 
-**Right! We added Zenodo links for our code and other materials used for this research in the Availability section (L505) and Supplementary Material (L518-520).**
+**Right! We added Zenodo links for our code and other materials used for this research in the Availability section (L677 manuscript-differences.pdf) and Supplementary Material section (L5689 manuscript-differences.pdf).**
 
 ***
 > I hope you will be willing to revise and resubmit your paper and that you’ll find these and the Reviewers’ comments useful.
@@ -208,7 +207,7 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 > * Title and Rabosky MEE 2019
 > * Sun et al AJB 2020
 
-**Thanks for pointing us to these references. We elaborated on this subject more thoroughly by adding results from these studies to the corresponding section on the Discussion, "Effects of phylogenetic sampling on downstream analyses" (L481 of manuscript without differences; L527 of manuscript with differences), as well as changing the wording from "making up" to "in the absence of genetic data, simulating following a birth-death process" (L489; L540).**
+**Thanks for pointing us to these references. We elaborated on this subject more thoroughly by adding results from these studies to the corresponding section on the Discussion, "Effects of taxon sampling on downstream analyses" (L600 manuscript-differences.pdf), as well as changing the wording from "making up" to "completing a phylogeny using a stochastic birth-death polytomy".**
 
 ***
 > There were many typographical errors in the manuscript which should be corrected prior to publication.
@@ -225,20 +224,20 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 
 **This is a good point. We are aware of this issue, and we think that any biological software is subject to this potential problem. For example, if someone generates bad DNA sequences, no matter how good the aligner software they use is, they will end up with a really bad alignment and subsequently a very bad phylogeny.**
 
-**We agree that users of all biological software should keep in mind that the results they get are only as good as the data they provide, and that they should implement some quality control. We mention this in the abstract and 3rd paragraph of discussion.**
+**We agree that users of all biological software should keep in mind that the results they get are only as good as the data they provide, and that they should implement some quality control. We mention this in the abstract and 3rd paragraph of discussion L456 (manuscript-differences.pdf).**
 
 ***
 > A separate but related point that I would also like to see discussed is that synthesizing services such as DL and OTOL seem capable of ending up in loops where bad trees with bad calibration points provide the skeleton for further bad trees based on the former - with their own seemingly well-supported but in fact dodgy secondary calibrations. Is that a risk? What can be done about it?
 
-**Thanks for mentioning this. We think DateLife actually helps preventing this issue. As shown in Figure 5, DateLife allows to compare all age data available for a group, and users can immediately identify chronograms that are outliers, and explore whether it is related to an artifact of the chronogram or something else about the data or methodology used to generate that chronogram. Users can then choose to drop those calibrations from the final analysis.**
+**Thanks for mentioning this. We think DateLife actually helps preventing this issue. As shown in Figure 5, DateLife allows to compare all age data available for a group, and users can immediately identify chronograms that are outliers, and explore whether it is related to an artifact of the chronogram or something else about the data or methodology used to generate that chronogram. Users can then choose to drop those calibrations from the final analysis. We mention this in several points of the disucssion.**
 
-**We agree that it is a responsibility of the users to check the trees and chonograms before using them as secondary calibrations, in the same way researchers curate fossils to use as primary calibration points.**
+**Generaly, it is a responsibility of the users to check the trees and chonograms before using them as secondary calibrations, in the same way researchers curate fossils to use as primary calibration points.**
 
 
 ***
 > Also related: will we gradually start developing a body of literature with trees where the root always just happens to be ±10% older than the oldest nodes? Might that be bad?
 
-**The Associate Editor also pointed this out, and we agree that this feature of DateLife is not ideal, so we corrected it and address it in the code and in the manuscript. First, adding the 10% is too arbitrary. If there is more than one age data point, the function now adds one standard deviation unit of the mean of published ages to the maximum age value, and uses that as the root age. Second, the function now returns a conspicuous warning message when the root is not based on published data to make sure that users are aware of the fact (L196-201).**
+**The Associate Editor also pointed this out, and we agree that this feature of DateLife is not ideal, so we corrected it and address it in the code and in the manuscript. First, adding the 10% is too arbitrary. If there is more than one age data point, the function now adds one standard deviation unit of the mean of published ages to the maximum age value, and uses that as the root age. Second, the function now returns a conspicuous warning message when the root is not based on published data to make sure that users are aware of the fact (L266 manuscript-differences.pdf).**
 
 **We want to highlight that the main goal of DateLife is to provide a single chronogram that can quickly show at a glance the distribution of node ages based on published data, so we want our program to be able to return a chronogram if there is at least one age data point available from the literature. Unfortunately, as you pointed out, when the root age is absent, it is not possible to return any dated tree.**
 **In the absence of that information, and to be able to automatize the algorithm, the only option available to us is to randomly chose an age that will allow to generate a chronogram using the real data that is available.**
@@ -255,12 +254,12 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 ***
 > - In the first paragraph of the Intro you might want to add something like 'comparative analysis' (Harvey & Pagel, yada yada yada). It's clearly something that's on your mind because in the Conclusions, 'trait evolution' is the first research area you mention as needing chronograms.
 
-**Thanks for pointing that out. We added that topic to the intro along with a couple of references, L48-49.**
+**Thanks for pointing that out. We added that topic to the intro along with a couple of references, L71 manuscript-differences.pdf.**
 
 ***
 > - On page 7, second paragraph, you state that subspecies are ignored. What do you mean precisely? My guess is that you ignore the subspecific epithet and collapse to species level. Maybe state that more clearly.
 
-**Thanks for pointing this out. We actually only ignore subspecies when retrieving data from a more inclusive taxonomic group. When provided by the user, subspecific taxa are processed and searched fully. We clarify this in the Description section "Creating a search query".**
+**Thanks for pointing this out. We actually only ignore subspecies when retrieving data from a more inclusive taxonomic group. When provided by the user, subspecific taxa are processed and searched fully. We clarify this in the Description section "Creating a search query" L104 manuscript-differences.pdf.**
 
 **It would be possible to drop the subspecific epithet and perform a more general search, so, we added this possibility to our software development plan, so that it can be implemented in a future iteration of the software.** 
 
@@ -277,7 +276,7 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 
 > - On page 8, fourth paragraph, it's not quite clear whether DL's database syncs automatically with Phylesystem or whether you have volunteered yourself for this task. Which would be noble, but hard to sustain.
 
-**It is indeed currently synced "manually". We specify this in the Description, L125. We comment in the discussion the benefits of having syncs done automatically, and ways to do so.**
+**It is indeed currently synced "manually". We specify this in the Description, L163 manuscript-differences.pdf. On the discussion, we elaborate on the benefits of having syncs done automatically, and ways to do so L446 manuscript-differences.pdf.**
 
 ***
 > - On page 10, second paragraph: mining BOLD and aligning the sequences automatically is very cool functionality but I did not see it exposed on the website at all. How can users get at those alignments? Also, might there be performance issues? MAFFT can be quite greedy with larger data sets.
@@ -285,16 +284,16 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 **Ah, yes, thanks for the comment! Well, the BOLD workflow is faster than a classic workflow, but it still takes considerable time, specifically computational time required for the database search, which the server can't afford yet. The functions are currently only available on DateLife's R package and not on the web application, and we think it would be good to make them available there in the future.**
 **Regarding possible performance issues, the alignments from BOLD data are not very long, so we expect both MUSCLE and MAFFT to perform approximately the same. We chose MUSCLE as the default aligner.**
 
-**We comment on this on L231-232. **
+**We comment on this on L288 manuscript-differences.pdf. **
 
 ***
 > - On page 25 you mention the fossilcalibrations.org initiative. Maybe that's a good opportunity to go a bit into what we need as a community. I suspect that, in general, most people in this field think that doing it by themself is 'better', i.e. do a bunch of sequencing (hybseq right now, I guess?) and then get good primary calibration points. Natural history collections must have many more of those, both as fossils but also from geology (i.e. vicariant events having to do with tectonics, orogeny, etc.). Shouldn't we want *that*?
 
-**Indeed! The golden standard for obtaining divergence time estimates entails the use of primary calibrations (fossil or from geologic events).  Fossil preservation bias makes it impossible to get calibrations to constrain all nodes in a phylogenetic tree, hence, we will always have nodes that we need to infer using a model.**
+**Indeed! We addressed that in the discussion L530 (manuscript-differences.pdf).**
+**The golden standard for obtaining divergence time estimates entails the use of primary calibrations (fossil or from geologic events).  Fossil preservation bias makes it impossible to get calibrations to constrain all nodes in a phylogenetic tree, hence, we will always have nodes that we need to infer using a model.**
 **Moreover, uncertainty in placement of fossil calibrations and phylogenetic hypotheses makes it so that there are many different hypothesis supported by the golden standard that can be even conflicting.**
 **The goal of DateLife is to provide the user with an insight on the current state of knowledge of time of lineage divergence for any group of taxa, as well as a tree summarizing the data.**
 
-**We addressed that in the discussion.**
 
 ***
 > - Page 26, line 416 has some typos.
@@ -304,7 +303,7 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 ***
 > - On page 26 you discuss some criteria for scoring quality of chronograms. One additional criterion might be where the calibration points are placed. Nodes that have a calibration point between them and the root have less freedom of movement and hence narrower confidence intervals. Ages ago, I did a bit of simulation work on that (Vos & Mooers, 2004 - definitely no need to cite). Maybe someone else has discussed this a bit better?
 
-**Thanks for pointing us to that paper! It gave us some nice ideas for discussion. We added a paragraph on the Discussion.**
+**Thanks for pointing us to that paper! It gave us some nice ideas for discussion. We added a paragraph on the Discussion L495 of manuscript-differences.pdf.**
 
 
 ***
@@ -320,4 +319,4 @@ Inherited from MrBayes implementation, the function requires setting parameter v
 ***
 > - Page 29, Supplementary Material: it's probably better to sync the repos with Zenodo and cite the DOI, just so that it's guaranteed unchanging.
 
-**Thanks for the suggestion! We created stable versions for all three repositories on Zenodo, and refer the doi in addition to the GitHub addresses, L522-525.**
+**Thanks for the suggestion! We created stable versions for all three repositories on Zenodo, and refer the doi in addition to the GitHub URLs, L677 and L699 of manuscript-differences.pdf.**

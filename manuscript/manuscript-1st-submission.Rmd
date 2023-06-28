@@ -490,7 +490,8 @@ For downstream analyses, using alternative chronogram may deeply affect our infe
 
 In ecology and conservation biology, incorporating at least some data on lineage divergence times represents a relevant improvement for testing alternative hypothesis using phylogenetic distance [@Webb2008].
 Hence, DateLife's workflow features different ways of estimating node ages in the absence of calibrations and branch length information for certain taxa.
-"Making up" branch lengths is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data.
+
+Making up branch lengths is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9, 993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31, 536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353, 185 seed plants where only 23% had molecular data.
 
 Notably, risks come with this practice.
 Taken to the extreme, one could make a fully resolved, calibrated tree of all modern and extinct taxa using a single taxonomy and a single calibration, using polytomy resolution and branch estimation methods.

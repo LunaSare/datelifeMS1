@@ -367,6 +367,23 @@ colnames(summary_table) <- c("Node Name",
 Print the summary table as pdf:
 
 ```{r}
+summary_table <- read.csv(file = "../tables/table-fringillidae-small-example-summary.csv")
+```
+
+```{r}
+# Export PDF
+
+pdf(paste0("../tables/table-fringillidae-small-example-summary.pdf"), 
+     width = 10, 
+     height = 8)
+gridExtra::grid.table(summary_table, 
+                      theme = tt1,
+                      rows = NULL) # I do not want row numbers
+dev.off()
+
+```
+
+```{r}
 # Export PDF
 png(paste0("../tables/table-fringillidae-small-example-summary.png"), 
     width = 9.2, 
