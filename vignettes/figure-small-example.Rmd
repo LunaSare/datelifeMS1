@@ -25,13 +25,34 @@ frin_sample_dsumm$phylo_median
 spp <- frin_sample_dsumm$phylo_median$tip.label[1:6]
 spp_write <- sub("_", " ", spp)
 spp_write <- spp_write[order(spp_write)]
-write(spp_write, file = "../figures/fringillidae_species_sample.txt")
+# write(spp_write, file = "../figures/fringillidae_species_sample.txt")
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 ```
 
 ```{r}
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)
+  na_rm = TRUE
+	datelife_result <- object
+	mrcas <- datelife_result_MRCA(datelife_result, na_rm = na_rm)
+	newick_all <- datelife_result_newick_all(datelife_result, na_rm = na_rm)
+	phylo_all <- datelife_result_phylo_all(datelife_result, na_rm = na_rm)
+	biggest <- get_biggest_multiphylo(phylo_all) # NAs in trees are removed in get_biggest_multiphylo
+
+	median_and_sdm <- datelife_result_median_and_sdm(datelife_result, datelife_query, na_rm = na_rm)
+  html_table <- datelife_result_html(datelife_result, datelife_query, na_rm = na_rm)
+  data_frame <- datelife_result_data_frame(datelife_result, na_rm = na_rm)
+	res <- list(citations = names(mrcas),
+	            mrca = mrcas,
+		          newick_all = newick_all,
+							phylo_all = phylo_all,
+						  newick_median = median_and_sdm$median_newick,
+						  phylo_median = median_and_sdm$median_phylo,
+							newick_sdm = median_and_sdm$sdm_newick,
+							phylo_sdm = median_and_sdm$sdm_phylo,
+							phylo_biggest = biggest,
+							html = html_table,
+							data_frame = data_frame)
 ```
 ```{r}
 topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)
