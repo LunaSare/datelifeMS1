@@ -8,7 +8,14 @@ Summary statistics of node ages from Table 1. Median ages are used by default to
 
 Figure 1
 
-Main DateLife workflow. Analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{https://phylotastic.org/datelife}.
+Main DateLife workflow to obtain sceintific data of time of lineage divergence for a set of taxon names. a) The workflow starts with at least two taxon names provided by the user as a list or as tip names on a tree. Input names can contain synonyms and misspellings.
+b) Taxon names are processed using the Taxonomic Name Resolution Service (TNRS) and are standardized to the taxonomy of the chronogram database. In this mock example, 4 names (in bold) are synonyms in the standardized taxonomy.
+c) Processed taxon names are searched in the chronogram database. Chronograms that have at least two taxon names are identified (*), pruned down to matching taxon names only, and stored as source chronograms for the set of input taxon names.
+d) A topology to map ages from source chronograms can be provided by the user. If no topology is provided, OpenTree's synthetic tree topology is used. Alternative topologies that can be used are the largest (with the most input taxon names) source chronogram or a phylogeny constructed using genetic data from the Barcode of Life Database (BOLD).
+e) Nodes from source chronogram are congruified to nodes from the tree topology chosen in step (d). In this example all ages from source chronograms are congruent with nodes on the tree topology and provide time of divergenve information for all but one node (n2).
+f) Source node ages per node are summarized.
+g) Summary node ages are used as secondary calibrations to date the chosen tree topology. In this example we show the chronogram of median ages.
+All this analyses can be performed via DateLife's interactive website at \url{www.datelife.org}, or using the \texttt{datelife} R package. Details on the R functions used to perform the analyses are available from \texttt{datelife}'s R package vignettes at \url{https://phylotastic.org/datelife}.
 
 Figure 2:
 

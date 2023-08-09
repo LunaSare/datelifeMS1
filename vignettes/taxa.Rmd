@@ -1,0 +1,48 @@
+---
+title: "taxa"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{taxa}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datelife)
+library(magrittr)
+opentree_chronograms$version
+opentree_chronograms$trees[[1]]$ott_ids
+taxon_ott_ids <- unique(as.numeric(unlist(sapply(opentree_chronograms$trees, "[", "ott_ids"))))
+which(is.na(taxon_ott_ids))
+```
+
+```{r}
+class(taxon_ott_ids)
+length(taxon_ott_ids)
+```
+
+There are `r length(taxon_ott_ids)` taxon OTT ids in the OpenTree chronograms DateLife database version `r opentree_chronograms$version`.
+
+What is the taxonomic distribution of these OTT ids?
+
+```{r}
+xx <- rotl::taxonomy_taxon_info(taxon_ott_ids[1], include_lineage = TRUE) 
+sapply(xx$`461645`$lineage, "[", "name") %>% 
+  unlist() %>% 
+  unname() -> taxonomy
+class(taxonomy)
+taxonomy
+```
+
+```{r}
+taxa <- unique(unlist(sapply(opentree_chronograms$trees, "[", "tip.label")))
+```
+
+There are `r length(taxa)` taxon names in the OpenTree chronograms DateLife database version `r opentree_chronograms$version`.

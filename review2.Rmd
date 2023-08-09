@@ -37,9 +37,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 > Accept pending minor revisions.
 
-> I thank the authors for their extensive and careful revisions to the manuscript. It has been reviewed by Associate Editor Dr Daniele Silvestro and myself. We both agree that the manuscript has been greatly improved and meets all the previous requests of the referees and the AE. The AE has several other suggestions that you should find useful while preparing the revision, mainly concerning editorial and formatting issues. I agree that some of your figures are difficult to visualize, for example Figs. 1 and 4, where you could use less color and more simple lines (they resemble a poster). Figure 5 is too large and detailed: it could never be published as an A4. I also wonder if all figures are necessary: for example, Figures 5 and 6 could be moved to the Supplementary; there is no limit in the number of figures in Software papers but we typically publish 4 figures per paper. Please consider these recommendations as you revise the manuscript.
+> I thank the authors for their extensive and careful revisions to the manuscript. It has been reviewed by Associate Editor Dr Daniele Silvestro and myself. We both agree that the manuscript has been greatly improved and meets all the previous requests of the referees and the AE. The AE has several other suggestions that you should find useful while preparing the revision, mainly concerning editorial and formatting issues. 
+
+I agree that some of your figures are difficult to visualize, for example Figs. 1 and 4, where you could use less color and more simple lines (they resemble a poster). 
 
 **Thank you for your decision! We modified Figures 1 and 4.**
+
+Figure 5 is too large and detailed: it could never be published as an A4. 
+I also wonder if all figures are necessary: for example, Figures 5 and 6 could be moved to the Supplementary; there is no limit in the number of figures in Software papers but we typically publish 4 figures per paper. Please consider these recommendations as you revise the manuscript.
+
+**We moved figures 5 and 6 to supplementary materials.**
+
 
 > Please acknowledge (by email to sysbio.editorialoffice@oup.com, SYSBIO.OUP.EA@straive.com) receipt of the reviews and give a probable time frame for the return of your revised manuscript. Your revision should be submitted as soon as possible. Any revision not received in a timely manner may have to be considered a new submission.
 
@@ -193,8 +201,10 @@ An alternative to BLADJ to date tree topologies in the absence of initial branch
 
 > Fig. 1. I like the trees in the background, but they contribute to making the figure really busy. Also, there is a lot of text and tables, I think this should be strongly streamlined.
 
+We streamlined the figure by removing text in the figure and adding it to the figure caption. We considered removing the tables, but we decided to keep them as they are important for the explanation of the workflow. We hope this new version of the figure is considerably clearer now.
 
 > Fig. 3. Way too much text, tip labels not readable. In b2 I would reduce the trees to like 4 examples and make sure all the boxes have the same size and are aligned. Again, consider removing the trees in the background, especially in the colored boxes. In c) fonts in references are way too small, the numbers on the time axis are not explained. In a figure I would not expect to see full sentences like “We used median summary ages of congruent nodes to date […]”. Font types and sizes seem inconsistent.
+
 
 > Arguably none of the text in Figs. 4 and 5 is readable without a 200% magnification and the title of the plot is unnecessary. Tip labels should not be shown if they can’t be read, consider summarizing them by e.g. higher taxonomy.
 
