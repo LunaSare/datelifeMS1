@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
 )
 writing_dir <- "../figures/figure-small-example/"
 ```
-## Getting source chronograms
+
+## Getting species names for a datelife search chronograms
 
 ```{r}
 # library(datelifeMS1)
@@ -29,6 +30,8 @@ spp_write <- spp_write[order(spp_write)]
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 ```
+
+## Getting source chronograms
 
 ```{r}
 spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, object = spp_dr)

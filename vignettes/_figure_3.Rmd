@@ -8,7 +8,7 @@ date: "2023-06-06"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Getting source chronograms
+## Getting species names for a datelife search of chronograms
 
 ```{r}
 load("../data/frin_sample_dsumm.rda")
@@ -20,6 +20,102 @@ write(spp_write, file = "../figures/fringillidae_species_sample.txt")
 spp_dq <- datelife::make_datelife_query(spp)
 spp_dr <- datelife::get_datelife_result(spp_dq)
 ```
+
+## Getting source chronograms
+```{r}
+topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)
+spp_dq$phy <- topology
+spp_summ <- datelife:::summary.datelifeResult(datelife_query = spp_dq, 
+                                              object = spp_dr)
+```
+### Plotting ALL 9 source chronograms
+
+We know that chronogram 9 has the oldest ages.
+Get the maximum age:
+```{r}
+phylo_all <- spp_summ$phylo_all
+max(ape::branching.times(phylo_all[[9]]))  # 44.29586
+#max(unlist(lapply(phylo_all, ape::branching.times)))
+
+plot_max_time <- 45
+```
+
+Rename source chronograms to have a shorter study name:
+
+```{r}
+# Reorder chronogram list alphabetically:
+alphabetic_order <- order(names(phylo_all))
+phylo_all <- phylo_all[alphabetic_order]
+names(phylo_all)
+names(phylo_all) <- c("Barker et al. 2013",
+                      "Barker et al. 2015 - chronogram 1",
+                      "Barker et al. 2015 - chronogram 2",
+                      "Burns et al. 2014",
+                      "Hedges et al. 2015 - chronogram 1",
+                      "Hedges et al. 2015 - chronogram 2",
+                      "Hooper et al. 2017",
+                      "Jetz et al. 2012 - chronogram 1",
+                      "Jetz et al. 2012 - chronogram 2")
+```
+
+Rename tips as follows:
+```{r}
+phylo_all <- lapply(phylo_all, function(x) {
+  x$tip.label <- gsub("_", " ", x$tip.label)
+  x
+})
+class(phylo_all) <- "multiPhylo"
+orig_names <- unlist(sapply(phylo_all, "[", "tip.label"))
+orig_names <- unique(gsub("_", " ", orig_names)) # only 6 unique species names
+first_letters <- substr(orig_names, 1, 1) # equivalent regex gsub("^(.).*", "\\1", orig_names)
+first_letters <- paste0(first_letters, ".")
+epithet <- sapply(strsplit(orig_names, " "), "[", 2)
+
+reduced_names <- paste(first_letters, epithet)
+reduced_names
+```
+
+Rename tips in source chronograms to plot:
+
+```{r}
+# i <- 2
+for (i in seq(phylo_all)) {
+   ii <- match(phylo_all[[i]]$tip.label, orig_names)
+   ii
+   phylo_all[[i]]$tip.label <-  reduced_names[ii]
+}
+sapply(phylo_all, "[", "tip.label")
+```
+
+
+Plot as pdf:
+
+```{r}
+datelifeplot::plot_phylo_all(chronograms = phylo_all,
+                             folder_name = "../figures/figure-small-example/source_phylo_all_renamed",
+                             plot_height = 440,
+                             plot_width = 600,
+                             mai1 = 1,
+                             mai2 = 0,
+                             mai3 = 1,
+                             mai4 = 3.72,
+                             omi1 = 1,
+                             omi2 = 0,
+                             omi3 = 0,
+                             omi4 = 0,
+                             write = "pdf",
+                             plot_type = "phyloch",
+                             max_depth = plot_max_time,
+                             edge.width = 3,
+                             cex_tiplabels = 3,
+                             cex_axislabel = 1.5,
+                             cex_axis = 2,
+                             cex_title = 2.5,
+                             pos_title = 10, # -2.8
+                             pos_axis = 2,
+                             axis_label = "")
+```
+
 
 ```{r}
 topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)

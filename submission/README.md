@@ -26,7 +26,8 @@ tex files:
 
 ### Figure original file names:
 
-cp figures/figure-workflow/figure1-new-horizontal.pdf submission/Figure_1.pdf
+cp figures/figure-workflow/figure1-new-cycle-vertical.pdf submission/Figure_1.pdf
+
 cp figures/fig_runtime_main.pdf submission/Figure_2.pdf
 cp figures/figure-small-example/figure3-horizontal.pdf submission/Figure_3.pdf
 cp figures/fringillidae-topologies/fringillidae-topology.pdf submission/Figure_4.pdf
