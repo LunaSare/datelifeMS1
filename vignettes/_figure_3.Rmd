@@ -79,19 +79,20 @@ Rename tips in source chronograms to plot:
 
 ```{r}
 # i <- 2
-for (i in seq(phylo_all)) {
-   ii <- match(phylo_all[[i]]$tip.label, orig_names)
+phylo_all_renamed <- phylo_all
+for (i in seq(phylo_all_renamed)) {
+   ii <- match(phylo_all_renamed[[i]]$tip.label, orig_names)
    ii
-   phylo_all[[i]]$tip.label <-  reduced_names[ii]
+   phylo_all_renamed[[i]]$tip.label <-  reduced_names[ii]
 }
-sapply(phylo_all, "[", "tip.label")
+sapply(phylo_all_renamed, "[", "tip.label")
 ```
 
 
 Plot as pdf:
 
 ```{r}
-datelifeplot::plot_phylo_all(chronograms = phylo_all,
+datelifeplot::plot_phylo_all(chronograms = phylo_all_renamed,
                              folder_name = "../figures/figure-small-example/source_phylo_all_renamed",
                              plot_height = 440,
                              plot_width = 600,
@@ -117,6 +118,8 @@ datelifeplot::plot_phylo_all(chronograms = phylo_all,
 ```
 
 
+Get summary:
+
 ```{r}
 topology <- datelife::get_otol_synthetic_tree(ott_ids = spp_dq$ott_ids)
 spp_dq$phy <- topology
@@ -134,25 +137,25 @@ Node ages in `phylo_median` do not seem to represent the median
 
 
 
-```{r}
-phylo_all <- spp_summ$phylo_all
-# Reorder chronogram list alphabetically:
-alphabetic_order <- order(names(phylo_all))
-phylo_all <- phylo_all[alphabetic_order]
-names(phylo_all)
-```
+<!-- ```{r} -->
+<!-- phylo_all <- spp_summ$phylo_all -->
+<!-- # Reorder chronogram list alphabetically: -->
+<!-- alphabetic_order <- order(names(phylo_all)) -->
+<!-- phylo_all <- phylo_all[alphabetic_order] -->
+<!-- names(phylo_all) -->
+<!-- ``` -->
 
-```{r}
-names(phylo_all) <- c("Barker et al. 2013",
-                      "Barker et al. 2015 - chronogram 1",
-                      "Barker et al. 2015 - chronogram 2",
-                      "Burns et al. 2014",
-                      "Hedges et al. 2015 - chronogram 1",
-                      "Hedges et al. 2015 - chronogram 2",
-                      "Hooper et al. 2017",
-                      "Jetz et al. 2012 - chronogram 1",
-                      "Jetz et al. 2012 - chronogram 2")
-```
+<!-- ```{r} -->
+<!-- names(phylo_all) <- c("Barker et al. 2013", -->
+<!--                       "Barker et al. 2015 - chronogram 1", -->
+<!--                       "Barker et al. 2015 - chronogram 2", -->
+<!--                       "Burns et al. 2014", -->
+<!--                       "Hedges et al. 2015 - chronogram 1", -->
+<!--                       "Hedges et al. 2015 - chronogram 2", -->
+<!--                       "Hooper et al. 2017", -->
+<!--                       "Jetz et al. 2012 - chronogram 1", -->
+<!--                       "Jetz et al. 2012 - chronogram 2") -->
+<!-- ``` -->
 
 All calibrations, even those that are not congruent:
 
@@ -204,7 +207,7 @@ calib_summ$in_phy[rr,]
 mean(calib_summ$in_phy[rr,"nodeAge"])
 ```
 
-The following is supposed to get the median summary matrix, but it is not.
+The following is supposed to get the median summary matrix, but it is not doing it.
 ```{r}
 best_grove <- datelife::get_best_grove(spp_dr)
 
@@ -382,6 +385,87 @@ plot_node_ages_2.2(chronogram = phylo_median_new,
 dev.off()
 ```   
 Trying to use unicode for more variety of symbols of points, from https://thoughtfulbloke.wordpress.com/2017/03/18/getting-the-cool-symbols-onto-graphs-in-r/
+
+Shorten tip names of `phylo_median`:
+```{r}
+phylo_median_new_renamed <- phylo_median_new
+ii <- match(phylo_median_new_renamed$tip.label, gsub(" ", "_", orig_names))
+ii
+data.frame(phylo_median_new_renamed$tip.label,  reduced_names[ii])
+phylo_median_new_renamed$tip.label <-  reduced_names[ii]
+```
+
+```{r}
+size <- 2
+svg(file = "../figures/figure-small-example/all_ages_long.svg",
+    height = 4.5 * size,
+    width = 9.5 * size)
+plot_node_ages_2.2(chronogram = phylo_median_new_renamed,
+               title = "",
+               plot_type = "phyloch",
+               time_depth = 45,
+               pos_axis = 2,
+               cex_axis = 2,
+               cex_axislabel = 2,
+               axis_label = "",
+               edge_width = 3,
+               cex_tiplabels = 2.7,
+               matched_ages  = all_ages,
+               pch_type = point_type,
+               pch_color = point_colors,
+               pch_cex = point_cex,
+               bars_lwd = 23,
+               legend_cex = c(1.5, 1.5),
+               legend_pt_cex = list(a1 = 1.7, a2 = c(1.7, 2.5)),
+               legend_text = leg_text,
+               legend_pch = leg_pch,
+               legend_color = leg_color,
+               legend_title = leg_title,
+               legend_box = leg_box,
+               legend_x = c(-40, 0),
+               legend_y = c(5.6, 5.2),
+               mai1 = 1, mai2 = 0, mai3 = 0.3, mai4 = 4,
+               omi1 = 1, omi2 = 7, omi3 = 0.3, omi4 = 0.3,
+               label.offset = 1
+               )
+dev.off()
+```   
+Get tree topology of renamed tree:
+
+```{r}
+# visualize median branching times:
+ape::branching.times(phylo_median_new_renamed)
+# force equal branch lengths, with root age = 1
+pp <- ape::compute.brlen(phylo_median_new_renamed, power = 1)
+# visualize the new branch lengths:
+ape::branching.times(pp)
+pp$edge.length
+plot(pp)
+ape::axisPhylo(side = 1)
+# to make branch lengths proportional to a certain age we have o multiply them by that age, in this case it's the total plot_max_time
+pp$edge.length <- pp$edge.length*plot_max_time 
+pp$node.label <- paste0("n", 1:5)
+```
+
+```{r}
+svg(filename = "../figures/figure-small-example/median_tree_topology_renamed.svg",
+    height = 5,
+    width = 8,
+    bg = "transparent")
+datelifeplot::plot_chronogram(pp,
+                         title = c("Median Tree topology"),
+                         time_axis = FALSE,
+                         axis_label = "",
+                         #edge.width = 3,
+                         cex_tiplabels = 2,
+                         cex_axislabel = 1.5,
+                         cex_axis = 2,
+                         cex_title = 2,
+                         pos_title = 3,
+                         mai4 = 3.6)
+ape::nodelabels(text = pp$node.label, frame = "circle", bg = "white", cex = 1.5)
+dev.off()
+```
 
 ```{r}
 # install.packages("showtext")
