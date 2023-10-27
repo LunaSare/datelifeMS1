@@ -21,6 +21,8 @@ opentree_chronograms$version
 opentree_chronograms$trees[[1]]$ott_ids
 taxon_ott_ids <- unique(as.numeric(unlist(sapply(opentree_chronograms$trees, "[", "ott_ids"))))
 which(is.na(taxon_ott_ids))
+taxon_ott_ids <- taxon_ott_ids[!is.na(taxon_ott_ids)]
+write(paste0(taxon_ott_ids, " "), file = "../data-raw/chronogram_taxon_ott_ids.txt")
 ```
 
 ```{r}
@@ -42,7 +44,35 @@ taxonomy
 ```
 
 ```{r}
-taxa <- unique(unlist(sapply(opentree_chronograms$trees, "[", "tip.label")))
+tip_labels <- unique(unlist(sapply(opentree_chronograms$trees, "[", "tip.label")))
+anyDuplicated(tip_labels)
+ott_ids <- unique(unlist(sapply(opentree_chronograms$trees, "[", "ott_ids")))
+length(ott_ids)
+data.frame(opentree_chronograms$trees[[1]]$tip.label,
+opentree_chronograms$trees[[1]]$ott_ids)
+length(opentree_chronograms$trees[[1]]$tip.label) == length(opentree_chronograms$trees[[1]]$ott_ids)
+
+equal_length <- sapply(seq(opentree_chronograms$trees), function(i) {
+  length(opentree_chronograms$trees[[i]]$tip.label) == length(opentree_chronograms$trees[[i]]$ott_ids)
+})
+
+length(opentree_chronograms$trees[[100]]$tip.label) == length(opentree_chronograms$trees[[100]]$ott_ids)
 ```
 
-There are `r length(taxa)` taxon names in the OpenTree chronograms DateLife database version `r opentree_chronograms$version`.
+```{r}
+tnrs100 <- rotl::tnrs_match_names(opentree_chronograms$trees[[100]]$tip.label)
+tnrs100
+```
+
+```{r}
+tip_labels_tnrs <- rotl::tnrs_match_names(tip_labels)
+tip_labels_tnrs[1:10,]
+length(tip_labels)
+length(tip_labels) == nrow(tip_labels_tnrs)
+sum(is.na(tip_labels_tnrs$ott_id))
+# 99474 unique tip labels
+# 979 do not have OTT id
+```
+
+
+

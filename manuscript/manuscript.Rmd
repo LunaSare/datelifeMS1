@@ -259,7 +259,7 @@ An alternative to BLADJ to date tree topologies in the absence of initial branch
 
 **_Dating a tree with branch lengths.--_**
 Relative branch lengths can provide key information for phylogenetic dating, specifically for nodes without any calibration data available.
-While using initial branch length data is the golden standard for phylogenetic dating analyses, estimating trees with branch lengths proportional to substitution rates per site requires obtaining primary data, assembling and curating a homology hypothesis, and choosing and implementing a method for phylogenetic inference.
+While using initial branch length data is the golden standard for phylogenetic dating analyses, estimating trees with branch lengths proportional to substitution rates per site requires obtaining primary data, assembling and curating a homology (orthology) hypothesis, and choosing and implementing a method for phylogenetic inference.
 DateLife implements a workflow to streamline this process by applying open data from the Barcode of Life Data System, BOLD [@ratnasingham2007bold] to obtain genetic markers for input taxa.
 <!--DNA sequences obtained from BOLD are short (between 500-800 bp) and display little variation. -->
 By default, BOLD genetic sequences are aligned with MUSCLE [@edgar2004muscle] using functions from the msa R package [@bodenhofer2015msa]. Alternatively, sequences can be aligned with MAFFT [@katoh2009multiple], using functions from the ape R package [@paradis2004].
