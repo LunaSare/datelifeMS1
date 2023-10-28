@@ -1,4 +1,4 @@
-June 9, 2023
+Oct 27, 2023
 
 Isabel Sanmartín
 Real Jardín Botánico
@@ -11,7 +11,7 @@ It is with great enthusiasm that we are resubmitting our manuscript entitled, �
 
 We carefully addressed all points made by the reviewers and AE, and we think they greatly improved the manuscript.
 
-We experienced a delay in our resubmission due to a dependency to our software that was orphaned (left without any maintainers), that resulted in it being kicked out from the official R software repository (CRAN). This put at risk the status of our own software. DateLife is hosted in other stable resources, but CRAN is the most widely used, so we decided to adopt the orphaned dependency to get it back on CRAN. However, the dependency is written in a language that we are not very familiar with (C), so it took us a while to figure it out. We believe it was worthy, as the DateLife package is now more stable in the official CRAN repository.
+We experienced a delay in our resubmission due to new teaching loads at the university, so it took us a while to get back to the reviews of the figures. We think figures are strea,lined and easier to understand and we thank you for pointing us out in that direction..
 
 We greatly appreciate your time and consideration for our resubmission, and we look forward to hearing from you at your earliest convenience.
 

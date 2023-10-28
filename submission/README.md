@@ -29,9 +29,14 @@ tex files:
 cp figures/figure-workflow/figure1-new-cycle-vertical.pdf submission/Figure_1.pdf
 
 cp figures/fig_runtime_main.pdf submission/Figure_2.pdf
+
 cp figures/figure-small-example/figure3-horizontal.pdf submission/Figure_3.pdf
+
 cp figures/fringillidae-topologies/fringillidae-topology.pdf submission/Figure_4.pdf
-cp figures/figure-fringillidae/figure5.png submission/Figure_5.png
+
+New minimal figure 5
+cp figures/figure-fringillidae/Figure5_minimal.pdf submission/Figure_5.pdf
+
 <!-- 
 Install required to use convert:
 brew install imagemagick
@@ -39,6 +44,7 @@ brew install imagemagick
 convert -density 100 submission/Figure_5.png submission/Figure_5.pdf
 
 cp figures/fringillidae-cross-validation/fig-cross-validation-xy-plots.pdf submission/Figure_6.pdf
+
 
 
 ### Figure caption files:
