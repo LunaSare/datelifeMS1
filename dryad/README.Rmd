@@ -50,6 +50,9 @@ GENERAL INFORMATION
 	name: Brian C. O'Meara    
 	institution: University of Tennessee, Knoxville, USA
 
+	Co-researcher 3    
+	name: Emily Jane McTavish    
+	institution: University of California, Merced, USA
 
 3. Date of data collection: 2022-01-28
 
@@ -152,7 +155,7 @@ line2.1 <- "DATA & FILE OVERVIEW
 1. Description of dataset
 
 These data were generated to investigate and showcase the performance of the datelife R package (<https://github.com/phylotastic/datelife>).
-We showcased the application of the package with one mock example and two different biological examples.
+We showcased the application of the package with two different biological examples.
 
 The first biological example uses datelife on a small sample of bird species.
 The second one uses datelife on bird species belonging to the family Fringillidae of 'true finches', following the NCBI taxonomy.
@@ -179,24 +182,31 @@ File 5 Description: CSV (comma separated values) file summarizing age data (in M
 
 File 6 Name: Sanchez-Reyes_etal_2022_supplementary_table_S2.pdf    
 File 6 Description: PDF file version of file Sanchez-Reyes_etal_2022_supplementary_table_S2.csv.
-	
-File 7 Name: Sanchez-Reyes_etal_2022_figure_1_chronogram_mock_example.tre    
-File 7 Description: Newick version of chronogram from the mock example shown in Figure 1 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
-File 8 Name: Sanchez-Reyes_etal_2022_figure_3_chronogram_small_example.tre    
-File 8 Description: Newick version of chronogram from the small example shown in Figure 3 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
+File 7 Name: Sanchez-Reyes_etal_2022_figure_3_chronogram_small_example.tre    
+File 7 Description: Newick version of chronogram from the small example shown in Figure 3 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
-File 9 Name: Sanchez-Reyes_etal_2022_figure_4A_topology_finches_mrca.tre    
-File 9 Description: Newick version of topology extracted from the Open Tree of Life synthetic tree, shown in Figure 4A of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
+File 8 Name: Sanchez-Reyes_etal_2022_figure_4A_topology_finches_mrca.tre    
+File 8 Description: Newick version of topology extracted from the Open Tree of Life synthetic tree, shown in Figure 4A of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
-File 10 Name: Sanchez-Reyes_etal_2022_figure_4B_topology_finches_ncbi.tre    
-File 10 Description: Newick version of topology extracted from the Open Tree of Life synthetic tree, shown in Figure 4B of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
+File 9 Name: Sanchez-Reyes_etal_2022_figure_4B_topology_finches_ncbi.tre    
+File 9 Description: Newick version of topology extracted from the Open Tree of Life synthetic tree, shown in Figure 4B of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
-File 11 Name: Sanchez-Reyes_etal_2022_figure_5_chronogram_finches_example.tre    
-File 11 Description: Newick version of chronogram from the finch example shown in Figure 5 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
+File 10 Name: Sanchez-Reyes_etal_2022_figure_5_chronogram_finches_example.tre    
+File 10 Description: Newick version of chronogram from the finch example shown in Figure 5 of the manuscript (https://www.biorxiv.org/content/10.1101/782094v2).
 
-File 12 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S1.pdf    
-File 12 Description: PDf file showing results of cross validation analysis of datelife's chronogram generating functions. 
+File 11 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S1.pdf    
+File 11 Description: PDf file showing a topology extracted from OpenTree of Life's synthetic tree, of 2,333 tips and 1,305 internal nodes encompassing bird species within the family Fringillidae following the NCBI taxonomy (black), as well as all other bird species that share the same Most Recent Common Ancestor (MRCA) node in OpenTree's synthetic tree (purple). 
+
+File 12 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S2.pdf    
+File 12 Description: PDf file showing a subtree topology of 289 tips and 253 internal nodes resulting from pruning species from supplementray figure S1 (purple branches), that do not belong to the family Fringillidae according to the NCBI taxonomy. 
+
+File 13 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S3.pdf    
+File 13 Description: PDf file showing the Fringillidae median summary chronogram resulting from a DateLife analysis. 
+
+File 14 Name: Sanchez-Reyes_etal_2022_supplementary_figure_S4.pdf    
+File 14 Description: PDf file showing results of cross validation analysis of datelife's chronogram generating functions. 
+
 "
 ```
 
@@ -223,8 +233,8 @@ names_phylo_all <- c("Barker et al. 2013",  # 1
                       "Roquet et al. 2014 - chronogram 1", # 17
                       "Roquet et al. 2014 - chronogram 2", # 18 
                       "Uyeda et al 2017")
-file_index <- 12
-fig_index <- 1
+file_index <- 15
+fig_index <- 5
 for (name in names_phylo_all) {
   file_index <- file_index + 1
   fig_index <- fig_index + 1

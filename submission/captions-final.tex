@@ -1,0 +1,28 @@
+Table 1
+
+Ages of nodes extracted from 9 chronograms containing at least 2 of the 6 bird species used in the Fringillidae small example of the DateLife workflow. All nodes are congruent with the chosen tree topology. See Figure 3, step c2.
+
+Table 2
+
+Summary statistics of node ages from Table 1. Median ages are used by default to date a tree topology using DateLife, see Figure 3, step c3.
+
+Figure 1:
+
+DateLife's benchmarking results. Computation time used to process a query and a search across \texttt{datelife}'s chronogram database, relative to number of input taxon names. For each N = \{10, 100, 200, ..., 1 000, ... , 9 000, 10 000\}, we sampled N species names from the class Aves a hundred times, and then performed a \texttt{datelife} search processing the input names using the Taxon Names Resolution Service (TNRS; light gray), and without processing names (dark gray). For comparison, we performed a search using an input that has been pre-processed with TNRS (light blue).
+
+Figure 2:
+
+DateLife analysis results for a small sample of 6 bird species within the Passeriformes (a). Processed species names were found across 9 chronograms within 6 independent studies (b; Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}). This revealed 28 source age data points for the queried species names. Summarized age data was used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree v13.4, resulting in a chronogram of summary source ages (c).
+
+
+
+
+Figure 3:
+
+Subgroup of the Fringillidae median summary chronogram generated with DateLife. The original topology has 289 tips and 253 nodes, from which 194 have age data from at least one published chronogram. In total, 19 different chronograms from 13 different studies contributed 818 age data points, which were summarized to obtain a single value for each one of the 194 nodes with age data. From the 194 summary ages available, 21 were not used as calibrations (asterisk, *), because they were older than a parent node or younger than a descendant node; the remaining 173 summary ages were used as secondary calibrations (forward slash, /) with the Branch Length Adjuster (BLADJ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}). The full figure is shown in Supplementary Figure S3.
+
+
+
+Figure 4:
+
+Cross validation of results from a DateLife analysis of the family Fringillidae, shown in Fig. 3 and Supplementary Figure S3. Each plot compares node age estimates from an original study chronogram (x axis) with the corresponding node age obtained with a DateLife analysis (y axis).
