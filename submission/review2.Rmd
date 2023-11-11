@@ -3,7 +3,7 @@ title: "Response to decision letter"
 output: 
   pdf_document:
     keep_md: yes
-date: "2023-07-20"
+date: "2023-11-07"
 ---
 
 ```{r setup, include=FALSE}
@@ -41,12 +41,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 I agree that some of your figures are difficult to visualize, for example Figs. 1 and 4, where you could use less color and more simple lines (they resemble a poster). 
 
-**Thank you for your decision! We modified Figures 1 and 4.**
+**Thank you for your decision! We modified Figures 1 and 4, and consolidated into a single one. They are more streamlined now and usage of color was reduced; we followed all suggestions from AE.**
 
 Figure 5 is too large and detailed: it could never be published as an A4. 
+
+**We reduced the number of tips shown in Fig 5 and moved the tree with all tips to supplementary data. Fig 5 is now Fig 3**
+
 I also wonder if all figures are necessary: for example, Figures 5 and 6 could be moved to the Supplementary; there is no limit in the number of figures in Software papers but we typically publish 4 figures per paper. Please consider these recommendations as you revise the manuscript.
 
-**We moved figures 5 and 6 to supplementary materials.**
+**We have now 4 figures in our paper. We achieved this by consolidating fig 1 and 3 into one single figure (now fig 2) and we moved figures 4 and 5 to supplementary material. We would like to request keeping Figure 6, which is now Figure 4 in the new submission, as we believe it adds good visual information for the cross validation analysis.**
 
 
 > Please acknowledge (by email to sysbio.editorialoffice@oup.com, SYSBIO.OUP.EA@straive.com) receipt of the reviews and give a probable time frame for the return of your revised manuscript. Your revision should be submitted as soon as possible. Any revision not received in a timely manner may have to be considered a new submission.
@@ -64,7 +67,7 @@ I also wonder if all figures are necessary: for example, Figures 5 and 6 could b
 > You will be unable to make your revisions in ScholarOne Manuscripts. Instead, revise your paper using a word processing program and save it on your computer.
 > HIGHLIGHT the changes to your manuscript within the document using the track changes mode in MS Word or by using bold, strikethrough, or colored text; any method you choose which indicates all changes made. If a large number of changes were made and you feel the document is too cluttered to read easily with all of them shown, feel free to submit a "clean" copy as well, in which changes are not indicated. If you decide a clean copy would likely be helpful to reviewers and editors, please upload it in the category called Related Files.
 
-**Noted. We highlighted changes using latex and submitted the PDF file.**
+**Noted. We highlighted changes using latex and submitted the PDF file with track changes names manuscript-differences.pdf.**
 
 > When submitting your revised manuscript, address each point made by the Editor, AE and Reviewers IN THE SPACE INDICATED (under "Response to Decision Letter"). Your revision cannot be processed if your responses to reviews are given only in a cover letter. The best way to address each point would be to copy this letter and insert your comments after each point made. Please do not change the order of or delete any of the comments because this makes it difficult to review again and would slow the process. The format of your responses must be compatible with ScholarOne Manuscripts text fields. For example, colored text is not an option, but you could use asterisks (and numbers, spacing, etc.) to clearly distinguish your responses from the text of the reviews.
 
@@ -106,7 +109,7 @@ All color costs can be avoided if you decide to have the figures printed in blac
 > SUPPLEMENTARY MATERIAL
 > Supplementary material, including data files and/or online-only appendices, can be found in the Dryad data repository (put your Dryad doi in parentheses here).
 
-**We added the DOI of our Dryad package containing all Supplementary Material on L690 (manuscript-differences.pdf).**
+**We added the DOI of our Dryad package containing all Supplementary Material at the en dof the manuscript (https://datadryad.org/stash/dataset/doi:10.5061/dryad.cnp5hqc6w).**
 
 > Make sure all section headings conform to Systematic Biology style for first, second and third levels. Use of incorrect styles is potentially confusing and, in any case, is likely to delay processing of the manuscript.
 
@@ -122,11 +125,11 @@ All color costs can be avoided if you decide to have the figures printed in blac
 
 > All funding used for this work should be listed in a "Funding" section preceding the Acknowledgements. Please give the full official name of each funding body.
 
-**Done on L700 (manuscript-differences.pdf).**
+**Added in "Funding" section, after "Supplementary Material".**
 
 > Our accepted abbreviation for millions of years ago is Ma. The abbreviation for millions of years duration is myr.
 
-**Checked.**
+**Checked and implemented.**
 
 > Our full instructions are accessible via the link in the upper right area of the ScholarOne Manuscripts page (the link goes to https://academic.oup.com/sysbio/pages/General_Instructions). In case of a discrepancy between the information at that site and this letter, follow the instructions in this letter.
 
@@ -158,58 +161,75 @@ All color costs can be avoided if you decide to have the figures printed in blac
 
 > Many thanks for the thorough revisions of your paper, which I find nearly ready for acceptance and have decided not to send it back to the reviewers. I do have a few additional comments, which I would like you to address in a minor revision.
 
-Thanks you for your decision! We addressed all the following comments.
+**Thanks you for your decision! We addressed all your comments as follows.**
 
 > Lines 24-25 “A service […] that provide services” rephrase?
 
-Rephrased to "a phylogenetic software that provides services"
+**Rephrased to "a phylogenetic software that provides services"**
 
 > Line 33: how is the topology chosen? User defined?
 
-By default it uses OpenTree's tree topology, ig the user does not provide a topology that they want. We specified this as "to corresponding nodes on a tree topology, either extracted from Open Tree of Life's synthetic phylogeny or one provided by the user"
+**By default it uses OpenTree's tree topology, ig the user does not provide a topology that they want. We specified this as "to corresponding nodes on a tree topology, either extracted from Open Tree of Life's synthetic phylogeny or one provided by the user"**
 
 > Line 40: I would rephrase to something like “Since the results of any […], we highlight that […]”
 
-Thanks for pointing this out, we rephrased to  "Because the results of any […], we highlight that […]"
+**Thanks for pointing this out, we rephrased to  "Because the results of any […], we highlight that […]"**
 
 > Line 43: “DateLife can help […]”
 
-Yes, we changed to "DateLife can help to increase [...]"
+**Yes, we changed to "DateLife can help to increase [...]"**
 
 > Line 116: can you provide more information about the taxonomic scope of the available phylogenies? How many species are included? Can a researcher working on e.g. plants or invertebrates still use it? What happens if none of the user's species are found?
 
+**We address this on the manuscript, section "Searching a chronogram database", second paragraph (L 126-132). Briefly, it depends on the taxonomic scope that the researcher is looking for. The chronogram database encompasses close to 100 k (99 474) different species. The chronograms in datelife’s database encompass almost the same amount of tips with phylogenetic information in OpenTree’s synthetic tree (112 669), in which Chordata and Embryophyta are nearly fully sampled. In contrast, Bacteria, Fungi, Nematoda, and Insecta, present a large gap between the estimated number of species and what has phylogenetic information in OpenTree’s synthetic tree. We would expect that users working with the former groups will always get results from datelife. If none of the user’s species are found, datelife will return a message saying that there are no chronograms containing any of those species in the database. It will also encourage users to submit chronograms to a public database, so that their taxon of interest can be included in future searches.**
 
 
 > Can a user choose to include a chronogram of their own? I think this would be useful if you want to plug a clade you are working on into a broader taxonomic scope.
 
+**Yes! They can add any chronograms they want to the database, or by providing an initial chronogram, node ages and tip names will be used as input for the analysis.**
+
 > Line 206-207: Equally spacing branches does not mean “not requiring any assumptions”. I think it’s OK to use it as default as it does not require prior estimates of speciation and extinction rates, but it is still making an assumption. The assumption translates into a possibly strange distribution of non-homogenous branching rates. I would focus on the fact that it does not require additional input (the rates) rather than on the assumption aspect.
 
-Thanks for pointing it out! We changed it to:
+**Thanks for pointing it out! We changed it to:**
 
-"BLADJ is an agnostic way to assign ages to nodes with no available genetic or branch length data, as it does not require initial diversification rates to draw from a branch length distribution"
+**"BLADJ is an agnostic way to assign ages to nodes with no available genetic or branch length data, as it does not require initial diversification rates to draw from a branch length distribution"**
 
-An alternative to BLADJ to date tree topologies in the absence of initial branch lengths that is common practice in the literature is to use a birth-death model to draw branch lengths [@Jetz2012; @rabosky2018inverse; @smith2018constructing]. In addition to the initial tree topology and nodes with age data, these methods require initial values of speciation and extinction rate parameters provided by the user. DateLife implements this approach with MrBayes [@Huelsenbeck2001; @Ronquist2003], using nodes with published age data as calibration priors on nodes of a tree topology with no branch lengths, a simple birth-death model with speciation and extinction rate parameters that are provided by the user, and no genetic data. However, BLADJ is the default option in DateLife, as it does not require any information on diversification rates for the phylogenetic sample to draw from a branch length distribution.
+**An alternative to BLADJ to date tree topologies in the absence of initial branch lengths that is common practice in the literature is to use a birth-death model to draw branch lengths [@Jetz2012; @rabosky2018inverse; @smith2018constructing]. In addition to the initial tree topology and nodes with age data, these methods require initial values of speciation and extinction rate parameters provided by the user. DateLife implements this approach with MrBayes [@Huelsenbeck2001; @Ronquist2003], using nodes with published age data as calibration priors on nodes of a tree topology with no branch lengths, a simple birth-death model with speciation and extinction rate parameters that are provided by the user, and no genetic data. However, BLADJ is the default option in DateLife, as it does not require any information on diversification rates for the phylogenetic sample to draw from a branch length distribution.**
 
 > Line 217: I think you mean branches that are proportional to the expected number of substitutions per site, i.e. substitution rate multiplied by elapsed time.
 
+**In this instance we are referring to branch lengths from phylogenetic trees that have not been dated yet. We modified the phrasing to make it more clear.**
 
 > Line 218: orthology hypothesis?
 
+**Yes! we clarified that, too.**
+
 > Lines 460-462: I don’t have strong opinion on this, but the statement seems unnecessary.
+
+**We removed it.**
 
 > I think the figures require some work. They look nice but are currently way too packed and I wonder if they need to include so much detail. I don’t know if anybody is still reading printed papers, but I doubt the figures would be readable on an A4. I recommend reducing the amount of text and substantially simplifying the graphics in general.
 
-> Fig. 1. I like the trees in the background, but they contribute to making the figure really busy. Also, there is a lot of text and tables, I think this should be strongly streamlined.
+**We simplified all figures and reduced the number of final figures in the main manuscript.**
 
-We streamlined the figure by removing text in the figure and adding it to the figure caption. We considered removing the tables, but we decided to keep them as they are important for the explanation of the workflow. We hope this new version of the figure is considerably clearer now.
+> Fig. 1. I like the trees in the background, but they contribute to making the figure really busy. Also, there is a lot of text and tables, I think this should be strongly streamlined.
 
 > Fig. 3. Way too much text, tip labels not readable. In b2 I would reduce the trees to like 4 examples and make sure all the boxes have the same size and are aligned. Again, consider removing the trees in the background, especially in the colored boxes. In c) fonts in references are way too small, the numbers on the time axis are not explained. In a figure I would not expect to see full sentences like “We used median summary ages of congruent nodes to date […]”. Font types and sizes seem inconsistent.
 
+**We consolidated Fig 1 and 3 and streamlined the figure by removing text in the figure and adding it to the figure caption. We removed the tables ad only reference them. We hope this new version of the figure is considerably clearer now.**
 
 > Arguably none of the text in Figs. 4 and 5 is readable without a 200% magnification and the title of the plot is unnecessary. Tip labels should not be shown if they can’t be read, consider summarizing them by e.g. higher taxonomy.
 
+**We reduced the number of tips shown in Figure 5 and sent the full figure (as well as Figure 4) to supplementary material. Figure 5 is now Figure 3.**
+
 > I hope this helps and look forward to seeing your revised version of the paper.
+
+**Thanks so much!**
 
 > Best regards,
 > Daniele
+
+**We greatly appreciate your consideration of our resubmission.**
+
+**Luna Sanchez-Reyes on behalf of all coauthors.**
 

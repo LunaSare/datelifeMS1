@@ -26,29 +26,30 @@ tex files:
 
 ### Figure original file names:
 
-cp figures/figure-workflow/figure1-new-cycle-vertical.pdf submission/Figure_1.pdf
+#### latest submission: Figure 2 became Figure 1
+cp figures/fig_runtime_main.pdf submission/Figure_1.pdf
 
-cp figures/fig_runtime_main.pdf submission/Figure_2.pdf
+#### latest submission: Figure 1 and 3 were merged into a single one, and became figure 2:
+cp figures/figure-small-example/figure3-cycle-no-bg.pdf submission/Figure_2.pdf
 
-cp figures/figure-small-example/figure3-horizontal.pdf submission/Figure_3.pdf
+#### latest submission: Figure 4 sent to supplement
 
-cp figures/fringillidae-topologies/fringillidae-topology.pdf submission/Figure_4.pdf
+#### latest submission: New, minimal figure 5, becomes figure 3
+cp figures/figure-fringillidae/Figure5_minimal.pdf submission/Figure_3.pdf
 
-New minimal figure 5
-cp figures/figure-fringillidae/Figure5_minimal.pdf submission/Figure_5.pdf
+#### latest submission: figure 6 becomes figure 4
+cp figures/fringillidae-cross-validation/fig-cross-validation-xy-plots-single-labels.pdf submission/Figure_4.pdf
 
-<!-- 
-Install required to use convert:
-brew install imagemagick
--->
-convert -density 100 submission/Figure_5.png submission/Figure_5.pdf
+### Supplemental figures
 
-cp figures/fringillidae-cross-validation/fig-cross-validation-xy-plots.pdf submission/Figure_6.pdf
-
+cp figures/fringillidae-topologies/fringillidae-topology.pdf submission/Figure_S1.pdf
 
 
 ### Figure caption files:
 
+submission/captions-final.tex
+
+#### previous captions:
 manuscript/fig-workflow.Rmd
 manuscript/fig-benchmark.Rmd
 manuscript/fig-small-example.Rmd
@@ -56,7 +57,6 @@ manuscript/fig-topologies.Rmd
 manuscript/fig-fringillidae-full-example.Rmd
 manuscript/fig-cross-validation.Rmd
 
-submission/final-captions.tex
 
 ### Previous figure and table references in manucript.Rmd file:
 

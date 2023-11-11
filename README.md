@@ -23,6 +23,7 @@ To create a "differences.tex" file, use [latexdiff](https://www.ctan.org/pkg/lat
 (I installed latexdiff using brew with `brew install latexdiff`):
 
     latexdiff manuscript-1st-submission.tex manuscript.tex > differences.tex
+    latexdiff manuscript-2nd-submission.tex manuscript.tex > differences.tex
 
 
 Then I rendered the differences.tex file from terminal with R:
@@ -39,4 +40,6 @@ To render reviews:
 
 ```
 R -e 'rmarkdown::render("review.Rmd", "all")'
+R -e 'rmarkdown::render("review2.Rmd", "all")'
+
 ```
