@@ -1,6 +1,7 @@
 ### Response to review
 
 cp review.pdf submission/response.pdf
+cp manuscript/differences.pdf submission/manuscript-differences.pdf
 
 ### Main files original file names:
 
@@ -10,6 +11,10 @@ cp manuscript/paper_references.bib submission/paper_references.bib
 cp manuscript/systematic-biology.csl submission/systematic-biology.csl
 
 ### Table original files:
+
+doc files:
+    cp tables/table-fringillidae-small-example.docx submission/table_1.docx
+    cp tables/table-fringillidae-small-example-summary.docx submission/table_2.docx
 
 pdf files:
     cp tables/table-fringillidae-small-example.pdf submission/table_1.pdf

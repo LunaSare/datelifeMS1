@@ -10,6 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(xtable)
 ```
 
+Doc files developed in files:
+- table-fringillidae-small-example.Rmd
+- table-fringillidae-small-example-summary.Rmd
+
+***
 tex file of small examples table 1 developed in vignettes/figure-small-example.Rmd L289-295.
 It is the same as the tex resulting in the code at the end.
 

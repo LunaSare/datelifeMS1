@@ -1,7 +1,7 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL manuscript-2nd-submission.tex   Tue Nov  7 19:22:46 2023
-%DIF ADD manuscript.tex                  Tue Nov 14 20:35:29 2023
+%DIF ADD manuscript.tex                  Tue Nov 21 13:29:09 2023
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[english,man]{apa6}
@@ -278,7 +278,7 @@ We performed a cross-validation test to compare node ages resulting from a DateL
 \emph{Keywords}: Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations.
 
 Word count: \DIFdelbegin \DIFdel{6707
-}\DIFdelend \DIFaddbegin \DIFadd{7042
+}\DIFdelend \DIFaddbegin \DIFadd{7484
 }\DIFaddend 
 
 \newpage
@@ -328,7 +328,7 @@ The processed taxon names are saved as an R object of a newly defined class, \te
 \end{center}
 
 At the time of writing of this manuscript
-(\DIFdelbegin \DIFdel{Jun 11}\DIFdelend \DIFaddbegin \DIFadd{Nov 14}\DIFaddend , 2023),
+(\DIFdelbegin \DIFdel{Jun 11}\DIFdelend \DIFaddbegin \DIFadd{Nov 21}\DIFaddend , 2023),
 DateLife's chronogram database latest version consist of 253 chronograms published in 187 different studies\DIFaddbegin \DIFadd{, encompassing close to 100 k (99 474) different species}\DIFaddend . It is curated from OpenTree's phylogenetic database, the Phylesystem, \DIFdelbegin \DIFdel{which constitutes an open source }\DIFdelend \DIFaddbegin \DIFadd{an open database }\DIFaddend of expert and peer-reviewed phylogenetic knowledge with rich metadata \DIFaddbegin \DIFadd{and a wide taxonomic scope }\DIFaddend (McTavish et al., 2015)\DIFdelbegin \DIFdel{, which allows automatic and reproducible assembly of our chronogram database. Datelife's chronogram database is navigable as an R data object within the }\texttt{\DIFdel{datelife}} %DIFAUXCMD
 \DIFdel{R package}\DIFdelend \DIFaddbegin \DIFadd{. We expect DateLife's database to largely overlap with OpenTree's phylogenetic database taxonomic coverage, where Chordata and Embryophyta are nearly fully sampled. In contrast, Bacteria, Fungi, Nematoda, and Insecta, currently present a large gap between the number of named species and what has phylogenetic information in OpenTree's synthetic tree. It is likely that users working with the former groups will get results from a DateLife analysis. If none of the user's species are found, the software will indicate the lack of age data for the queried taxa in the database}\DIFaddend .
 
@@ -497,7 +497,7 @@ As explained in the \enquote{Description} section, a tree topology to summarize 
 By default, DateLife uses the topology from OpenTree's synthetic tree that contains all taxa from the search query.
 According to OpenTree's synthetic tree, species belonging to the family Fringillidae do not form a monophyletic group (\DIFdelbegin \DIFdel{Fig. 4a}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Fig. S1}\DIFaddend ). Hence, a topology containing only the 289 species from the original query was extracted from Open Tree of Life's synthetic tree v12.3 (\DIFdelbegin \DIFdel{Fig. 4b}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Fig. S2}\DIFaddend ; Open Tree Of Life et al., 2019).
 
-\DIFdelbegin \DIFdel{Source }\DIFdelend \DIFaddbegin \DIFadd{All 19 source }\DIFaddend chronograms (Supplementary Figs. \DIFdelbegin \DIFdel{S2-S20}\DIFdelend \DIFaddbegin \DIFadd{S5-S23}\DIFaddend ) were congruified to OpenTree's topology shown in \DIFdelbegin \DIFdel{Figure 4b}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Figure S2}\DIFaddend , reducing the original 1,206 node age data set to 818 different data points (Supplementary Table S2) that \DIFdelbegin \DIFdel{can }\DIFdelend \DIFaddbegin \DIFadd{could }\DIFaddend be used as calibrations for the chosen topology (\DIFdelbegin \DIFdel{Fig. 4b}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Fig. S2}\DIFaddend ). The congruent node age data points were summarized for each node, resulting in 194 summary node ages. From these 21 were excluded as secondary calibrations because they were older than the ancestral node. The remaining 173 summary node ages were used as secondary calibrations to obtain a fully dated (and resolved) phylogeny with the program BLADJ (\DIFdelbegin \DIFdel{Fig. 5). }\DIFdelend \DIFaddbegin \DIFadd{Supplementary Figure S3). Results for a subgroup are shown in Figure 3.
+\DIFdelbegin \DIFdel{Source }\DIFdelend \DIFaddbegin \DIFadd{All 19 source }\DIFaddend chronograms (Supplementary Figs. \DIFdelbegin \DIFdel{S2-S20}\DIFdelend \DIFaddbegin \DIFadd{S5-S23}\DIFaddend ) were congruified to OpenTree's topology shown in \DIFdelbegin \DIFdel{Figure 4b}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Figure S2}\DIFaddend , reducing the original 1,206 node age data set to 818 different data points (Supplementary Table S2) that \DIFdelbegin \DIFdel{can }\DIFdelend \DIFaddbegin \DIFadd{could }\DIFaddend be used as calibrations for \DIFdelbegin \DIFdel{the chosen topology(Fig. 4b). }\DIFdelend \DIFaddbegin \DIFadd{that chosen topology. }\DIFaddend The congruent node age data points were summarized for each node, resulting in 194 summary node ages. From these 21 were excluded as secondary calibrations because they were older than the ancestral node. The remaining 173 summary node ages were used as secondary calibrations to obtain a fully dated (and resolved) phylogeny with the program BLADJ (\DIFdelbegin \DIFdel{Fig. 5). }\DIFdelend \DIFaddbegin \DIFadd{Supplementary Figure S3). Results for a subgroup are shown in Figure 3.
 }\DIFaddend 
 
 \begin{center}
@@ -528,7 +528,7 @@ We would like to emphasize on the importance of sharing chronogram data, includi
 As we envision that DateLife will have many interesting applications in research and beyond, we emphasize that DateLife's results --as well as any insights gleaned from them, largely depend on the quality of the source chronograms: low quality chronograms will produce low quality results. The \enquote{garbage in, garbage out} problem has long been recognised in supertree methods for summarizing phylogenetic trees (Bininda-Emonds et al., 2004).
 We note that this is a surfacing issue of any automated tool for biological data analysis. For example, DNA riddled with sequencing errors will produce generally poor alignments that will return biased evolutionary hypothesis, independently of the quality of the analysis software used. Again, we urge readers and DateLife users to explore all input chronograms before using a summary chronogram resulting from a DateLife workflow.
 
-Finally, uncertainty and variability of chronogram node age estimates might pose larger issues in some research areas than others. For example, in ecological and conservation biology studies, it has been shown that incorporating some chronogram data provides better results than when not using any age data at all, even if the node ages are not good quality (Webb et al., 2008). In the following sections we discuss the particularities of divergence times from DateLife's summary chronograms and their impact on certain evolutionary analyses, for consideration of the readers and users in different research areas.
+Finally, uncertainty and variability of chronogram node age estimates might pose larger issues in some research areas than others. For example, in ecological and conservation biology studies, it has been shown that incorporating some chronogram data provides better results than when not using any age data at all, even if the node ages are not \DIFdelbegin \DIFdel{good }\DIFdelend \DIFaddbegin \DIFadd{the best }\DIFaddend quality (Webb et al., 2008). In the following sections we discuss the particularities of divergence times from DateLife's summary chronograms and their impact on certain evolutionary analyses, for consideration of the readers and users in different research areas.
 
 \begin{center}
 \emph{Age Variation in Source Chronograms}
@@ -622,8 +622,11 @@ Development versions are available from DateLife's GitHub repository (\url{https
 \textsc{Supplementary Material}
 \end{center}
 
-Supplementary Figures can be viewed and downloaded from their Zenodo repository (\url{https://doi.org/10.5281/zenodo.6683667}).
-Supplementary material, including code, biological examples, benchmark results, data files and online-only appendices, can be downloaded from the Dryad data repository (\url{https://doi.org/10.5061/dryad.cnp5hqc6w}), as well as in the Zenodo stable repositories that host the reproducible manuscript (\url{https://doi.org/10.5281/zenodo.7435094}), the biological examples (\url{https://doi.org/10.5281/zenodo.7435101}), and the software benchmark (\url{https://doi.org/10.5281/zenodo.7435106}). Development versions corresponding to all of the above are hosted on GitHub, accesible at \url{https://github.com/LunaSare/datelifeMS1}, \url{https://github.com/LunaSare/datelife_examples}, and \url{https://github.com/LunaSare/datelife_benchmark}.
+Supplementary \DIFdelbegin \DIFdel{Figures can be viewed and downloaded from their Zenodo repository (}%DIFDELCMD < \url{https://doi.org/10.5281/zenodo.6683667}%%%
+\DIFdel{).
+Supplementary }\DIFdelend material, including \DIFaddbegin \DIFadd{figures, tables, }\DIFaddend code, biological examples, benchmark results, data files and online-only appendices, can be \DIFaddbegin \DIFadd{viewed and }\DIFaddend downloaded from the Dryad data repository (\url{https://doi.org/10.5061/dryad.cnp5hqc6w}), as well as \DIFdelbegin \DIFdel{in }\DIFdelend \DIFaddbegin \DIFadd{from }\DIFaddend the Zenodo stable repositories that host the reproducible manuscript (\url{https://doi.org/10.5281/zenodo.7435094}), the biological examples (\url{https://doi.org/10.5281/zenodo.7435101}), \DIFdelbegin \DIFdel{and }\DIFdelend the software benchmark (\url{https://doi.org/10.5281/zenodo.7435106})\DIFdelbegin \DIFdel{. }\DIFdelend \DIFaddbegin \DIFadd{, and the figures (}\url{https://doi.org/10.5281/zenodo.6683667}\DIFadd{).
+Dryad's data publication fee is covered by the Society of Systematic Biologists.
+}\DIFaddend Development versions corresponding to all of the above are hosted on GitHub, \DIFdelbegin \DIFdel{accesible }\DIFdelend \DIFaddbegin \DIFadd{accessible }\DIFaddend at \url{https://github.com/LunaSare/datelifeMS1}, \url{https://github.com/LunaSare/datelife_examples}, and \url{https://github.com/LunaSare/datelife_benchmark}.
 
 \begin{center}
 \textsc{Funding}
@@ -812,13 +815,13 @@ Klicka, J., Barker, F. K., Burns, K. J., Lanyon, S. M., Lovette, I. J., Chaves, 
 Ksepka, D. T., Benton, M. J., Carrano, M. T., Gandolfo, M. A., Head, J. J., Hermsen, E. J., \ldots{} others. (2011). \emph{Synthesizing and databasing fossil calibrations: Divergence dating and beyond}. The Royal Society.
 
 \leavevmode\hypertarget{ref-ksepka2015fossil}{}%
-Ksepka, D. T., Parham, J. F., Allman, J. F., Benton, M. J., Carrano, M. T., Cranston, K. A., \ldots{} others. (2015). The fossil calibration database---a new resource for divergence dating. \emph{Systematic Biology}, \emph{64}(5), 853--859\DIFaddbegin \DIFadd{.
+Ksepka, D. T., Parham, J. F., Allman, J. F., Benton, M. J., Carrano, M. T., Cranston, K. A., \ldots{} others. (2015). The fossil calibration database---a new resource for divergence dating. \emph{Systematic Biology}, \emph{64}(5), 853--859.
+
+\leavevmode\DIFaddbegin \hypertarget{ref-kumar2022timetree}{}%DIF > 
+\DIFadd{Kumar, S., Suleski, M., Craig, J. M., Kasprowicz, A. E., Sanderford, M., Li, M., \ldots{} Hedges, S. B. (2022). TimeTree 5: An expanded resource for species divergence times. }\emph{\DIFadd{Molecular Biology and Evolution}}\DIFadd{, }\emph{39}(8)\DIFadd{, msac174.
 }
 
-\leavevmode\hypertarget{ref-kumar2022timetree}{}%DIF > 
-\DIFadd{Kumar, S., Suleski, M., Craig, J. M., Kasprowicz, A. E., Sanderford, M., Li, M., \ldots{} Hedges, S. B. (2022). TimeTree 5: An expanded resource for species divergence times. }\emph{\DIFadd{Molecular Biology and Evolution}}\DIFadd{, }\emph{39}(8)\DIFadd{, msac174}\DIFaddend .
-
-\leavevmode\hypertarget{ref-lamichhaney2015evolution}{}%
+\leavevmode\DIFaddend \hypertarget{ref-lamichhaney2015evolution}{}%
 Lamichhaney, S., Berglund, J., Almén, M. S., Maqbool, K., Grabherr, M., Martinez-Barrio, A., \ldots{} others. (2015). Evolution of darwin's finches and their beaks revealed by genome sequencing. \emph{Nature}, \emph{518}(7539), 371--375.
 
 \leavevmode\hypertarget{ref-laubichler2009form}{}%
@@ -1011,6 +1014,22 @@ Weir, J., \& Schluter, D. (2008). Calibrating the avian molecular clock. \emph{M
 Zuccon, D., Prŷs-Jones, R., Rasmussen, P. C., \& Ericson, P. G. (2012). The phylogenetic relationships and generic limits of finches (fringillidae). \emph{Molecular Phylogenetics and Evolution}, \emph{62}(2), 581--596.
 
 \endgroup
+\DIFaddbegin 
+
+\hypertarget{figure-captions}{%
+\section{Figure Captions}\label{figure-captions}}
+
+\DIFadd{Figure 1. DateLife's benchmarking results showing computation time used for taxon name processing and search across }\texttt{\DIFadd{datelife}}\DIFadd{'s chronogram database, as a function of number of input taxon names (N). For each N = \{10, 100, 200, \ldots{}, 1 000, \ldots{} , 9 000, 10 000\}, we randomly sampled N species names from the class Aves, a hundred times, and then performed a }\texttt{\DIFadd{datelife}} \DIFadd{search processing the input names using the Taxon Names Resolution Service (TNRS; light gray), and without processing input names (dark gray). For comparison, we performed a chronogram search using names that have been pre-processed with TNRS.
+}
+
+\DIFadd{Figure 2. DateLife results of an analysis of a small sample of 6 bird species within the Passeriformes (a, b). Processed species names were found across 9 chronograms within 6 independent studies (c; Barker et al. (}\protect\hyperlink{ref-barker2012going}{2012}\DIFadd{), Barker et al. (}\protect\hyperlink{ref-barker2015new}{2015}\DIFadd{), Burns et al. (}\protect\hyperlink{ref-burns2014phylogenetics}{2014}\DIFadd{), Hedges et al. (}\protect\hyperlink{ref-Hedges2015}{2015}\DIFadd{), Hooper and Price (}\protect\hyperlink{ref-hooper2017chromosomal}{2017}\DIFadd{), Jetz et al. (}\protect\hyperlink{ref-Jetz2012}{2012}\DIFadd{). This revealed 28 source age data points for the queried species names (e; Table 1). Summarized age data (f; Table 2) was used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree v13.4 (d), resulting in the chronogram of summary source ages shown in (g).
+}
+
+\DIFadd{Figure 3. Median summary chronogram resulting from a Datelife analysis of bird species within the family Fringillidae. For visualization purposes, we are showing a portion of the final median summary chronogram encompassing 57 species out of the 289 total included in the analysis. The complete final chronogram is available as Supplementary Figure S3. The starting tree topology (Supplementary Fig. S2) has 289 tip species and 253 nodes; DateLife revealed age data for 194 of these nodes from at least one published chronogram. In total, 19 different chronograms from 13 different studies contributed 818 age data points, which were summarized to obtain a single value for each one of the 194 nodes with age data. From the 194 summary ages available, 21 were discarded and not used as calibrations (asterisk, *), because they were older than a parent node or younger than a descendant node; the remaining 173 summary ages were used as secondary calibrations (forward slash, /) with the Branch Length Adjuster (BLADJ) software from Webb et al., (}\protect\hyperlink{ref-Webb2008}{2008}\DIFadd{).
+}
+
+\DIFadd{Figure 4. Cross validation of results from a DateLife analysis of the family Fringillidae, shown in Figure 3 and Supplementary Figure S3. Each plot compares the original node age estimates from an input source study chronogram (x axis) with the corresponding node age resulting from a dating analysis using the DateLife workflow, excluding data from that study (y axis).
+}\DIFaddend 
 
 
 \end{document}

@@ -1,4 +1,4 @@
-Nov 7, 2023
+Nov 14, 2023
 
 Isabel Sanmartín
 Real Jardín Botánico
@@ -9,7 +9,7 @@ Dear Systematic Biology editor-in-chief, Isabel Sanmartín
 
 It is with great enthusiasm that we are resubmitting our manuscript entitled, “DateLife: leveraging databases and analytical tools to reveal the dated Tree of Life” for publication in the journal of Systematic Biology, as a Software article.
 
-We carefully addressed all points made by the reviewers and AE, and we think they greatly improved the figures and the clarity of the manuscript.
+We carefully addressed all points made by the reviewers and AE, and we think they greatly improved the figures and the clarity of the manuscript. We reduced the number of figures from 6 to only 4.
 
 We would like to request for support to have one figure published in color, if possible (figure 3). All other figures are ok to be published in grayscale.
 
