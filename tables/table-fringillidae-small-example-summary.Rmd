@@ -1,0 +1,25 @@
+---
+title: ""
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+table2 <- read.csv(file = "table-fringillidae-small-example-summary.csv")
+head(table2)
+colnames_edited <- gsub("\\.", " ", colnames(table2))
+colnames_edited
+```
+
+```{r, echo =FALSE}
+knitr::kable(table2, 
+             digits = 3,
+             row.names = FALSE,
+             col.names = colnames_edited,
+             align = "l",
+            caption = "Table 2. Summary statistics of node ages from Table 1. DateLife uses median ages by default to date a chosen tree topology (Fig. 3g).")
+```
+

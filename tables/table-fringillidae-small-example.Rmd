@@ -1,0 +1,26 @@
+---
+title: ""
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+table10 <- read.csv(file = "table-fringillidae-small-example.csv")
+head(table10)
+colnames_edited <- gsub("\\.", " ", colnames(table10))
+colnames_edited 
+colnames_edited[5] <- "Study reference"
+```
+
+```{r, echo =FALSE}
+knitr::kable(table10, 
+             digits = 3,
+             row.names = FALSE,
+             col.names = colnames_edited,
+             align = "l",
+            caption = "Table 1. Node ages extracted with DateLife from 9 chronograms (shown in Fig. 2c) containing at least 2 of the 6 bird species analysed in the Fringillidae small example. All nodes are congruent with the chosen tree topology shown in Figure 2d.")
+```
+
