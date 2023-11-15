@@ -432,11 +432,21 @@ In general, topologically deeper nodes display the largest age variation between
 \textsc{Discussion}
 \end{center}
 
-DateLife's goal is to improve availability and accessibility of state-of-the-art data on evolutionary time frame of organisms, to allow users from all areas of science and with all levels of expertise to compare, reuse, and reanalyse expert age data for their own applications. As such, it is designed as an open service that does not require any expert biological knowledge --besides the scientific names of the species or group users want to work with, to use any of its functionalities.
+DateLife's goal is to improve availability, accessibility, and reusability of state-of-the-art data on evolutionary time frame of organisms, to allow users from all areas of science and with all levels of expertise to compare, use and reanalyse expert age data for their own applications. As such, it is designed as an open service that does not require any expert biological knowledge --besides the scientific names of the species or group that users want to work with-- to use any of its functionalities.
 
 A total of `r format(length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label"))))), big.mark=",")` unique terminal taxa are represented in DateLife's database.
-Incorporation of more chronograms into the database will continue to improve DateLife's services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository.  Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
-We would like to emphasize on the importance of sharing chronogram data, including systematically curated metadata, into open repositories, such as OpenTree's Phylesystem [@mctavish2015phylesystem] for the benefit of the scientific community as a whole.
+Incorporation of more chronograms into the database will continue to improve DateLife's services. One option to increase the number of chronograms in the DateLife database is the Dryad data repository. Methods to automatically mine chronograms from Dryad could be designed and implemented. However, Dryad's metadata system has no information to automatically detect branch length units, and those would still need to be determined manually by a human curator.
+We would like to emphasize on the importance of sharing chronogram data, including systematically curated metadata, into open repositories, such as OpenTree's Phylesystem [@mctavish2015phylesystem] for the benefit of research and the scientific community as a whole.
+Another important source of expert data on time of lineage divergence is TimeTree's database [@Hedges2006], which holds chronograms from more than 4k published studies, and is fully browsable using its graphical user interface (timetree.org). TimeTree's chronogram database was not accessible in computer readable format until very recently [@kumar2022timetree], when its terms of use and website application were updated, now allowing some kinds of reuse, but not redistribution.  
+<!-- Programmatic access and redistribution is still prohibited by copyright, which prevents adding chronograms to any other databases.--> The inaccessibility of TimeTree's database was an inspiration for the DateLife project, which was born as a prototype tool initially developed over a series of hackathons at the National Evolutionary Synthesis Center, NC, USA [@Stoltzfus2013], as the need to make scientific information that is funded by the public practically available to the public was acknowledged and prioritized.
+
+<!--
+We believe that separating science from a capitalist view is important.
+
+However the source chronograms used as input data for this tree are not available in computer readable format, preventing reuse and reanalysis. As this tree is part of datelife's database, the amount of lineages that can be queried using `datelife` (`r length(unique(unname(unlist(lapply(opentree_chronograms$trees, "[[", "tip.label")))))` unique terminal taxa) is substantial.
+Access to the input chronograms used to generate the Hedges et al. summary tree would improve measures of uncertainty in DateLife, but they are available only as image files and not as usable data (timetree.org).
+-->
+
 
 As we envision that DateLife will have many interesting applications in research and beyond, we emphasize that DateLife's results --as well as any insights gleaned from them, largely depend on the quality of the source chronograms: low quality chronograms will produce low quality results. The "garbage in, garbage out" problem has long been recognised in supertree methods for summarizing phylogenetic trees [@bininda2004garbage].
 We note that this is a surfacing issue of any automated tool for biological data analysis. For example, DNA riddled with sequencing errors will produce generally poor alignments that will return biased evolutionary hypothesis, independently of the quality of the analysis software used. Again, we urge readers and DateLife users to explore all input chronograms before using a summary chronogram resulting from a DateLife workflow.
@@ -456,7 +466,7 @@ https://towardsdatascience.com/a-primer-on-the-sources-of-biases-in-data-mining-
 
 Conflict in estimated ages among alternative studies is common in the literature. See, for example, the robust ongoing debate about crown group age of angiosperms [@sauquet2021age; @barba2018constraining; @magallon2015metacalibrated; @sanderson2001sources; @ramshaw1972time].
 Alternative source chronograms available for the same taxa have potentially been estimated implementing different types of calibrations, which affects the resulting node age estimates.
-For example, in the DateLife analysis of the Fringillidae shown above, the chronograms from one study [@burns2014phylogenetics] were inferred using molecular substitution rate estimates across birds [@weir2008calibrating], and have much older age estimates for the same nodes than chronograms that were inferred using fossil calibrations (Fig. 4; Supplementary Figs. S4c, S10).
+For example, in the DateLife analysis of the Fringillidae shown above, the chronograms from one study [@burns2014phylogenetics] were inferred using molecular substitution rate estimates across birds [@weir2008calibrating], and have much older age estimates for the same nodes than chronograms that were inferred using fossil calibrations (Figs. 3, 4c, Supplementary Figs. S4c, S10).
 <!--\textcolor{red}{EJM: MORE ON the FINCH examples and the cross validation here}-->
 Another source of conflict in estimated node ages can arise from different placements for the same calibration, which would imply fundamentally distinct evolutionary hypotheses [@antonelli2017supersmart].
 For example, two independent researchers working on the same clade should both carefully select and justify their choices of fossil calibration placement.
@@ -497,10 +507,8 @@ Some characteristics that are often cited in published studies as a measure of i
 DateLife provides an opportunity to capture concordance and conflict among date estimates, which can also be used as a metric for chronogram reliability.
 Its open database of chronograms allows other researchers to do such analyses themselves reproducibly, and without needing permission. Though, of course, they should follow proper citation practices, especially for the source chronogram studies.
 
-The exercise of summarizing age data from across multiple studies provides the opportunity to work with a chronogram that reflects a unified evolutionary history for a lineage, by putting together evidence from different hypotheses.
-The largest, and taxonomically broadest chronogram currently available from OpenTree was constructed summarizing age data from 2,274 published chronograms using NCBI's taxonomic tree as backbone [@Hedges2015].
-<!--BCO: I just checked: TIMETREEE NOW ALLOWS SOURCE TREE DOWNLOADS! This is great news. They have a copyright (not legal in US on trees, IMHO) notice on individual trees, but they do say "To download all individual study timetrees, please send an email request to info@timetree.org." -- I think this could be great to do-->
-A summarizing exercise may also amplify the effect of uncertainty and errors in source data, and blur parts of the evolutionary history of a lineage that might only be reflected in source chronograms and lost on the summary chronogram [@sauquet2021age].
+The exercise of summarizing age data from across multiple studies is a common resource in research, as it provides the opportunity to work with a chronogram that reflects a unified evolutionary history for a lineage, by putting together evidence from different hypotheses. For example, the largest, and taxonomically broadest chronogram currently available from OpenTree was constructed summarizing age data from 2,274 published chronograms using NCBI's taxonomic tree as backbone [@Hedges2015], which has been widely reused for research.
+Finally, we note that summarizing chronograms should be done with caution, as it may amplify the effect of uncertainty and errors in source data, and blur parts of the evolutionary history of a lineage that might only be reflected in source chronograms and lost on the summary chronogram [@sauquet2021age].
 <!--\textcolor{red}{EJM: ??? it's not clear to me what this last part means! What might you be losing?
 LLSR: I changed loosing to blurring. But I will elaborate more on it}
 Choosing source chronograms that we are going to keep and the ones that we are going to discard might be key.
@@ -509,6 +517,9 @@ Choosing source chronograms that we are going to keep and the ones that we are g
 <!-- Comparison of available age data for a wide range of organisms shown here suggest that discrepancy in age estimates across studies is a widespread phenomenon that requires further attention. -->
 
 <!-- Still, even if all source chronograms have been generated by excellent standards and using similar methods, the evolutionary history they depict might be very different.  -->
+<!--
+
+BCO: I just checked: TIMETREEE NOW ALLOWS SOURCE TREE DOWNLOADS! This is great news. They have a copyright (not legal in US on trees, IMHO) notice on individual trees, but they do say "To download all individual study timetrees, please send an email request to info@timetree.org." -- I think this could be great to do-->
 
 \begin{center}
 \emph{Effects of Taxon Sampling on Downstream Analyses}
@@ -518,7 +529,7 @@ Analysis of species diversification of simulated and empirical phylogenies sugge
 Ideally, phylogenies should be completed using genetic data, but this is a time-consuming and difficult task to achieve for many biological groups.
 Hence, DateLife's workflow features different ways of assigning divergence times to taxa with missing the absence of branch length data and calibrations and branch lengths for certain taxa.
 
-Completing a phylogeny using a stochastic birth-death polytomy resolver and a backbone taxonomy is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353,185 seed plants where only 23% had molecular data. These stochastically resolved chronograms return diversification rates estimates that appear less biased than those estimated from their incompletely sampled counterparts, even with methods that account for missing lineages by using sampling fractions [@cusimano2012new; @chang2020estimating], but can also introduce spurious patterns of early bursts of diversification [@cusimano2010slowdowns; @sun2020estimating].
+Completing a phylogeny using a stochastic birth-death polytomy resolver and a backbone taxonomy is a common practice in scientific publications: @Jetz2012, created a chronogram of all 9,993 bird species, where 67% had molecular data and the rest was simulated; @rabosky2018inverse created a chronogram of 31,536 ray-finned fishes, of which only 37% had molecular data; @smith2018constructing constructed a chronogram of 353,185 seed plants where only 23% had molecular data. Stochastically resolved chronograms can return diversification rates estimates that appear less biased than those estimated from their incompletely sampled counterparts, even with methods that account for missing lineages by using sampling fractions [@cusimano2012new; @chang2020estimating], but can also introduce spurious patterns of early bursts of diversification [@cusimano2010slowdowns; @sun2020estimating].
 
 Taxonomy-based stochastic polytomy resolvers also introduce topological differences in phylogenetic trees.
 The study of macroevolutionary processes largely depends on an understanding of the timing of species diversification events, and different phylogenetic and chronogram hypothesis can provide very different overviews of the macroevolutionary history of a biological group.
@@ -573,11 +584,9 @@ Funding was provided by the US National Science Foundation (NSF) grants ABI-1458
 \end{center}
 
 We thank Isabel Sanmartín, Daniele Silvestro, Rutger Vos and an anonymous reviewer, for comments that greatly improved this manuscript.
-The DateLife project was born as a prototype tool aiming to provide the services describe in this paper, and was initially developed over a series of hackathons at the National Evolutionary Synthesis Center, NC, USA [@Stoltzfus2013].
 We thank colleagues from the O'Meara Lab at the University
 of Tennessee Knoxville for suggestions, discussions and software testing.
-The late National Evolutionary Synthesis Center (NESCent), which sponsored hackathons
-that led to initial work on this project. The team that assembled DateLife's first proof of concept: Tracy Heath, Jonathan Eastman, Peter Midford, Joseph Brown, Matt Pennell, Mike Alfaro, and Luke Harmon.
+The late National Evolutionary Synthesis Center (NESCent), which sponsored hackathons that led to initial work on this project. The team that assembled DateLife's first proof of concept: Tracy Heath, Jonathan Eastman, Peter Midford, Joseph Brown, Matt Pennell, Mike Alfaro, and Luke Harmon.
 The Open Tree of Life project that provides the open, metadata rich repository of
 trees used to construct DateLife's chronogram database.
 The many scientists who publish their chronograms in an open, reusable form, and the scientists who curate them for deposition in the Open Tree of Life repository.
