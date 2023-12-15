@@ -1,0 +1,78 @@
+---
+title: "felis plot"
+output: pdf_document
+date: "2023-12-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+getwd()
+source(file = "R/plot_node_ages_v2.3.R")
+library(ape)
+library(datelife)
+```
+
+
+```{r}
+felis_node_subtree <- rotl::tol_subtree(node_id = 'ott563165', label = "name")
+my_datelife_query <- datelife::make_datelife_query(input = felis_node_subtree)
+ls(my_datelife_query)
+my_datelife_result <-  datelife::get_datelife_result(input = my_datelife_query, cache = opentree_chronograms)
+```
+
+```{r}
+my_datelife_result$`Roquet, C., Lavergne, S., & Thuiller, W. (2014). One Tree to Link Them All: A Phylogenetic Dataset for the European Tetrapoda. PLoS Currents. doi:10.1371/currents.tol.5102670fff8aa5c918e78f5592790e48
+`
+```
+
+```{r}
+phylo_median <- datelife::datelife_search(input = my_datelife_query,
+                                           summary_format = "phylo_median")
+#dsumm <- datelife:::summary.datelifeResult(datelife_query = my_datelife_query, object = my_datelife_result) 
+
+phylo_all <- datelife::datelife_search(input = my_datelife_query,
+                                           summary_format = "phylo_all")
+class(phylo_all)
+ls(phylo_all)
+length(phylo_all)
+```
+
+### Getting oldest age among all source chronograms in a `multiPhylo` object:
+
+```{r}
+lapply(phylo_all, ape::branching.times)
+
+plot_max_time <- 846
+```
+
+
+```{r}
+all_calibrations <- datelife:::extract_calibrations_phylo(
+  input = phylo_all,
+  each = FALSE)
+nrow(all_calibrations)
+```
+Congruify calibrations:
+
+
+```{r}
+congruified_calibs <- datelife::congruify_and_mrca_multiPhylo(phy = phylo_median,
+                              source_chronograms = phylo_all[-9])
+
+```
+
+```{r}
+
+calibrations <-  datelife:::summary.matchedCalibrations(phylo_median)
+ls(calibrations)
+calibrations$in_phy
+congruified_calibs
+
+calibrations <- list(in_phy = congruified_calibs)
+plot_node_ages_2.3(phylo_median, calibrations)
+```
+
+```{r}
+datelifeplot::plot_node_ages2(chronogram = phylo_median, matched_ages = calibrations)
+```
+
