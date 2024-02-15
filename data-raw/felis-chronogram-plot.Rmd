@@ -7,8 +7,12 @@ date: "2023-12-14"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 getwd()
-source(file = "R/plot_node_ages_v2.3.R")
+source(file = "../R/plot_node_ages_v2.3.R")
 library(ape)
+# detach("package:datelife", unload=TRUE)
+devtools::install(pkg = "../../lunasare/datelife/.")
+
+# devtools::install_github(repo = "phylotastic/datelife", ref = "ott-names")
 library(datelife)
 ```
 
@@ -36,13 +40,44 @@ class(phylo_all)
 ls(phylo_all)
 length(phylo_all)
 ```
+### Visualizing all source chronograms
+
+```{r}
+plot_max_time <- 845
+source_chronogram_file_names <- paste0("felis-source-chronogram-", 1:length(phylo_all))
+datelifeplot::plot_phylo_all(chronograms = phylo_all,
+                             folder_name = paste0("felis-source_chronograms"),
+                             file_name = source_chronogram_file_names,
+                             plot_height = 600,
+                             plot_width = 600,
+                             mai1 = 1,
+                             mai2 = 0,
+                             mai3 = 1,
+                             mai4 = 5,
+                             omi1 = 1,
+                             omi2 = 0,
+                             omi3 = 0,
+                             omi4 = 0,
+                             write = "pdf",
+                             plot_type = "phyloch",
+                             max_depth = plot_max_time,
+                             edge.width = 2,
+                             cex_tiplabels = 1,
+                             cex_axislabel = 1.5,
+                             cex_axis = 2,
+                             cex_title = 2.5,
+                             pos_title = -2.8,
+                             pos_axis = 2,
+                             axis_label = "")
+```
+
 
 ### Getting oldest age among all source chronograms in a `multiPhylo` object:
 
 ```{r}
 lapply(phylo_all, ape::branching.times)
-
-plot_max_time <- 846
+class(phylo_all[[9]]) <- "phylo"
+datelifeplot::plot_chronogram(chronogram = plot(phylo_all[[9]]))
 ```
 
 

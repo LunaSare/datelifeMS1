@@ -15,8 +15,10 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::load_all("../../datelifeplot")
-devtools::load_all("../../lunasare/datelife")
+# devtools::load_all(".datelifeplot")
+# devtools::load_all("../../lunasare/datelife")
+library(datelife)
+library(datelifeplot)
 writing_dir <- "../figures/figure-fringillidae/"
 source_chronograms_dir <- "../figures/figure-fringillidae/source_chronograms"
 dir_exists <- dir.exists(path = source_chronograms_dir)
@@ -29,7 +31,13 @@ if (!dir_exists) dir.create(path = source_chronograms_dir)
 dquery <- datelife::make_datelife_query(input = "fringillidae",
                                              use_tnrs = TRUE,
                                              get_spp_from_taxon = TRUE,
-                                             taxonomic_source = "ncbi")
+                                             reference_taxonomy = "ncbi")
+```
+```{r, eval = FALSE}
+dquery_ott <- datelife::make_datelife_query(input = "fringillidae",
+                                             use_tnrs = TRUE,
+                                             get_spp_from_taxon = TRUE,
+                                             reference_taxonomy = "ott")
 ```
 
 
