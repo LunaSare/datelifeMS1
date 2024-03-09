@@ -115,13 +115,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -193,7 +193,7 @@ DateLife can help to increase awareness of the existing disparities among altern
 
 \emph{Keywords}: Tree; Phylogeny; Scaling; Dating; Ages; Divergence times; Open Science; Congruification; Supertree; Calibrations; Secondary calibrations.
 
-Word count: 7484
+Word count: 7478
 
 \newpage
 
@@ -242,8 +242,8 @@ The processed taxon names are saved as an R object of a newly defined class, \te
 \end{center}
 
 At the time of writing of this manuscript
-(Nov 21, 2023),
-DateLife's chronogram database latest version consist of 253 chronograms published in 187 different studies, encompassing close to 100 k (99 474) different species. It is curated from OpenTree's phylogenetic database, the Phylesystem, an open database of expert and peer-reviewed phylogenetic knowledge with rich metadata and a wide taxonomic scope (McTavish et al., 2015). We expect DateLife's database to largely overlap with OpenTree's phylogenetic database taxonomic coverage, where Chordata and Embryophyta are nearly fully sampled. In contrast, Bacteria, Fungi, Nematoda, and Insecta, currently present a large gap between the number of named species and what has phylogenetic information in OpenTree's synthetic tree. It is likely that users working with the former groups will get results from a DateLife analysis. If none of the user's species are found, the software will indicate the lack of age data for the queried taxa in the database.
+(Mar 08, 2024),
+DateLife's chronogram database latest version consist of 253 chronograms published in 187 studies, encompassing 99 474 species. It is curated from OpenTree's phylogenetic database, the Phylesystem, an open database of expert and peer-reviewed phylogenetic knowledge with rich metadata and a wide taxonomic scope (McTavish et al., 2015). We expect DateLife's database to largely overlap with OpenTree's phylogenetic database taxonomic coverage, where Chordata and Embryophyta are nearly fully sampled. In contrast, Bacteria, Fungi, Nematoda, and Insecta, currently present a large gap between the number of named species and what has phylogenetic information in OpenTree's synthetic tree. It is likely that users working with the former groups will get results from a DateLife analysis. If none of the user's species are found, the software will indicate the lack of age data for the queried taxa in the database.
 
 A unique feature of the Phylesystem is that any user can add new published, state-of-the-art chronograms any time, through OpenTree's curator application (\url{https://tree.opentreeoflife.org/curator}). Relying on an open source database permits an automatic and reproducible assembly of DateLife's chronogram database, which is stored and navigable as an R data object within the \texttt{datelife} R package. As chronograms are added to Phylesystem, they can be incorporated into the chronogram database within the \texttt{datelife} R package, by manually triggering an update. The updated \texttt{datelife} database is assigned a new version number, followed by a package release on CRAN.
 We encourage users to submit published chronograms to OpenTree's phylogenetic database, so that their taxon of interest can be included in future DateLife searches.
@@ -251,7 +251,7 @@ Users can directly run \texttt{datelife} functions to trigger an update of their
 
 A DateLife search is implemented by matching processed taxon names provided by the user to tip labels in the chronogram database. Chronograms with at least two matching taxon names on their tip labels are identified and pruned down to preserve only the matched taxa.
 These matching pruned chronograms are referred to as source chronograms.
-Total distance in units of million years (Myr) between taxon pairs within each source chronogram are stored as a patristic distance matrix.
+Total distance in units of million years (myr) between taxon pairs within each source chronogram are stored as a patristic distance matrix.
 The matrix format speeds up extraction of pairwise taxon ages of any queried taxa, as opposed to searching the ancestor node of a pair of taxa in a \enquote{phylo} object or newick string.
 Finally, the patristic matrices are associated to the study citation where the original chronogram was published, and stored as an R object of the newly defined class \texttt{datelifeResult}.
 
@@ -919,7 +919,7 @@ Figure 1. DateLife's benchmarking results showing computation time used for taxo
 
 Figure 2. DateLife results of an analysis of a small sample of 6 bird species within the Passeriformes (a, b). Processed species names were found across 9 chronograms within 6 independent studies (c; Barker et al. (\protect\hyperlink{ref-barker2012going}{2012}), Barker et al. (\protect\hyperlink{ref-barker2015new}{2015}), Burns et al. (\protect\hyperlink{ref-burns2014phylogenetics}{2014}), Hedges et al. (\protect\hyperlink{ref-Hedges2015}{2015}), Hooper and Price (\protect\hyperlink{ref-hooper2017chromosomal}{2017}), Jetz et al. (\protect\hyperlink{ref-Jetz2012}{2012}). This revealed 28 source age data points for the queried species names (e; Table 1). Summarized age data (f; Table 2) was used as secondary calibrations to date a tree topology obtained from OpenTree's synthetic tree v13.4 (d), resulting in the chronogram of summary source ages shown in (g).
 
-Figure 3. Median summary chronogram resulting from a Datelife analysis of bird species within the family Fringillidae. For visualization purposes, we are showing a portion of the final median summary chronogram encompassing 57 species out of the 289 total included in the analysis. The complete final chronogram is available as Supplementary Figure S3. The starting tree topology (Supplementary Fig. S2) has 289 tip species and 253 nodes; DateLife revealed age data for 194 of these nodes from at least one published chronogram. In total, 19 different chronograms from 13 different studies contributed 818 age data points, which were summarized to obtain a single value for each one of the 194 nodes with age data. From the 194 summary ages available, 21 were discarded and not used as calibrations (asterisk, *), because they were older than a parent node or younger than a descendant node; the remaining 173 summary ages were used as secondary calibrations (forward slash, /) with the Branch Length Adjuster (BLADJ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).
+Figure 3. Median summary chronogram resulting from a DateLife analysis of bird species within the family Fringillidae. For visualization purposes, we are showing a portion of the final median summary chronogram encompassing 57 species out of the 289 total included in the analysis. The complete final chronogram is available as Supplementary Figure S3. The starting tree topology (Supplementary Fig. S2) has 289 tip species and 253 nodes; DateLife revealed age data for 194 of these nodes from at least one published chronogram. In total, 19 different chronograms from 13 different studies contributed 818 age data points, which were summarized to obtain a single value for each one of the 194 nodes with age data. From the 194 summary ages available, 21 were discarded and not used as calibrations (asterisk, *), because they were older than a parent node or younger than a descendant node; the remaining 173 summary ages were used as secondary calibrations (forward slash, /) with the Branch Length Adjuster (BLADJ) software from Webb et al., (\protect\hyperlink{ref-Webb2008}{2008}).
 
 Figure 4. Cross validation of results from a DateLife analysis of the family Fringillidae, shown in Figure 3 and Supplementary Figure S3. Each plot compares the original node age estimates from an input source study chronogram (x axis) with the corresponding node age resulting from a dating analysis using the DateLife workflow, excluding data from that study (y axis).
 
